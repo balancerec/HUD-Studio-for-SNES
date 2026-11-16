@@ -1,0 +1,262 @@
+{
+  "version": "0.2.8",
+  "geometry": "per-sprite alpha mask, pixel-space",
+  "bars": [
+    {
+      "id": "01_barra_longa_A",
+      "size": [
+        1766,
+        114
+      ],
+      "polygon": [
+        [
+          1678,
+          24
+        ],
+        [
+          1702,
+          48
+        ],
+        [
+          1713,
+          60
+        ],
+        [
+          1722,
+          86
+        ],
+        [
+          1722,
+          88
+        ],
+        [
+          1711,
+          89
+        ],
+        [
+          94,
+          89
+        ],
+        [
+          64,
+          59
+        ],
+        [
+          43,
+          36
+        ],
+        [
+          43,
+          27
+        ],
+        [
+          48,
+          24
+        ]
+      ],
+      "frame": "assets/dynamic-bars/reconstructed/01_barra_longa_A_frame.png",
+      "mask": "assets/dynamic-bars/reconstructed/01_barra_longa_A_mask.png",
+      "empty": "assets/dynamic-bars/reconstructed/01_barra_longa_A_empty.png",
+      "fills": {
+        "vermelho": "assets/dynamic-bars/reconstructed/01_barra_longa_A_vermelho.png",
+        "verde": "assets/dynamic-bars/reconstructed/01_barra_longa_A_verde.png",
+        "azul": "assets/dynamic-bars/reconstructed/01_barra_longa_A_azul.png",
+        "lilas": "assets/dynamic-bars/reconstructed/01_barra_longa_A_lilas.png",
+        "pink": "assets/dynamic-bars/reconstructed/01_barra_longa_A_pink.png"
+      }
+    },
+    {
+      "id": "02_barra_longa_B",
+      "size": [
+        1768,
+        114
+      ],
+      "polygon": [
+        [
+          1721,
+          24
+        ],
+        [
+          1724,
+          34
+        ],
+        [
+          1724,
+          40
+        ],
+        [
+          1720,
+          50
+        ],
+        [
+          1681,
+          89
+        ],
+        [
+          53,
+          89
+        ],
+        [
+          43,
+          88
+        ],
+        [
+          43,
+          84
+        ],
+        [
+          61,
+          52
+        ],
+        [
+          89,
+          24
+        ]
+      ],
+      "frame": "assets/dynamic-bars/reconstructed/02_barra_longa_B_frame.png",
+      "mask": "assets/dynamic-bars/reconstructed/02_barra_longa_B_mask.png",
+      "empty": "assets/dynamic-bars/reconstructed/02_barra_longa_B_empty.png",
+      "fills": {
+        "vermelho": "assets/dynamic-bars/reconstructed/02_barra_longa_B_vermelho.png",
+        "verde": "assets/dynamic-bars/reconstructed/02_barra_longa_B_verde.png",
+        "azul": "assets/dynamic-bars/reconstructed/02_barra_longa_B_azul.png",
+        "lilas": "assets/dynamic-bars/reconstructed/02_barra_longa_B_lilas.png",
+        "pink": "assets/dynamic-bars/reconstructed/02_barra_longa_B_pink.png"
+      }
+    },
+    {
+      "id": "03_barra_curta_A",
+      "size": [
+        725,
+        52
+      ],
+      "polygon": [
+        [
+          691,
+          9
+        ],
+        [
+          698,
+          16
+        ],
+        [
+          698,
+          25
+        ],
+        [
+          686,
+          37
+        ],
+        [
+          680,
+          42
+        ],
+        [
+          39,
+          42
+        ],
+        [
+          27,
+          31
+        ],
+        [
+          26,
+          30
+        ],
+        [
+          26,
+          15
+        ],
+        [
+          32,
+          10
+        ],
+        [
+          37,
+          9
+        ]
+      ],
+      "frame": "assets/dynamic-bars/reconstructed/03_barra_curta_A_frame.png",
+      "mask": "assets/dynamic-bars/reconstructed/03_barra_curta_A_mask.png",
+      "empty": "assets/dynamic-bars/reconstructed/03_barra_curta_A_empty.png",
+      "fills": {
+        "vermelho": "assets/dynamic-bars/reconstructed/03_barra_curta_A_vermelho.png",
+        "verde": "assets/dynamic-bars/reconstructed/03_barra_curta_A_verde.png",
+        "azul": "assets/dynamic-bars/reconstructed/03_barra_curta_A_azul.png",
+        "lilas": "assets/dynamic-bars/reconstructed/03_barra_curta_A_lilas.png",
+        "pink": "assets/dynamic-bars/reconstructed/03_barra_curta_A_pink.png"
+      }
+    },
+    {
+      "id": "04_barra_curta_B",
+      "size": [
+        726,
+        53
+      ],
+      "polygon": [
+        [
+          625,
+          9
+        ],
+        [
+          693,
+          11
+        ],
+        [
+          696,
+          13
+        ],
+        [
+          699,
+          16
+        ],
+        [
+          699,
+          32
+        ],
+        [
+          688,
+          43
+        ],
+        [
+          44,
+          43
+        ],
+        [
+          32,
+          36
+        ],
+        [
+          29,
+          33
+        ],
+        [
+          26,
+          26
+        ],
+        [
+          26,
+          15
+        ],
+        [
+          31,
+          10
+        ],
+        [
+          68,
+          9
+        ]
+      ],
+      "frame": "assets/dynamic-bars/reconstructed/04_barra_curta_B_frame.png",
+      "mask": "assets/dynamic-bars/reconstructed/04_barra_curta_B_mask.png",
+      "empty": "assets/dynamic-bars/reconstructed/04_barra_curta_B_empty.png",
+      "fills": {
+        "vermelho": "assets/dynamic-bars/reconstructed/04_barra_curta_B_vermelho.png",
+        "verde": "assets/dynamic-bars/reconstructed/04_barra_curta_B_verde.png",
+        "azul": "assets/dynamic-bars/reconstructed/04_barra_curta_B_azul.png",
+        "lilas": "assets/dynamic-bars/reconstructed/04_barra_curta_B_lilas.png",
+        "pink": "assets/dynamic-bars/reconstructed/04_barra_curta_B_pink.png"
+      }
+    }
+  ]
+}

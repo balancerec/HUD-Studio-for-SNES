@@ -13,8 +13,33 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install asset-test dependencies
+        run: python -m pip install Pillow
+
       - name: Validate package and embedded JavaScript
         run: python tests/smoke-test.py
 
       - name: Hit-test regression tests
         run: node tests/hit-test.test.cjs
+
+      - name: Multi-selection and group regression
+        run: node tests/editor-v021.test.cjs
+
+      - name: UI and clipboard regressions
+        run: |
+          node tests/ui-v022.test.cjs
+          node tests/editor-v023.test.cjs
+
+      - name: DynamicBar components and assets
+        run: |
+          python tests/dynamic-bar-assets.py
+          node tests/dynamic-bars.test.cjs
+
+      - name: Validate master sprite-sheet extraction
+        run: python tests/master-assets.test.py
+
+      - name: Verificar miolos quatro cores
+        run: python tests/miolos-4-cores.test.py
+
+      - name: Validate Fill Editor V0.2.7
+        run: python tests/fill-editor-v027.test.py

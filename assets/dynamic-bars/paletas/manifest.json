@@ -1,0 +1,183 @@
+{
+  "version": "0.2.7",
+  "method": "Hue substitution of red fill only; border/alpha retained; hues from supplied miolos catalog",
+  "source_catalog": "assets/miolos-4-cores/catalog.json",
+  "variants": [
+    {
+      "source": "01_barra_longa_A_miolo_vermelho.png",
+      "color": "verde",
+      "file": "assets/dynamic-bars/paletas/01_barra_longa_A_verde.png",
+      "size": [
+        1766,
+        114
+      ],
+      "sha256": "f98ad547d051cff713c857866c028f7f90071063195d634b836f347592e7e52f",
+      "modified_pixels": 115449
+    },
+    {
+      "source": "01_barra_longa_A_miolo_vermelho.png",
+      "color": "azul",
+      "file": "assets/dynamic-bars/paletas/01_barra_longa_A_azul.png",
+      "size": [
+        1766,
+        114
+      ],
+      "sha256": "c77451551760f79b2cf65f74e6bf07e64700118ff64c6e36f12dd921cb265813",
+      "modified_pixels": 115449
+    },
+    {
+      "source": "01_barra_longa_A_miolo_vermelho.png",
+      "color": "lilas",
+      "file": "assets/dynamic-bars/paletas/01_barra_longa_A_lilas.png",
+      "size": [
+        1766,
+        114
+      ],
+      "sha256": "383be4be01404ad3379096d5a1a2ca9e18ce100414ffe402b2eee53464c269bb",
+      "modified_pixels": 115449
+    },
+    {
+      "source": "01_barra_longa_A_miolo_vermelho.png",
+      "color": "pink",
+      "file": "assets/dynamic-bars/paletas/01_barra_longa_A_pink.png",
+      "size": [
+        1766,
+        114
+      ],
+      "sha256": "81ecc3c6aae26d0afccebd2080033cc75d17cc63b7c4128b31e04e174bd1e1b0",
+      "modified_pixels": 115449
+    },
+    {
+      "source": "02_barra_longa_B_miolo_vermelho.png",
+      "color": "verde",
+      "file": "assets/dynamic-bars/paletas/02_barra_longa_B_verde.png",
+      "size": [
+        1768,
+        114
+      ],
+      "sha256": "ffaa90a1a75e1ebfe65272392aff8888f3f9f5b8fedbfd6ba461fbe6f790a38a",
+      "modified_pixels": 116172
+    },
+    {
+      "source": "02_barra_longa_B_miolo_vermelho.png",
+      "color": "azul",
+      "file": "assets/dynamic-bars/paletas/02_barra_longa_B_azul.png",
+      "size": [
+        1768,
+        114
+      ],
+      "sha256": "62b79073c3ee202e8a19ea428c2da0d55ebb9e5c3f62aefb2dcd90c577d2e801",
+      "modified_pixels": 116172
+    },
+    {
+      "source": "02_barra_longa_B_miolo_vermelho.png",
+      "color": "lilas",
+      "file": "assets/dynamic-bars/paletas/02_barra_longa_B_lilas.png",
+      "size": [
+        1768,
+        114
+      ],
+      "sha256": "181c6868f3baa2a9a4ad2312303e72ed09f1397524aca9102630480f9b1510de",
+      "modified_pixels": 116172
+    },
+    {
+      "source": "02_barra_longa_B_miolo_vermelho.png",
+      "color": "pink",
+      "file": "assets/dynamic-bars/paletas/02_barra_longa_B_pink.png",
+      "size": [
+        1768,
+        114
+      ],
+      "sha256": "2ef7b9b3948fc2605bedbc79ccf637fa6fa99e2f97f0b8848ceb5d92963a7436",
+      "modified_pixels": 116172
+    },
+    {
+      "source": "03_barra_curta_A_miolo_vermelho.png",
+      "color": "verde",
+      "file": "assets/dynamic-bars/paletas/03_barra_curta_A_verde.png",
+      "size": [
+        725,
+        52
+      ],
+      "sha256": "d45a4a594ada8e1c11fcb45ca255d562866f34370baae5d8c582dc7a599d91c2",
+      "modified_pixels": 21174
+    },
+    {
+      "source": "03_barra_curta_A_miolo_vermelho.png",
+      "color": "azul",
+      "file": "assets/dynamic-bars/paletas/03_barra_curta_A_azul.png",
+      "size": [
+        725,
+        52
+      ],
+      "sha256": "5c86a154e0654240689b4300f3774b92b93d6d4327feeb5c82b037046d9a4146",
+      "modified_pixels": 21174
+    },
+    {
+      "source": "03_barra_curta_A_miolo_vermelho.png",
+      "color": "lilas",
+      "file": "assets/dynamic-bars/paletas/03_barra_curta_A_lilas.png",
+      "size": [
+        725,
+        52
+      ],
+      "sha256": "2016a337db42fce4fff64d9acb5e2617090a3c2f85a0503f32419566562e59a4",
+      "modified_pixels": 21174
+    },
+    {
+      "source": "03_barra_curta_A_miolo_vermelho.png",
+      "color": "pink",
+      "file": "assets/dynamic-bars/paletas/03_barra_curta_A_pink.png",
+      "size": [
+        725,
+        52
+      ],
+      "sha256": "a55af30899eb2ea950a5e96e59144e27a27149515107f3a077789169e5f3771b",
+      "modified_pixels": 21174
+    },
+    {
+      "source": "04_barra_curta_B_miolo_vermelho.png",
+      "color": "verde",
+      "file": "assets/dynamic-bars/paletas/04_barra_curta_B_verde.png",
+      "size": [
+        726,
+        53
+      ],
+      "sha256": "b6aa4e7ea710f27013dfcfb9cc69db746f1a49197bf867a8cd0e94581f90feba",
+      "modified_pixels": 21630
+    },
+    {
+      "source": "04_barra_curta_B_miolo_vermelho.png",
+      "color": "azul",
+      "file": "assets/dynamic-bars/paletas/04_barra_curta_B_azul.png",
+      "size": [
+        726,
+        53
+      ],
+      "sha256": "38effeacb4f8fc64ecf6be038b8244ef7264a03a9ef28e6f6f7db02049693256",
+      "modified_pixels": 21630
+    },
+    {
+      "source": "04_barra_curta_B_miolo_vermelho.png",
+      "color": "lilas",
+      "file": "assets/dynamic-bars/paletas/04_barra_curta_B_lilas.png",
+      "size": [
+        726,
+        53
+      ],
+      "sha256": "615c9b85df34d4f21d0de4805fd376445ad421874d01f8e85e5c9920f67595d4",
+      "modified_pixels": 21630
+    },
+    {
+      "source": "04_barra_curta_B_miolo_vermelho.png",
+      "color": "pink",
+      "file": "assets/dynamic-bars/paletas/04_barra_curta_B_pink.png",
+      "size": [
+        726,
+        53
+      ],
+      "sha256": "ef9112dd02a156a94ae55b37195bd29e4439e8c18718a90f227dd69cb7e01a5c",
+      "modified_pixels": 21630
+    }
+  ]
+}

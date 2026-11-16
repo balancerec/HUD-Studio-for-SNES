@@ -1,0 +1,282 @@
+{
+  "version": "0.2.6",
+  "source_zip": "miolos_HUD_4_cores(1).zip",
+  "source_sha256": "15142d2b28728f809f63fa2cc7e7cc4f6e39b957d8d1bb66d003f6938538985a",
+  "note": "Arquivos originais preservados. miolo_moldura inclui borda dourada e fragmentos laterais; é sprite composto, não moldura vazia. Sheets são somente referência.",
+  "colors": {
+    "verde": {
+      "hex": "#16de27",
+      "assets": [
+        "lava_verde",
+        "moldura_verde",
+        "sheet_verde"
+      ]
+    },
+    "azul": {
+      "hex": "#145bea",
+      "assets": [
+        "lava_azul",
+        "moldura_azul",
+        "sheet_azul"
+      ]
+    },
+    "lilas": {
+      "hex": "#ab27e3",
+      "assets": [
+        "lava_lilas",
+        "moldura_lilas",
+        "sheet_lilas"
+      ]
+    },
+    "pink": {
+      "hex": "#e71884",
+      "assets": [
+        "lava_pink",
+        "moldura_pink",
+        "sheet_pink"
+      ]
+    }
+  },
+  "assets": [
+    {
+      "id": "lava_verde",
+      "path": "assets/miolos-4-cores/miolo_lava_verde.png",
+      "filename": "miolo_lava_verde.png",
+      "type": "lava",
+      "color": "verde",
+      "width": 281,
+      "height": 81,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        281,
+        81
+      ],
+      "visible_pixels": 20485,
+      "translucent_pixels": 20485,
+      "sha256": "285d2f085dbdb5afdb73506c86d9aab4aed19cab9f26c50acdb17ee5949a9dc8",
+      "note": "Recorte interno com textura, contém pequenos pixels residuais de elementos adjacentes"
+    },
+    {
+      "id": "moldura_verde",
+      "path": "assets/miolos-4-cores/miolo_moldura_verde.png",
+      "filename": "miolo_moldura_verde.png",
+      "type": "moldura",
+      "color": "verde",
+      "width": 283,
+      "height": 94,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        283,
+        94
+      ],
+      "visible_pixels": 20591,
+      "translucent_pixels": 20591,
+      "sha256": "bf8681ac81e95e7139392e574559ca7b2ac5a00845df70225912def94e7d2167",
+      "note": "Recorte composto com borda dourada, contém pequenos fragmentos externos"
+    },
+    {
+      "id": "sheet_verde",
+      "path": "assets/miolos-4-cores/HUD_miolos_verde.png",
+      "filename": "HUD_miolos_verde.png",
+      "type": "sheet",
+      "color": "verde",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "visible_pixels": 951198,
+      "translucent_pixels": 951198,
+      "sha256": "ed4038af589470ad131fa2ef3e324dcc240902dad2f69125539547654ea11016",
+      "note": "Sprite sheet completa apenas para inspeção, não recomenda-se arrastar como um único sprite"
+    },
+    {
+      "id": "lava_azul",
+      "path": "assets/miolos-4-cores/miolo_lava_azul.png",
+      "filename": "miolo_lava_azul.png",
+      "type": "lava",
+      "color": "azul",
+      "width": 281,
+      "height": 81,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        281,
+        81
+      ],
+      "visible_pixels": 20485,
+      "translucent_pixels": 20485,
+      "sha256": "0ba9994ec0f61ff9f8762a65699421d174cfbbbe0a8438a0f05fd868bf650dfb",
+      "note": "Recorte interno com textura, contém pequenos pixels residuais de elementos adjacentes"
+    },
+    {
+      "id": "moldura_azul",
+      "path": "assets/miolos-4-cores/miolo_moldura_azul.png",
+      "filename": "miolo_moldura_azul.png",
+      "type": "moldura",
+      "color": "azul",
+      "width": 283,
+      "height": 94,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        283,
+        94
+      ],
+      "visible_pixels": 20591,
+      "translucent_pixels": 20591,
+      "sha256": "7eb04289a958751554d0699a102540e39351a5b35031961f7dae43eee538e973",
+      "note": "Recorte composto com borda dourada, contém pequenos fragmentos externos"
+    },
+    {
+      "id": "sheet_azul",
+      "path": "assets/miolos-4-cores/HUD_miolos_azul.png",
+      "filename": "HUD_miolos_azul.png",
+      "type": "sheet",
+      "color": "azul",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "visible_pixels": 951198,
+      "translucent_pixels": 951198,
+      "sha256": "1459c88bffb6530641df704e9f9d9844eb51e9f6ff2b10f82307eece6e1477e4",
+      "note": "Sprite sheet completa apenas para inspeção, não recomenda-se arrastar como um único sprite"
+    },
+    {
+      "id": "lava_lilas",
+      "path": "assets/miolos-4-cores/miolo_lava_lilas.png",
+      "filename": "miolo_lava_lilas.png",
+      "type": "lava",
+      "color": "lilas",
+      "width": 281,
+      "height": 81,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        281,
+        81
+      ],
+      "visible_pixels": 20485,
+      "translucent_pixels": 20485,
+      "sha256": "4916d411586e84062a2f888c70f0df2a164231e5272f9462a66fe85f124912d5",
+      "note": "Recorte interno com textura, contém pequenos pixels residuais de elementos adjacentes"
+    },
+    {
+      "id": "moldura_lilas",
+      "path": "assets/miolos-4-cores/miolo_moldura_lilas.png",
+      "filename": "miolo_moldura_lilas.png",
+      "type": "moldura",
+      "color": "lilas",
+      "width": 283,
+      "height": 94,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        283,
+        94
+      ],
+      "visible_pixels": 20591,
+      "translucent_pixels": 20591,
+      "sha256": "752330e2cd54de16e6be41bf2efa578673fd62a4154c939a1dc7ea078bde7500",
+      "note": "Recorte composto com borda dourada, contém pequenos fragmentos externos"
+    },
+    {
+      "id": "sheet_lilas",
+      "path": "assets/miolos-4-cores/HUD_miolos_lilas.png",
+      "filename": "HUD_miolos_lilas.png",
+      "type": "sheet",
+      "color": "lilas",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "visible_pixels": 951198,
+      "translucent_pixels": 951198,
+      "sha256": "24bd0c554682eff2280ada78de984f4254ff32cc52dd1159135c4f9d668635ca",
+      "note": "Sprite sheet completa apenas para inspeção, não recomenda-se arrastar como um único sprite"
+    },
+    {
+      "id": "lava_pink",
+      "path": "assets/miolos-4-cores/miolo_lava_pink.png",
+      "filename": "miolo_lava_pink.png",
+      "type": "lava",
+      "color": "pink",
+      "width": 281,
+      "height": 81,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        281,
+        81
+      ],
+      "visible_pixels": 20485,
+      "translucent_pixels": 20485,
+      "sha256": "358e4fe690fc49a96a063c8de8851d92e63ae7d892b11744c381e3c6947a4c32",
+      "note": "Recorte interno com textura, contém pequenos pixels residuais de elementos adjacentes"
+    },
+    {
+      "id": "moldura_pink",
+      "path": "assets/miolos-4-cores/miolo_moldura_pink.png",
+      "filename": "miolo_moldura_pink.png",
+      "type": "moldura",
+      "color": "pink",
+      "width": 283,
+      "height": 94,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        283,
+        94
+      ],
+      "visible_pixels": 20591,
+      "translucent_pixels": 20591,
+      "sha256": "e673227006812c886edf734b9f87b6a60f6b8ad4d6be8e2b4780f4b607cf8b45",
+      "note": "Recorte composto com borda dourada, contém pequenos fragmentos externos"
+    },
+    {
+      "id": "sheet_pink",
+      "path": "assets/miolos-4-cores/HUD_miolos_pink.png",
+      "filename": "HUD_miolos_pink.png",
+      "type": "sheet",
+      "color": "pink",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "alpha_bbox": [
+        0,
+        0,
+        1536,
+        1024
+      ],
+      "visible_pixels": 951198,
+      "translucent_pixels": 951198,
+      "sha256": "af8c4356ae42947af40f403cbe354f8dafd6fecbe60834240ac089bf57ff1a78",
+      "note": "Sprite sheet completa apenas para inspeção, não recomenda-se arrastar como um único sprite"
+    }
+  ]
+}
