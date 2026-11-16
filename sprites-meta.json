@@ -1,0 +1,145 @@
+{
+  "nameplate_left": {
+    "source": "placa_hud_metálica_dourada_em_chamas.png",
+    "crop": [
+      0,
+      0,
+      2126,
+      724
+    ],
+    "size": [
+      2126,
+      724
+    ]
+  },
+  "nameplate_right": {
+    "source": "placa_de_nome_metálica_dourada_em_neon.png",
+    "crop": [
+      13,
+      0,
+      2170,
+      724
+    ],
+    "size": [
+      2157,
+      724
+    ]
+  },
+  "upper_blue": {
+    "source": "bar_azul_craquelado_com_borda_dourada.png",
+    "crop": [
+      0,
+      0,
+      2140,
+      724
+    ],
+    "size": [
+      2140,
+      724
+    ]
+  },
+  "upper_red": {
+    "source": "bar_hud_dourada_com_textura_rubra.png",
+    "crop": [
+      0,
+      3,
+      2172,
+      716
+    ],
+    "size": [
+      2172,
+      713
+    ]
+  },
+  "lower_blue": {
+    "source": "bar_azul_elétrico_com_moldura_dourada.png",
+    "crop": [
+      0,
+      5,
+      2172,
+      705
+    ],
+    "size": [
+      2172,
+      700
+    ]
+  },
+  "lower_red": {
+    "source": "barra_vermelha_dourada_com_brilho.png",
+    "crop": [
+      0,
+      37,
+      2168,
+      714
+    ],
+    "size": [
+      2168,
+      677
+    ]
+  },
+  "green_left": {
+    "source": "barra_neon_verde_com_moldura_dourada.png",
+    "crop": [
+      0,
+      16,
+      2166,
+      706
+    ],
+    "size": [
+      2166,
+      690
+    ]
+  },
+  "green_right": {
+    "source": "barra_de_status_verde_neon_dourada.png",
+    "crop": [
+      0,
+      21,
+      2172,
+      708
+    ],
+    "size": [
+      2172,
+      687
+    ]
+  },
+  "center_panel": {
+    "source": "brasão_v_metálico_em_pedra_rachada.png",
+    "crop": [
+      0,
+      13,
+      1448,
+      1086
+    ],
+    "size": [
+      1448,
+      1073
+    ]
+  },
+  "medallion": {
+    "source": "medalhão_dourado_do_dragão_mk.png",
+    "crop": [
+      0,
+      31,
+      1208,
+      1248
+    ],
+    "size": [
+      1208,
+      1217
+    ]
+  },
+  "full_hud": {
+    "source": "png_image_an_ornate_fighting_game_hud_frame_over.png",
+    "crop": [
+      14,
+      15,
+      2159,
+      724
+    ],
+    "size": [
+      2145,
+      709
+    ]
+  }
+}

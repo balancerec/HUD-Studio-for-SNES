@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UMK3 HUD Studio FL</title>
+<style>
+:root{
+  --bg:#2b2d31; --bg2:#1e2024; --bg3:#121317; --panel:#181a1f; --panel2:#20232a; --line:#383c44;
+  --text:#eceef3; --muted:#9ba1aa; --accent:#ffb547; --accent2:#ff8d2c; --green:#75d45c; --danger:#d95e54;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#101115;color:var(--text);font:13px/1.45 'Segoe UI',Tahoma,Arial,sans-serif;overflow:hidden}
+button,input,select{font:inherit}
+button{background:linear-gradient(180deg,#3a3d45,#23262d);border:1px solid #4a4f59;color:var(--text);border-radius:6px;padding:7px 10px;cursor:pointer}
+button:hover{border-color:#707784}
+button.primary{background:linear-gradient(180deg,#7a4925,#4c2d15);border-color:#a96a35;color:#fff5e7}
+button.danger{background:linear-gradient(180deg,#7a2d28,#4a1d1a);border-color:#9a4741}
+input,select{background:#0e1014;border:1px solid #404652;color:#f1f2f5;border-radius:6px;padding:7px 8px;min-width:0}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+input[type="range"]{padding:0;background:transparent;border:none}
+input[type="color"]{padding:2px;height:34px}
+.check{display:flex;align-items:center;gap:6px;color:#d7d9df}
+.check input{accent-color:#f0a130}
+.chrome{display:flex;flex-direction:column;height:100%}
+.menubar{display:flex;align-items:center;gap:14px;padding:4px 10px;background:linear-gradient(180deg,#57585e,#44464b);border-bottom:1px solid #232529;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+.menubar .brand{margin-right:18px;font-weight:700;color:#fff6db}
+.transport{display:flex;align-items:center;gap:8px;padding:7px 10px;background:linear-gradient(180deg,#4b4d53,#303238);border-bottom:1px solid #1f2125}
+.pill{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;padding:0 8px;border-radius:14px;background:#7d2ea9;color:#fff;font-weight:700;font-size:11px}
+.transport .btn{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;padding:0}
+.transport .spacer{flex:1}
+.display{background:#1a1d20;border:1px solid #616570;color:#f7fafc;border-radius:6px;padding:2px 10px;font-size:14px;font-weight:700;min-width:116px;text-align:right}
+.transport .slot{background:#23262a;border:1px solid #555a65;border-radius:6px;padding:4px 8px;color:#d8dbe1}
+.app{display:grid;grid-template-columns:280px minmax(0,1fr) 320px;min-height:0;flex:1}
+.panel{background:linear-gradient(180deg,#1b1d22,#15171b);border-right:1px solid #2c2f36;overflow:auto}
+.panel.right{border-right:none;border-left:1px solid #2c2f36}
+.section{padding:14px}
+.section + .section{border-top:1px solid #262930}
+.section h1,.section h2,.section h3{margin:0 0 10px}
+.section h1{font-size:16px}
+.section h2{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:#ffcf8a}
+.hint{margin:0 0 10px;color:var(--muted);font-size:12px}
+.browser-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#d7dae0}
+.library{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.asset{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;min-height:100px;padding:8px;background:linear-gradient(180deg,#101217,#0a0b0f);border:1px solid #31353d;border-radius:9px;cursor:grab;user-select:none}
+.asset:hover{border-color:#f2a642;background:linear-gradient(180deg,#22180d,#110d08)}
+.asset:active{cursor:grabbing}
+.asset img{width:100%;height:56px;object-fit:contain;pointer-events:none}
+.asset span{font-size:11px;color:#ddd}
+.workspace{display:flex;flex-direction:column;min-width:0;background:#0f1115}
+.workspace-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:linear-gradient(180deg,#1f2127,#15171b);border-bottom:1px solid #2e3239}
+.workspace-toolbar .title{font-weight:700;color:#fff0c2;margin-right:auto}
+.workspace-toolbar .tag{padding:2px 8px;border-radius:999px;background:#343841;border:1px solid #4a4f59;color:#d7dae1;font-size:11px}
+.viewport{flex:1;overflow:auto;padding:20px;background:radial-gradient(circle at 50% 20%, #1e2025 0, #0e1014 60%)}
+.scale-wrap{position:relative;margin:auto}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#090a0d;border:1px solid #30343c;box-shadow:0 18px 70px rgba(0,0,0,.6);overflow:hidden;transform-origin:top left}
+.stage::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.06));pointer-events:none;z-index:2}
+.stage.grid::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);background-size:var(--grid-size,16px) var(--grid-size,16px);pointer-events:none;z-index:4}
+.bg-layer{position:absolute;inset:0;z-index:0;background-position:center;background-repeat:no-repeat;background-size:cover}
+.reference{position:absolute;left:50%;top:100px;transform:translateX(-50%);width:1780px;opacity:.18;display:none;pointer-events:none;z-index:1}
+.stage.show-reference .reference{display:block}
+.stage.drop-target{outline:3px dashed #ffb54a;outline-offset:-6px}
+.sprite{position:absolute;transform-origin:center center;touch-action:none;user-select:none;cursor:grab;z-index:10}
+.sprite img{width:100%;height:100%;object-fit:fill;pointer-events:none;display:block}
+.sprite.selected{outline:2px dashed #ffd25e;outline-offset:3px;cursor:move}
+.sprite.locked{cursor:not-allowed}
+.handle{position:absolute;width:14px;height:14px;border-radius:4px;border:2px solid #16181d;background:#ffbe54;display:none}
+.handle.br{right:-9px;bottom:-9px;cursor:nwse-resize}
+.handle.rot{left:50%;top:-26px;transform:translateX(-50%);border-radius:50%;background:#83dfff;cursor:grab}
+.sprite.selected .handle{display:block}
+.sprite.locked .handle{display:none}
+.status{padding:8px 12px;border-top:1px solid #2f333b;background:#16181d;color:#d8bc8b;font-size:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;color:#c9cdd4}
+.field small{color:#8f95a0}
+.stack{display:flex;flex-direction:column;gap:8px}
+.layer{display:flex;align-items:center;gap:8px;border:1px solid #31353d;background:#0f1116;border-radius:8px;padding:6px;margin-bottom:6px;cursor:pointer}
+.layer.selected{border-color:#f1ad4c;background:#2a1f12}
+.layer img{width:42px;height:28px;object-fit:contain;background:#00000022;border-radius:4px}
+.layer span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.layer button{padding:4px 6px;font-size:11px}
+.empty{border:1px dashed #40444d;border-radius:8px;padding:10px;color:#969ca6;font-size:12px}
+.stat{margin-top:10px;padding-top:10px;border-top:1px solid #2c3038;color:#adb2bc;font-size:12px}
+.hidden{display:none!important}
+@media (max-width: 1200px){.app{grid-template-columns:250px minmax(0,1fr) 290px}}
+@media (max-width: 980px){.app{grid-template-columns:1fr}.panel.right,.panel{max-height:40vh;border-left:none;border-right:none}.workspace{min-height:50vh}}
+</style>
+</head>
+<body>
+<div class="chrome">
+  <div class="menubar">
+    <div class="brand">UMK3 HUD Studio</div>
+    <div>File</div><div>Edit</div><div>Add</div><div>Patterns</div><div>View</div><div>Options</div><div>Tools</div><div>Help</div>
+  </div>
+  <div class="transport">
+    <span class="pill">PAT</span>
+    <button class="btn">▶</button>
+    <button class="btn">■</button>
+    <button class="btn">●</button>
+    <span class="slot">Snap</span>
+    <span class="slot">Drag & Drop</span>
+    <span class="spacer"></span>
+    <span class="display">1920 × 1080</span>
+  </div>
+  <div class="app">
+    <aside class="panel">
+      <div class="section">
+        <div class="browser-head"><strong>Browser</strong><span class="tag">Sprites</span></div>
+        <p class="hint">Arraste os itens para o palco, como no workflow de Browser/Playlist.</p>
+        <div class="library" id="palette"></div>
+      </div>
+      <div class="section">
+        <h2>Projeto</h2>
+        <div class="row">
+          <button id="reset">Restaurar HUD</button>
+          <button id="clear">Limpar palco</button>
+        </div>
+      </div>
+      <div class="section">
+        <h2>Importar / Exportar</h2>
+        <div class="stack">
+          <div class="row">
+            <button id="exportJson">Exportar JSON</button>
+            <button id="importJson">Importar JSON</button>
+          </div>
+          <div class="row">
+            <button id="exportPng" class="primary">Exportar PNG</button>
+          </div>
+          <input hidden type="file" id="jsonFile" accept=".json,application/json">
+        </div>
+        <p class="hint" style="margin-top:10px">Atalhos: Setas = mover • Shift+Setas = 10 px • Del = apagar • Ctrl+D = duplicar • Ctrl+Z = desfazer.</p>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace-toolbar">
+        <div class="title">Canvas / Playlist</div>
+        <label class="check"><input type="checkbox" id="snap" checked> Snap</label>
+        <label class="check">Grid <select id="gridSize"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option><option value="64">64</option></select></label>
+        <label class="check"><input type="checkbox" id="grid" checked> Mostrar grade</label>
+        <label class="check"><input type="checkbox" id="referenceToggle"> Referência</label>
+        <label class="check"><input type="checkbox" id="includeBg" checked> Exportar com BG</label>
+        <label class="check">Zoom <select id="zoom"><option value="auto">Ajustar</option><option value="0.35">35%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></label>
+      </div>
+      <div class="viewport" id="viewport">
+        <div class="scale-wrap" id="scaleWrap">
+          <div class="stage" id="stage">
+            <div class="bg-layer" id="bgLayer"></div>
+            <img class="reference" src="assets/full_hud.png" alt="Referência do HUD">
+          </div>
+        </div>
+      </div>
+      <div class="status" id="status">Arraste um sprite da biblioteca para o palco. Palco configurado em 1920×1080.</div>
+    </main>
+
+    <aside class="panel right">
+      <div class="section">
+        <h1>Inspector</h1>
+        <p class="hint" id="selectionHint">Selecione um item no palco.</p>
+        <div id="inspector" class="hidden">
+          <label class="field">Nome do item<input id="propLabel" type="text"></label>
+          <div class="grid2">
+            <label class="field">X<input id="propX" type="number" step="1"></label>
+            <label class="field">Y<input id="propY" type="number" step="1"></label>
+            <label class="field">Largura<input id="propW" type="number" step="1" min="1"></label>
+            <label class="field">Altura<input id="propH" type="number" step="1" min="1"></label>
+            <label class="field">Rotação °<input id="propRot" type="number" step="1"></label>
+            <label class="field">Camada Z<input id="propZ" type="number" step="1"></label>
+          </div>
+          <label class="field">Opacidade<input id="propOpacity" type="range" min="0" max="100"></label>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="propFlipX"> Espelhar H</label>
+            <label class="check"><input type="checkbox" id="propFlipY"> Espelhar V</label>
+          </div>
+          <div class="row">
+            <label class="check"><input type="checkbox" id="propLock"> Bloquear</label>
+            <label class="check"><input type="checkbox" id="propVisible"> Visível</label>
+          </div>
+          <div class="row">
+            <button id="flipH">Espelhar H</button>
+            <button id="flipV">Espelhar V</button>
+          </div>
+          <div class="row">
+            <button id="duplicate">Duplicar</button>
+            <button id="bringFront">Trazer à frente</button>
+            <button id="sendBack">Enviar atrás</button>
+            <button id="delete" class="danger">Excluir</button>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <h2>Background</h2>
+        <div class="grid2">
+          <label class="field">Cor base<input id="bgColor" type="color" value="#0b0c10"></label>
+          <label class="field">Modo<select id="bgFit"><option value="cover">Cover</option><option value="contain">Contain</option><option value="stretch">Stretch</option></select></label>
+        </div>
+        <label class="field">Opacidade do BG<input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
+        <div class="row">
+          <button id="loadBg">Trocar background</button>
+          <button id="clearBg">Remover background</button>
+        </div>
+        <input hidden type="file" id="bgFile" accept="image/png,image/jpeg,image/webp,image/gif">
+      </div>
+      <div class="section">
+        <h2>Camadas</h2>
+        <div id="layers"></div>
+        <div class="stat" id="stat"></div>
+      </div>
+    </aside>
+  </div>
+</div>
+<script>
+'use strict';
+const W=1920, H=1080, KEY='umk3-hud-fl-editor-v2';
+const $ = id => document.getElementById(id);
+const stage = $('stage');
+const view = $('viewport');
+const bgLayer = $('bgLayer');
+let uid = 0, scale = 1, selected = null, history = [];
+const imageCache = {};
+const alphaCanvasCache = {};
+const template = [
+  {id:'nameplate_left',src:'assets/nameplate_left.png',label:'Nome P1',x:52,y:138,w:431,z:10},
+  {id:'nameplate_right',src:'assets/nameplate_right.png',label:'Nome P2',x:1438,y:138,w:431,z:10},
+  {id:'upper_blue',src:'assets/upper_blue.png',label:'Azul superior',x:18,y:268,w:474,z:18},
+  {id:'upper_red',src:'assets/upper_red.png',label:'Vermelho superior',x:1428,y:268,w:474,z:18},
+  {id:'lower_blue',src:'assets/lower_blue.png',label:'Azul inferior',x:52,y:352,w:802,z:20},
+  {id:'lower_red',src:'assets/lower_red.png',label:'Vermelho inferior',x:1066,y:352,w:803,z:20},
+  {id:'green_left',src:'assets/green_left.png',label:'Verde P1',x:95,y:440,w:378,z:23},
+  {id:'green_right',src:'assets/green_right.png',label:'Verde P2',x:1449,y:440,w:378,z:23},
+  {id:'center_panel',src:'assets/center_panel.png',label:'Painel central',x:861,y:326,w:197,z:25},
+  {id:'medallion_l1',src:'assets/medallion.png',label:'Medalhão P1 A',x:703,y:479,w:68,z:30},
+  {id:'medallion_l2',src:'assets/medallion.png',label:'Medalhão P1 B',x:770,y:479,w:68,z:30},
+  {id:'medallion_r1',src:'assets/medallion.png',label:'Medalhão P2 A',x:1084,y:479,w:68,z:30},
+  {id:'medallion_r2',src:'assets/medallion.png',label:'Medalhão P2 B',x:1151,y:479,w:68,z:30}
+];
+const paletteItems = [
+  {src:'assets/nameplate_left.png',label:'Nome P1',w:431},
+  {src:'assets/nameplate_right.png',label:'Nome P2',w:431},
+  {src:'assets/upper_blue.png',label:'Azul superior',w:474},
+  {src:'assets/upper_red.png',label:'Vermelho superior',w:474},
+  {src:'assets/lower_blue.png',label:'Azul inferior',w:802},
+  {src:'assets/lower_red.png',label:'Vermelho inferior',w:803},
+  {src:'assets/green_left.png',label:'Barra verde',w:378},
+  {src:'assets/center_panel.png',label:'Painel central',w:197},
+  {src:'assets/medallion.png',label:'Medalhão',w:68}
+];
+const ratioCache = {};
+function preload(path){
+  if(imageCache[path]) return imageCache[path];
+  const img = new Image(); img.src = path; imageCache[path]=img; return img;
+}
+function getAlphaCanvas(src){
+  if(alphaCanvasCache[src]) return alphaCanvasCache[src];
+  const img = preload(src);
+  const entry = { canvas:null, ctx:null, ready:false };
+  alphaCanvasCache[src] = entry;
+  const build = () => {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth || img.width || 1;
+    c.height = img.naturalHeight || img.height || 1;
+    const ctx = c.getContext('2d', { willReadFrequently:true });
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.drawImage(img,0,0);
+    entry.canvas = c;
+    entry.ctx = ctx;
+    entry.ready = true;
+  };
+  if(img.complete && (img.naturalWidth || img.width)) build();
+  else img.onload = build;
+  return entry;
+}
+paletteItems.forEach(p=>{ preload(p.src); getAlphaCanvas(p.src); }); preload('assets/full_hud.png');
+function sizeRatio(src){
+  if(ratioCache[src]) return ratioCache[src];
+  const img = preload(src);
+  ratioCache[src] = (img.naturalHeight && img.naturalWidth) ? img.naturalHeight/img.naturalWidth : 1;
+  if(!img.complete){ img.onload=()=>{ ratioCache[src] = img.naturalHeight/img.naturalWidth; }; }
+  return ratioCache[src];
+}
+function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+function normalize(s){
+  return {
+    id: s.id || newId(), src: s.src, label: s.label || 'Sprite',
+    x: Number.isFinite(+s.x) ? +s.x : 0, y: Number.isFinite(+s.y) ? +s.y : 0,
+    w: Math.max(1, +s.w || 100), h: Math.max(1, +s.h || Math.round((+s.w || 100) * sizeRatio(s.src))),
+    z: Number.isFinite(+s.z) ? +s.z : 10, rot: Number.isFinite(+s.rot) ? +s.rot : 0,
+    opacity: Number.isFinite(+s.opacity) ? +s.opacity : 100,
+    flipX: !!s.flipX, flipY: !!s.flipY,
+    visible: s.visible !== false, locked: !!s.locked
+  };
+}
+function defaultSprites(){ return template.map(normalize); }
+let background = { color:'#0b0c10', image:null, fit:'cover', opacity:100 };
+let sprites = defaultSprites();
+function save(){
+  localStorage.setItem(KEY, JSON.stringify({ version:3, background, sprites }));
+}
+function load(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(KEY));
+    if(raw){
+      if(raw.background) background = Object.assign(background, raw.background);
+      if(Array.isArray(raw.sprites)) sprites = raw.sprites.map(normalize);
+    }
+  }catch(e){}
+}
+load();
+function snapshot(){ history.push(JSON.stringify({background, sprites})); if(history.length>80) history.shift(); }
+function undo(){
+  const last = history.pop(); if(!last) return;
+  const state = JSON.parse(last); background = state.background || background; sprites = (state.sprites||[]).map(normalize); selected=null; renderAll(); status('Desfazer aplicado.');
+}
+function status(msg){ $('status').textContent = msg; }
+function newId(){ return 'sprite_' + Date.now().toString(36) + '_' + (++uid); }
+function selectedSprite(){ return sprites.find(s => s.id === selected); }
+function snapValue(v){ const grid = Number($('gridSize').value) || 16; return $('snap').checked ? Math.round(v/grid)*grid : Math.round(v); }
+function onstageCoords(clientX, clientY){ const r = stage.getBoundingClientRect(); return { x:(clientX-r.left)/scale, y:(clientY-r.top)/scale }; }
+function pointInSpriteLocal(s, stageX, stageY){
+  const cx = s.x + s.w/2, cy = s.y + s.h/2;
+  let dx = stageX - cx, dy = stageY - cy;
+  const rad = -s.rot * Math.PI / 180;
+  const cr = Math.cos(rad), sr = Math.sin(rad);
+  let rx = dx * cr - dy * sr;
+  let ry = dx * sr + dy * cr;
+  if(s.flipX) rx *= -1;
+  if(s.flipY) ry *= -1;
+  const lx = rx + s.w/2;
+  const ly = ry + s.h/2;
+  return { lx, ly };
+}
+function spriteHitOpaque(s, clientX, clientY, threshold=8){
+  if(!s.visible) return false;
+  const pt = onstageCoords(clientX, clientY);
+  const { lx, ly } = pointInSpriteLocal(s, pt.x, pt.y);
+  if(lx < 0 || ly < 0 || lx > s.w || ly > s.h) return false;
+  const entry = getAlphaCanvas(s.src);
+  if(!entry.ready || !entry.ctx || !entry.canvas) return true;
+  const px = Math.max(0, Math.min(entry.canvas.width - 1, Math.floor((lx / s.w) * entry.canvas.width)));
+  const py = Math.max(0, Math.min(entry.canvas.height - 1, Math.floor((ly / s.h) * entry.canvas.height)));
+  const alpha = entry.ctx.getImageData(px, py, 1, 1).data[3];
+  return alpha > threshold;
+}
+function findTopmostSpriteAt(clientX, clientY, excludeId=null){
+  const ordered = [...sprites]
+    .filter(s => s.visible && s.id !== excludeId)
+    .sort((a,b) => b.z - a.z);
+  for(const s of ordered){
+    if(spriteHitOpaque(s, clientX, clientY)) return s;
+  }
+  return null;
+}
+function fitScale(){
+  const z = $('zoom').value;
+  const available = Math.max(300, view.clientWidth - 42);
+  scale = z === 'auto' ? Math.max(.15, Math.min(1, available / W)) : Number(z);
+  $('scaleWrap').style.width = (W * scale) + 'px';
+  $('scaleWrap').style.height = (H * scale) + 'px';
+  stage.style.transform = `scale(${scale})`;
+}
+function stageCssTransform(s){ return `rotate(${s.rot}deg) scaleX(${s.flipX?-1:1}) scaleY(${s.flipY?-1:1})`; }
+function setSpriteStyle(el, s){
+  Object.assign(el.style, {
+    left:s.x+'px', top:s.y+'px', width:s.w+'px', height:s.h+'px', zIndex:String(s.z),
+    opacity:s.visible?String(s.opacity/100):'0', display:s.visible?'block':'none',
+    transform: stageCssTransform(s)
+  });
+  el.classList.toggle('locked', !!s.locked);
+}
+function applySprite(s){
+  const el = stage.querySelector(`.sprite[data-id="${s.id}"]`);
+  if(el) setSpriteStyle(el,s);
+}
+function renderBackground(){
+  bgLayer.style.backgroundColor = background.color || '#0b0c10';
+  bgLayer.style.opacity = String((background.opacity ?? 100)/100);
+  bgLayer.style.backgroundImage = background.image ? `url(${JSON.stringify(background.image).slice(1,-1)})` : 'none';
+  bgLayer.style.backgroundSize = background.fit === 'stretch' ? '100% 100%' : background.fit;
+  $('bgColor').value = background.color || '#0b0c10';
+  $('bgFit').value = background.fit || 'cover';
+  $('bgOpacity').value = background.opacity ?? 100;
+}
+function select(id){
+  selected = id;
+  stage.querySelectorAll('.sprite').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
+  renderInspector(); renderLayers();
+}
+function drawSprite(s){
+  const el = document.createElement('div');
+  el.className = 'sprite'; el.dataset.id = s.id;
+  const img = document.createElement('img'); img.src = s.src; img.alt = s.label; img.draggable = false;
+  const resize = document.createElement('span'); resize.className = 'handle br';
+  const rotate = document.createElement('span'); rotate.className = 'handle rot';
+  el.append(img, resize, rotate);
+  setSpriteStyle(el, s);
+  let op = null;
+  el.addEventListener('pointerdown', e => {
+    if(e.button !== 0) return;
+    const clickedHandle = (e.target === resize || e.target === rotate);
+    if(!clickedHandle && !spriteHitOpaque(s, e.clientX, e.clientY)){
+      e.preventDefault();
+      e.stopPropagation();
+      const under = findTopmostSpriteAt(e.clientX, e.clientY, s.id);
+      if(under){
+        const underEl = stage.querySelector(`.sprite[data-id="${under.id}"]`);
+        if(underEl){
+          const cloned = new PointerEvent('pointerdown', {
+            bubbles:true, cancelable:true, clientX:e.clientX, clientY:e.clientY,
+            button:e.button, buttons:e.buttons, pointerId:e.pointerId,
+            pointerType:e.pointerType, isPrimary:e.isPrimary
+          });
+          underEl.dispatchEvent(cloned);
+          return;
+        }
+      }
+      select(null);
+      return;
+    }
+    e.stopPropagation(); select(s.id); if(s.locked) return;
+    e.preventDefault(); snapshot();
+    const p = onstageCoords(e.clientX, e.clientY);
+    op = {
+      type: e.target === resize ? 'resize' : (e.target === rotate ? 'rotate' : 'move'),
+      x:s.x, y:s.y, w:s.w, h:s.h, rot:s.rot, px:p.x, py:p.y,
+      cx: s.x + s.w/2, cy: s.y + s.h/2
+    };
+    el.setPointerCapture(e.pointerId);
+  });
+  el.addEventListener('pointermove', e => {
+    if(!op) return;
+    const p = onstageCoords(e.clientX, e.clientY);
+    if(op.type === 'move'){
+      s.x = snapValue(op.x + (p.x - op.px));
+      s.y = snapValue(op.y + (p.y - op.py));
+    } else if(op.type === 'resize'){
+      s.w = Math.max(10, snapValue(op.w + (p.x - op.px)));
+      s.h = Math.max(10, snapValue(op.h + (p.y - op.py)));
+    } else if(op.type === 'rotate'){
+      const a = Math.atan2(p.y - op.cy, p.x - op.cx) * 180 / Math.PI;
+      s.rot = Math.round(a + 90);
+    }
+    setSpriteStyle(el,s); refreshInspectorFields();
+  });
+  const end = () => { if(op){ op=null; save(); renderLayers(); } };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  return el;
+}
+function render(){
+  stage.querySelectorAll('.sprite').forEach(n=>n.remove());
+  sprites.forEach(s => stage.append(drawSprite(s)));
+  select(selected && sprites.some(s=>s.id===selected) ? selected : null);
+  $('stat').textContent = `${sprites.length} instâncias • ${paletteItems.length} tipos • Canvas ${W} × ${H}`;
+}
+function renderPalette(){
+  const palette = $('palette'); palette.innerHTML='';
+  paletteItems.forEach((asset,i) => {
+    const item = document.createElement('div'); item.className='asset'; item.draggable=true; item.dataset.index=i; item.title='Arraste para o palco';
+    item.innerHTML = `<img src="${asset.src}" alt=""><span>${asset.label}</span>`;
+    item.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', 'hud-asset:'+i); e.dataTransfer.effectAllowed='copy'; });
+    palette.append(item);
+  });
+}
+function makeFromLibrary(index, x, y){
+  const p = paletteItems[index]; if(!p) return;
+  const w = p.w, h = Math.round(w * sizeRatio(p.src));
+  snapshot();
+  const z = Math.max(10, ...sprites.map(s=>s.z)) + 1;
+  const s = normalize({ id:newId(), src:p.src, label:p.label, x:snapValue(x - w/2), y:snapValue(y - h/2), w,h,z });
+  sprites.push(s); save(); render(); select(s.id); status(`Sprite inserido: ${s.label}`);
+}
+stage.addEventListener('dragenter', e => { e.preventDefault(); stage.classList.add('drop-target'); });
+stage.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect='copy'; });
+stage.addEventListener('dragleave', e => { if(!stage.contains(e.relatedTarget)) stage.classList.remove('drop-target'); });
+stage.addEventListener('drop', e => {
+  e.preventDefault(); stage.classList.remove('drop-target');
+  const data = e.dataTransfer.getData('text/plain'); if(!data.startsWith('hud-asset:')) return;
+  const idx = Number(data.split(':')[1]); const p = onstageCoords(e.clientX, e.clientY); makeFromLibrary(idx,p.x,p.y);
+});
+stage.addEventListener('pointerdown', e => { if(e.target === stage || e.target === bgLayer || e.target.classList.contains('reference')) select(null); });
+
+const props = { propLabel:'label', propX:'x', propY:'y', propW:'w', propH:'h', propRot:'rot', propZ:'z', propOpacity:'opacity', propFlipX:'flipX', propFlipY:'flipY', propLock:'locked', propVisible:'visible' };
+function refreshInspectorFields(){
+  const s = selectedSprite(); if(!s) return;
+  for(const [id,key] of Object.entries(props)){
+    const el = $(id);
+    if(el.type === 'checkbox') el.checked = !!s[key];
+    else if(document.activeElement !== el) el.value = s[key];
+  }
+}
+function renderInspector(){
+  const s = selectedSprite();
+  $('inspector').classList.toggle('hidden', !s);
+  $('selectionHint').textContent = s ? `Selecionado: ${s.label}` : 'Selecione um item no palco.';
+  if(s) refreshInspectorFields();
+}
+for(const [id,key] of Object.entries(props)){
+  $(id).addEventListener('change', e => {
+    const s = selectedSprite(); if(!s) return; snapshot();
+    if(e.target.type === 'checkbox') s[key] = e.target.checked;
+    else if(key === 'label') s[key] = e.target.value;
+    else s[key] = Number(e.target.value);
+    if(key === 'w' || key === 'h') s[key] = Math.max(1, s[key]);
+    save(); render(); select(s.id);
+  });
+}
+function renderLayers(){
+  const box = $('layers'); box.innerHTML='';
+  if(!sprites.length){ box.innerHTML = '<div class="empty">Sem sprites no palco.</div>'; return; }
+  [...sprites].sort((a,b)=>b.z-a.z).forEach(s => {
+    const row = document.createElement('div'); row.className='layer'+(selected===s.id?' selected':'');
+    const icon = document.createElement('img'); icon.src=s.src;
+    const name = document.createElement('span'); name.textContent=s.label;
+    const eye = document.createElement('button'); eye.textContent = s.visible ? '◉' : '○'; eye.title='Mostrar / ocultar';
+    eye.onclick = ev => { ev.stopPropagation(); snapshot(); s.visible=!s.visible; save(); render(); select(s.id); };
+    row.append(icon,name,eye); row.onclick=()=>select(s.id); box.append(row);
+  });
+}
+function mutateSelected(fn){ const s = selectedSprite(); if(!s) return; snapshot(); fn(s); save(); render(); select(s.id); }
+$('duplicate').onclick = ()=>{ const s = selectedSprite(); if(!s) return; snapshot(); const copy = normalize({...s,id:newId(),label:s.label+' cópia',x:s.x+24,y:s.y+24,z:s.z+1}); sprites.push(copy); save(); render(); select(copy.id); };
+$('delete').onclick = ()=>{ if(!selected) return; snapshot(); sprites = sprites.filter(s=>s.id!==selected); selected=null; save(); render(); };
+$('bringFront').onclick = ()=> mutateSelected(s=> s.z = Math.max(...sprites.map(x=>x.z))+1);
+$('sendBack').onclick = ()=> mutateSelected(s=> s.z = Math.min(...sprites.map(x=>x.z))-1);
+$('flipH').onclick = ()=> mutateSelected(s=> s.flipX = !s.flipX);
+$('flipV').onclick = ()=> mutateSelected(s=> s.flipY = !s.flipY);
+$('reset').onclick = ()=>{ if(!confirm('Restaurar o layout padrão?')) return; snapshot(); sprites = defaultSprites(); selected=null; save(); render(); status('Layout restaurado.'); };
+$('clear').onclick = ()=>{ if(!confirm('Remover todos os sprites do palco?')) return; snapshot(); sprites=[]; selected=null; save(); render(); status('Palco limpo.'); };
+$('grid').onchange = e => stage.classList.toggle('grid', e.target.checked);
+$('gridSize').onchange = () => { stage.style.setProperty('--grid-size', $('gridSize').value+'px'); status(`Grid ajustada para ${$('gridSize').value}px.`); };
+$('referenceToggle').onchange = e => stage.classList.toggle('show-reference', e.target.checked);
+$('zoom').onchange = fitScale; window.addEventListener('resize', fitScale);
+$('bgColor').oninput = e => { background.color = e.target.value; renderBackground(); save(); };
+$('bgFit').onchange = e => { background.fit = e.target.value; renderBackground(); save(); };
+$('bgOpacity').oninput = e => { background.opacity = Number(e.target.value); renderBackground(); save(); };
+$('loadBg').onclick = ()=> $('bgFile').click();
+$('bgFile').onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = () => { snapshot(); background.image = reader.result; renderBackground(); save(); status('Background carregado.'); };
+  reader.readAsDataURL(f); e.target.value='';
+};
+$('clearBg').onclick = ()=>{ snapshot(); background.image = null; renderBackground(); save(); status('Background removido.'); };
+function downloadBlob(data,name,type){ const blob = data instanceof Blob ? data : new Blob([data], {type}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1500); }
+$('exportJson').onclick = ()=> downloadBlob(JSON.stringify({version:3, stage:{width:W,height:H}, background, sprites}, null, 2), 'umk3-hud-project.json', 'application/json');
+$('importJson').onclick = ()=> $('jsonFile').click();
+$('jsonFile').onchange = async e => {
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const data = JSON.parse(await f.text());
+    snapshot();
+    background = Object.assign({color:'#0b0c10',image:null,fit:'cover',opacity:100}, data.background || {});
+    const list = Array.isArray(data) ? data : data.sprites;
+    if(!Array.isArray(list)) throw new Error('Formato inválido');
+    sprites = list.map(normalize); selected = null; save(); renderAll(); status('Projeto importado com sucesso.');
+  }catch(err){ alert('Falha ao importar: '+err.message); }
+  e.target.value='';
+};
+async function drawBackgroundToCanvas(ctx){
+  if(!$('includeBg').checked) return;
+  const alpha = (background.opacity ?? 100)/100;
+  if(background.color){ ctx.save(); ctx.globalAlpha = alpha; ctx.fillStyle = background.color; ctx.fillRect(0,0,W,H); ctx.restore(); }
+  if(background.image){
+    const img = new Image(); img.src = background.image; await img.decode();
+    ctx.save(); ctx.globalAlpha = alpha;
+    if(background.fit === 'stretch'){
+      ctx.drawImage(img,0,0,W,H);
+    }else{
+      const ir = img.width/img.height, sr = W/H;
+      let dw, dh, dx, dy;
+      if(background.fit === 'contain' ? ir > sr : ir < sr){ dw=W; dh=W/ir; dx=0; dy=(H-dh)/2; }
+      else { dh=H; dw=H*ir; dy=0; dx=(W-dw)/2; }
+      ctx.drawImage(img,dx,dy,dw,dh);
+    }
+    ctx.restore();
+  }
+}
+$('exportPng').onclick = async ()=>{
+  try{
+    const canvas = document.createElement('canvas'); canvas.width=W; canvas.height=H; const ctx = canvas.getContext('2d');
+    await drawBackgroundToCanvas(ctx);
+    const ordered = [...sprites].filter(s=>s.visible).sort((a,b)=>a.z-b.z);
+    for(const s of ordered){
+      const img = preload(s.src); if(!img.complete || !img.naturalWidth) await img.decode();
+      ctx.save(); ctx.globalAlpha = s.opacity/100; ctx.translate(s.x+s.w/2, s.y+s.h/2); ctx.rotate(s.rot*Math.PI/180); ctx.scale(s.flipX?-1:1, s.flipY?-1:1); ctx.drawImage(img, -s.w/2, -s.h/2, s.w, s.h); ctx.restore();
+    }
+    canvas.toBlob(blob=>{ if(blob) downloadBlob(blob, 'umk3-hud-1920x1080.png', 'image/png'); }, 'image/png');
+    status('PNG exportado em 1920×1080.');
+  }catch(err){ alert('Falha ao exportar PNG: '+err.message); }
+};
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement?.tagName;
+  if(e.ctrlKey && e.key.toLowerCase() === 'z'){ e.preventDefault(); undo(); return; }
+  if(e.ctrlKey && e.key.toLowerCase() === 'd'){ e.preventDefault(); $('duplicate').click(); return; }
+  if(['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+  if(e.key==='Escape'){ select(null); return; }
+  if((e.key==='Delete' || e.key==='Backspace') && selected){ e.preventDefault(); $('delete').click(); return; }
+  const s = selectedSprite(); if(!s || s.locked) return;
+  const step = e.shiftKey ? 10 : 1; let dx=0, dy=0;
+  if(e.key==='ArrowLeft') dx=-step; else if(e.key==='ArrowRight') dx=step; else if(e.key==='ArrowUp') dy=-step; else if(e.key==='ArrowDown') dy=step; else return;
+  e.preventDefault(); snapshot(); s.x = snapValue(s.x+dx); s.y = snapValue(s.y+dy); save(); applySprite(s); refreshInspectorFields(); renderLayers();
+});
+function renderAll(){ stage.style.setProperty('--grid-size', $('gridSize').value+'px'); stage.classList.toggle('grid', $('grid').checked); renderBackground(); render(); fitScale(); }
+renderPalette(); renderAll();
+</script>
+</body>
+</html>

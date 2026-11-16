@@ -1,0 +1,25 @@
+# Local development / OS
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Runtime and user data
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.env
+.env.*
+!.env.example
+
+# Exported projects, images and private local background files
+exports/
+projects/local/
+backups/
