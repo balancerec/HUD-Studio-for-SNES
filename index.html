@@ -61,15 +61,18 @@ input[type="color"]{padding:2px;height:34px}
 .reference{position:absolute;left:50%;top:100px;transform:translateX(-50%);width:1780px;opacity:.18;display:none;pointer-events:none;z-index:1}
 .stage.show-reference .reference{display:block}
 .stage.drop-target{outline:3px dashed #ffb54a;outline-offset:-6px}
-.sprite{position:absolute;transform-origin:center center;touch-action:none;user-select:none;cursor:grab;z-index:10}
+.sprite{position:absolute;transform-origin:center center;touch-action:none;user-select:none;cursor:grab;z-index:10;pointer-events:none}
 .sprite img{width:100%;height:100%;object-fit:fill;pointer-events:none;display:block}
 .sprite.selected{outline:2px dashed #ffd25e;outline-offset:3px;cursor:move}
 .sprite.locked{cursor:not-allowed}
-.handle{position:absolute;width:14px;height:14px;border-radius:4px;border:2px solid #16181d;background:#ffbe54;display:none}
+.handle{pointer-events:auto;position:absolute;width:14px;height:14px;border-radius:4px;border:2px solid #16181d;background:#ffbe54;display:none}
 .handle.br{right:-9px;bottom:-9px;cursor:nwse-resize}
 .handle.rot{left:50%;top:-26px;transform:translateX(-50%);border-radius:50%;background:#83dfff;cursor:grab}
 .sprite.selected .handle{display:block}
 .sprite.locked .handle{display:none}
+.guide{position:absolute;z-index:90002;pointer-events:none;background:#6ae4ff8a}.guide.h{left:0;width:100%;height:1px}.guide.v{top:0;height:100%;width:1px}
+.ruler{position:absolute;pointer-events:none;z-index:90003;background:#1d2229d9;color:#f5ce85;font:12px Consolas,monospace}.ruler.x{top:0;left:24px;right:0;height:24px;border-bottom:1px solid #5b6470}.ruler.y{top:24px;left:0;bottom:0;width:24px;border-right:1px solid #5b6470}.ruler b{position:absolute;font-size:11px;font-weight:400}.ruler.x b{top:4px}.ruler.y b{left:2px;writing-mode:vertical-rl}.ruler-corner{position:absolute;top:0;left:0;width:24px;height:24px;z-index:90004;background:#373d46}
+.stage .selection-frame{position:absolute;pointer-events:none;border:2px dashed #ffd25e;z-index:90005}
 .status{padding:8px 12px;border-top:1px solid #2f333b;background:#16181d;color:#d8bc8b;font-size:12px}
 .row{display:flex;gap:8px;flex-wrap:wrap}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -142,6 +145,9 @@ input[type="color"]{padding:2px;height:34px}
         <label class="check">Grid <select id="gridSize"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option><option value="64">64</option></select></label>
         <label class="check"><input type="checkbox" id="grid" checked> Mostrar grade</label>
         <label class="check"><input type="checkbox" id="referenceToggle"> Referência</label>
+        <label class="check"><input type="checkbox" id="rulers" checked> Réguas</label>
+        <label class="check"><input type="checkbox" id="magnet" checked> Guias magnéticas</label>
+        <button id="undoBtn" title="Ctrl+Z">Desfazer</button><button id="redoBtn" title="Ctrl+Y">Refazer</button>
         <label class="check"><input type="checkbox" id="includeBg" checked> Exportar com BG</label>
         <label class="check">Zoom <select id="zoom"><option value="auto">Ajustar</option><option value="0.35">35%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></label>
       </div>
@@ -149,6 +155,8 @@ input[type="color"]{padding:2px;height:34px}
         <div class="scale-wrap" id="scaleWrap">
           <div class="stage" id="stage">
             <div class="bg-layer" id="bgLayer"></div>
+            <div class="guide h hidden" id="guideH"></div><div class="guide v hidden" id="guideV"></div>
+            <div id="rulerX" class="ruler x"></div><div id="rulerY" class="ruler y"></div><div class="ruler-corner" id="rulerCorner"></div>
             <img class="reference" src="assets/full_hud.png" alt="Referência do HUD">
           </div>
         </div>
@@ -182,6 +190,10 @@ input[type="color"]{padding:2px;height:34px}
           <div class="row">
             <button id="flipH">Espelhar H</button>
             <button id="flipV">Espelhar V</button>
+          </div>
+          <div class="row">
+            <button id="alignLeft">Alinhar E</button><button id="alignCenter">Centralizar X</button><button id="alignRight">Alinhar D</button>
+            <button id="alignTop">Alinhar topo</button><button id="alignMiddle">Centralizar Y</button><button id="alignBottom">Alinhar base</button>
           </div>
           <div class="row">
             <button id="duplicate">Duplicar</button>
@@ -219,7 +231,7 @@ const $ = id => document.getElementById(id);
 const stage = $('stage');
 const view = $('viewport');
 const bgLayer = $('bgLayer');
-let uid = 0, scale = 1, selected = null, history = [];
+let uid = 0, scale = 1, selected = null, history = [], future = [], gesture=null;
 const imageCache = {};
 const alphaCanvasCache = {};
 const template = [
@@ -256,21 +268,22 @@ function preload(path){
 function getAlphaCanvas(src){
   if(alphaCanvasCache[src]) return alphaCanvasCache[src];
   const img = preload(src);
-  const entry = { canvas:null, ctx:null, ready:false };
+  const entry = { data:null, width:0, height:0, ready:false, failed:false };
   alphaCanvasCache[src] = entry;
   const build = () => {
-    const c = document.createElement('canvas');
-    c.width = img.naturalWidth || img.width || 1;
-    c.height = img.naturalHeight || img.height || 1;
-    const ctx = c.getContext('2d', { willReadFrequently:true });
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.drawImage(img,0,0);
-    entry.canvas = c;
-    entry.ctx = ctx;
-    entry.ready = true;
+    if(entry.ready || entry.failed || !img.naturalWidth) return;
+    try {
+      const c = document.createElement('canvas');
+      c.width=img.naturalWidth; c.height=img.naturalHeight;
+      const ctx = c.getContext('2d', {willReadFrequently:true});
+      ctx.drawImage(img,0,0);
+      entry.data = ctx.getImageData(0,0,c.width,c.height).data;
+      entry.width=c.width; entry.height=c.height; entry.ready=true;
+    } catch(err) {entry.failed=true;console.warn('Máscara alpha indisponível:',src,err);}
   };
-  if(img.complete && (img.naturalWidth || img.width)) build();
-  else img.onload = build;
+  if(img.complete) build();
+  img.addEventListener('load',build,{once:true});
+  img.addEventListener('error',()=>{entry.failed=true;},{once:true});
   return entry;
 }
 paletteItems.forEach(p=>{ preload(p.src); getAlphaCanvas(p.src); }); preload('assets/full_hud.png');
@@ -278,7 +291,7 @@ function sizeRatio(src){
   if(ratioCache[src]) return ratioCache[src];
   const img = preload(src);
   ratioCache[src] = (img.naturalHeight && img.naturalWidth) ? img.naturalHeight/img.naturalWidth : 1;
-  if(!img.complete){ img.onload=()=>{ ratioCache[src] = img.naturalHeight/img.naturalWidth; }; }
+  if(!img.complete){ img.addEventListener('load',()=>{ ratioCache[src] = img.naturalHeight/img.naturalWidth; },{once:true}); }
   return ratioCache[src];
 }
 function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
@@ -309,10 +322,18 @@ function load(){
   }catch(e){}
 }
 load();
-function snapshot(){ history.push(JSON.stringify({background, sprites})); if(history.length>80) history.shift(); }
+function snapshot(){ history.push(JSON.stringify({background, sprites})); if(history.length>80) history.shift(); future=[]; }
+function restoreState(serialized){
+  const state=JSON.parse(serialized); background=state.background||background;
+  sprites=(state.sprites||[]).map(normalize); selected=null; save(); renderAll();
+}
 function undo(){
-  const last = history.pop(); if(!last) return;
-  const state = JSON.parse(last); background = state.background || background; sprites = (state.sprites||[]).map(normalize); selected=null; renderAll(); status('Desfazer aplicado.');
+  if(!history.length)return;
+  future.push(JSON.stringify({background,sprites})); restoreState(history.pop()); status('Desfazer aplicado.');
+}
+function redo(){
+  if(!future.length)return;
+  history.push(JSON.stringify({background,sprites})); restoreState(future.pop()); status('Refazer aplicado.');
 }
 function status(msg){ $('status').textContent = msg; }
 function newId(){ return 'sprite_' + Date.now().toString(36) + '_' + (++uid); }
@@ -338,11 +359,10 @@ function spriteHitOpaque(s, clientX, clientY, threshold=8){
   const { lx, ly } = pointInSpriteLocal(s, pt.x, pt.y);
   if(lx < 0 || ly < 0 || lx > s.w || ly > s.h) return false;
   const entry = getAlphaCanvas(s.src);
-  if(!entry.ready || !entry.ctx || !entry.canvas) return true;
-  const px = Math.max(0, Math.min(entry.canvas.width - 1, Math.floor((lx / s.w) * entry.canvas.width)));
-  const py = Math.max(0, Math.min(entry.canvas.height - 1, Math.floor((ly / s.h) * entry.canvas.height)));
-  const alpha = entry.ctx.getImageData(px, py, 1, 1).data[3];
-  return alpha > threshold;
+  if(!entry.ready || !entry.data) return false; // nunca capturar caixa vazia enquanto carrega
+  const px = Math.max(0, Math.min(entry.width-1, Math.floor(lx/s.w*entry.width)));
+  const py = Math.max(0, Math.min(entry.height-1, Math.floor(ly/s.h*entry.height)));
+  return entry.data[(py*entry.width+px)*4+3] * s.opacity/100 > threshold;
 }
 function findTopmostSpriteAt(clientX, clientY, excludeId=null){
   const ordered = [...sprites]
@@ -389,65 +409,67 @@ function select(id){
   renderInspector(); renderLayers();
 }
 function drawSprite(s){
-  const el = document.createElement('div');
-  el.className = 'sprite'; el.dataset.id = s.id;
-  const img = document.createElement('img'); img.src = s.src; img.alt = s.label; img.draggable = false;
-  const resize = document.createElement('span'); resize.className = 'handle br';
-  const rotate = document.createElement('span'); rotate.className = 'handle rot';
-  el.append(img, resize, rotate);
-  setSpriteStyle(el, s);
-  let op = null;
-  el.addEventListener('pointerdown', e => {
-    if(e.button !== 0) return;
-    const clickedHandle = (e.target === resize || e.target === rotate);
-    if(!clickedHandle && !spriteHitOpaque(s, e.clientX, e.clientY)){
-      e.preventDefault();
-      e.stopPropagation();
-      const under = findTopmostSpriteAt(e.clientX, e.clientY, s.id);
-      if(under){
-        const underEl = stage.querySelector(`.sprite[data-id="${under.id}"]`);
-        if(underEl){
-          const cloned = new PointerEvent('pointerdown', {
-            bubbles:true, cancelable:true, clientX:e.clientX, clientY:e.clientY,
-            button:e.button, buttons:e.buttons, pointerId:e.pointerId,
-            pointerType:e.pointerType, isPrimary:e.isPrimary
-          });
-          underEl.dispatchEvent(cloned);
-          return;
-        }
-      }
-      select(null);
-      return;
-    }
-    e.stopPropagation(); select(s.id); if(s.locked) return;
-    e.preventDefault(); snapshot();
-    const p = onstageCoords(e.clientX, e.clientY);
-    op = {
-      type: e.target === resize ? 'resize' : (e.target === rotate ? 'rotate' : 'move'),
-      x:s.x, y:s.y, w:s.w, h:s.h, rot:s.rot, px:p.x, py:p.y,
-      cx: s.x + s.w/2, cy: s.y + s.h/2
-    };
-    el.setPointerCapture(e.pointerId);
-  });
-  el.addEventListener('pointermove', e => {
-    if(!op) return;
-    const p = onstageCoords(e.clientX, e.clientY);
-    if(op.type === 'move'){
-      s.x = snapValue(op.x + (p.x - op.px));
-      s.y = snapValue(op.y + (p.y - op.py));
-    } else if(op.type === 'resize'){
-      s.w = Math.max(10, snapValue(op.w + (p.x - op.px)));
-      s.h = Math.max(10, snapValue(op.h + (p.y - op.py)));
-    } else if(op.type === 'rotate'){
-      const a = Math.atan2(p.y - op.cy, p.x - op.cx) * 180 / Math.PI;
-      s.rot = Math.round(a + 90);
-    }
-    setSpriteStyle(el,s); refreshInspectorFields();
-  });
-  const end = () => { if(op){ op=null; save(); renderLayers(); } };
-  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
-  return el;
+  const el=document.createElement('div');el.className='sprite';el.dataset.id=s.id;
+  const img=document.createElement('img');img.src=s.src;img.alt=s.label;img.draggable=false;
+  const resize=document.createElement('span');resize.className='handle br';resize.dataset.operation='resize';
+  const rotate=document.createElement('span');rotate.className='handle rot';rotate.dataset.operation='rotate';
+  el.append(img,resize,rotate);setSpriteStyle(el,s);return el;
 }
+function magnetic(value, candidates){
+  if(!$('magnet').checked)return {value,guide:null};
+  let result={value,guide:null},best=7;
+  for(const v of candidates){const dist=Math.abs(value-v);if(dist<best){best=dist;result={value:v,guide:v};}}
+  return result;
+}
+function showGuides(x,y){
+  $('guideV').classList.toggle('hidden',x==null);
+  $('guideH').classList.toggle('hidden',y==null);
+  if(x!=null)$('guideV').style.left=x+'px';
+  if(y!=null)$('guideH').style.top=y+'px';
+}
+function beginGesture(e){
+  if(e.button!==0)return;
+  const target=e.target.closest('.handle');
+  const forcedId=target?.closest('.sprite')?.dataset.id;
+  const s=forcedId?sprites.find(s=>s.id===forcedId):findTopmostSpriteAt(e.clientX,e.clientY);
+  if(!s){select(null);return;}
+  select(s.id);
+  if(s.locked)return;
+  e.preventDefault();snapshot();
+  const p=onstageCoords(e.clientX,e.clientY);
+  gesture={pointerId:e.pointerId,id:s.id,type:target?.dataset.operation||'move',px:p.x,py:p.y,x:s.x,y:s.y,w:s.w,h:s.h,rot:s.rot,cx:s.x+s.w/2,cy:s.y+s.h/2};
+  stage.setPointerCapture(e.pointerId);
+}
+function moveGesture(e){
+  if(!gesture || gesture.pointerId!==e.pointerId)return;
+  const s=sprites.find(s=>s.id===gesture.id);if(!s)return;
+  const g=gesture,p=onstageCoords(e.clientX,e.clientY);
+  if(g.type==='move'){
+    let x=snapValue(g.x+p.x-g.px),y=snapValue(g.y+p.y-g.py);
+    // Guias alinham centros e bordas com o palco e os outros sprites
+    const other=sprites.filter(v=>v.id!==s.id && v.visible);
+    const vx=[0,W/2,W,...other.flatMap(v=>[v.x,v.x+v.w/2,v.x+v.w])];
+    const vy=[0,H/2,H,...other.flatMap(v=>[v.y,v.y+v.h/2,v.y+v.h])];
+    let bestX=null,bestY=null;
+    for(const offset of [0,s.w/2,s.w]){const hit=magnetic(x+offset,vx);if(hit.guide!==null){x=hit.value-offset;bestX=hit.guide;break;}}
+    for(const offset of [0,s.h/2,s.h]){const hit=magnetic(y+offset,vy);if(hit.guide!==null){y=hit.value-offset;bestY=hit.guide;break;}}
+    s.x=Math.round(x);s.y=Math.round(y);showGuides(bestX,bestY);
+  }else if(g.type==='resize'){
+    s.w=Math.max(10,snapValue(g.w+p.x-g.px));
+    s.h=Math.max(10,snapValue(g.h+p.y-g.py));
+  }else if(g.type==='rotate'){
+    s.rot=Math.round(Math.atan2(p.y-g.cy,p.x-g.cx)*180/Math.PI+90);
+  }
+  applySprite(s);refreshInspectorFields();
+}
+function endGesture(e){
+  if(!gesture || e.pointerId!==gesture.pointerId)return;
+  gesture=null;showGuides(null,null);save();renderLayers();
+}
+stage.addEventListener('pointerdown',beginGesture);
+stage.addEventListener('pointermove',moveGesture);
+stage.addEventListener('pointerup',endGesture);
+stage.addEventListener('pointercancel',endGesture);
 function render(){
   stage.querySelectorAll('.sprite').forEach(n=>n.remove());
   sprites.forEach(s => stage.append(drawSprite(s)));
@@ -479,7 +501,7 @@ stage.addEventListener('drop', e => {
   const data = e.dataTransfer.getData('text/plain'); if(!data.startsWith('hud-asset:')) return;
   const idx = Number(data.split(':')[1]); const p = onstageCoords(e.clientX, e.clientY); makeFromLibrary(idx,p.x,p.y);
 });
-stage.addEventListener('pointerdown', e => { if(e.target === stage || e.target === bgLayer || e.target.classList.contains('reference')) select(null); });
+// A seleção é calculada no palco: caixas transparentes não interceptam eventos.
 
 const props = { propLabel:'label', propX:'x', propY:'y', propW:'w', propH:'h', propRot:'rot', propZ:'z', propOpacity:'opacity', propFlipX:'flipX', propFlipY:'flipY', propLock:'locked', propVisible:'visible' };
 function refreshInspectorFields(){
@@ -519,6 +541,27 @@ function renderLayers(){
   });
 }
 function mutateSelected(fn){ const s = selectedSprite(); if(!s) return; snapshot(); fn(s); save(); render(); select(s.id); }
+function alignSelected(mode){
+  mutateSelected(s=>{
+    if(mode==='left')s.x=0;
+    if(mode==='center')s.x=Math.round((W-s.w)/2);
+    if(mode==='right')s.x=W-s.w;
+    if(mode==='top')s.y=0;
+    if(mode==='middle')s.y=Math.round((H-s.h)/2);
+    if(mode==='bottom')s.y=H-s.h;
+  });
+}
+[['alignLeft','left'],['alignCenter','center'],['alignRight','right'],['alignTop','top'],['alignMiddle','middle'],['alignBottom','bottom']]
+ .forEach(([id,mode])=>$(id).onclick=()=>alignSelected(mode));
+$('undoBtn').onclick=undo;$('redoBtn').onclick=redo;
+function updateRulers(){
+  $('rulerX').replaceChildren();$('rulerY').replaceChildren();
+  for(let x=0;x<=W;x+=100){const b=document.createElement('b');b.textContent=x;b.style.left=(x)+'px';$('rulerX').append(b);}
+  for(let y=0;y<=H;y+=100){const b=document.createElement('b');b.textContent=y;b.style.top=(y)+'px';$('rulerY').append(b);}
+  const active=$('rulers').checked;
+  for(const id of ['rulerX','rulerY','rulerCorner'])$(id).classList.toggle('hidden',!active);
+}
+$('rulers').onchange=updateRulers;
 $('duplicate').onclick = ()=>{ const s = selectedSprite(); if(!s) return; snapshot(); const copy = normalize({...s,id:newId(),label:s.label+' cópia',x:s.x+24,y:s.y+24,z:s.z+1}); sprites.push(copy); save(); render(); select(copy.id); };
 $('delete').onclick = ()=>{ if(!selected) return; snapshot(); sprites = sprites.filter(s=>s.id!==selected); selected=null; save(); render(); };
 $('bringFront').onclick = ()=> mutateSelected(s=> s.z = Math.max(...sprites.map(x=>x.z))+1);
@@ -591,7 +634,8 @@ $('exportPng').onclick = async ()=>{
 };
 document.addEventListener('keydown', e => {
   const tag = document.activeElement?.tagName;
-  if(e.ctrlKey && e.key.toLowerCase() === 'z'){ e.preventDefault(); undo(); return; }
+  if(e.ctrlKey && e.key.toLowerCase() === 'z'){ e.preventDefault(); e.shiftKey ? redo():undo(); return; }
+  if(e.ctrlKey && e.key.toLowerCase() === 'y'){ e.preventDefault(); redo(); return; }
   if(e.ctrlKey && e.key.toLowerCase() === 'd'){ e.preventDefault(); $('duplicate').click(); return; }
   if(['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
   if(e.key==='Escape'){ select(null); return; }
@@ -599,10 +643,10 @@ document.addEventListener('keydown', e => {
   const s = selectedSprite(); if(!s || s.locked) return;
   const step = e.shiftKey ? 10 : 1; let dx=0, dy=0;
   if(e.key==='ArrowLeft') dx=-step; else if(e.key==='ArrowRight') dx=step; else if(e.key==='ArrowUp') dy=-step; else if(e.key==='ArrowDown') dy=step; else return;
-  e.preventDefault(); snapshot(); s.x = snapValue(s.x+dx); s.y = snapValue(s.y+dy); save(); applySprite(s); refreshInspectorFields(); renderLayers();
+  e.preventDefault(); snapshot(); s.x += dx; s.y += dy; save(); applySprite(s); refreshInspectorFields(); renderLayers();
 });
 function renderAll(){ stage.style.setProperty('--grid-size', $('gridSize').value+'px'); stage.classList.toggle('grid', $('grid').checked); renderBackground(); render(); fitScale(); }
-renderPalette(); renderAll();
+renderPalette(); renderAll(); updateRulers();
 </script>
 </body>
 </html>

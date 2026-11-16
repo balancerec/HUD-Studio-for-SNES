@@ -15,3 +15,6 @@ jobs:
           node-version: '22'
       - name: Validate package and embedded JavaScript
         run: python tests/smoke-test.py
+
+      - name: Hit-test regression tests
+        run: node tests/hit-test.test.cjs
