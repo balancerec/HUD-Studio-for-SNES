@@ -232,3 +232,40 @@ Painel **Smart HUD** (sempre visível no Inspector): adicionar nomes P1/P2, sele
 Os encaixes de material usam máscaras poligonais aproximadas e precisam de validação visual para cada moldura. O timer é uma prévia de editor, não um contador conectado ao motor do jogo. GIFs seguem animados no navegador, mas exportar PNG captura um quadro. O modo Subtrair permanece uma aproximação visual na prévia.
 
 Validar: `node tests/smart-hud-v031.test.cjs` e `py tests/smoke-test.py`.
+
+## V0.3.2 — Precision Editing
+
+Réguas X/Y deslocadas para fora do canvas, guias auxiliares criadas por arrastar e com snap magnético; hierarquia corrigida de camadas (topo/fundo/um nível); reflexo luminoso animado percorrendo a borda opaca das molduras, com cor, velocidade e intensidade. Configurações e guias persistem no JSON. Consulte `docs/PRECISION_V032.md`.
+
+## V0.3.2+ — Salvamento, tipografia e precisão
+
+- **Salvar estado (.json)** ou `Ctrl+S`: backup portátil do projeto, incluindo sprites, guias, efeitos, materiais e configurações de espelhamento.
+- **Fonte em caixa alta:** Smart HUD renderiza textos em Impact/Arial Black.
+- **Mirror Quantize 2.0:** X=960/Y=540, horizontal/vertical/duplo, tolerância configurável, vínculo entre pares e diagnóstico visual.
+- **Pivôs e alinhamento:** pivô percentual por objeto, centralização exata, prévia e exportação com o mesmo pivô.
+- **Máscaras e materiais:** cortes percentuais nas quatro bordas, presets V/hexagonal/retangular, escala, rotação, deslocamento de textura.
+- **Validação:** veja `docs/PRECISION_V032_PLUS.md`. Testes no Chromium não puderam ser concluídos neste ambiente; valide no Edge.
+
+
+## V0.3.3 — FX Fidelity / Legacy Project Recovery
+
+- Corrige projetos antigos com GIF de **fumaça** de fundo preto: migração dirigida somente a sprites cujo rótulo contém `fumaça`, `smoke`, `fog` ou `neblina` e `.gif` (dark key limiar 25, feather 65, blend screen). **GIFs dos lutadores não são alterados**. A propriedade `fxPipelineVersion: 3` impede migração repetida depois de um salvamento. Pode ajustar dark key, feather, blend, tint no Inspector.
+- Nome de lutador: preserva texto legível mesmo quando o sprite é espelhado no eixo X ou Y. Projetos antigos com `flipX` em texto são corrigidos na importação. Rótulo atualizado a partir do conteúdo e lado da tela.
+- Cronômetro: a escolha de 1/2/3 minutos sincroniza imediatamente os segundos restantes e a prévia; quando reabre o JSON, o Inspector exibe a duração salva. Projetos antigos com cronômetro concluído em 00:00 permanecem concluídos até o usuário mudar a duração ou clicar em Reiniciar.
+- Materiais: `materialParentId` vincula novos miolos às molduras. Projetos antigos têm os preenchimentos centrais reorganizados imediatamente abaixo da moldura correspondente.
+- Exportação: pipeline `key preto → alpha → tint preservando alpha → blending → PNG`; mantida captura estática do quadro corrente dos GIFs.
+- Persistência: o JSON agora é `version: 5`; mantém `guides`, `editor` e parâmetros de FX por sprite.
+
+**Atenção**: ao importar um arquivo antigo, o tratamento de fumaça é deliberadamente migrado, não é uma reprodução bit a bit da configuração antiga. Salve o JSON corrigido separadamente.
+
+**Limitação**: teste automatizado interativo no Chromium indisponível neste ambiente (`ERR_BLOCKED_BY_ADMINISTRATOR`). Faça a comparação no Edge com o GIF animando e após exportação PNG.
+
+## V0.3.4 — Auto Trim (PNG / GIF)
+
+- Inspector → **✂ Auto Trim · PNG / GIF**: **Cortar vazios** encontra o limite de pixels visíveis, descontando margens e mantendo o objeto na posição do palco. **Restaurar margens** reverte o recorte sem substituir o arquivo de origem.
+- A seleção múltipla permite aplicar o recorte a vários sprites PNG/GIF; barras dinâmicas, textos e materiais são protegidos.
+- GIF: usa `ImageDecoder` do Edge/Chrome para calcular a **união de todos os quadros**. O movimento permanece animado na prévia. Se o navegador não suportar o decodificador, o corte é recusado para impedir perda de braços/pernas em outros quadros.
+- Limiar alfa, margem de segurança e opção de avaliar a remoção do fundo preto (quando Dark Key está ativo) são configuráveis.
+- O recorte é **não destrutivo**, serializado como `trimRect` no projeto JSON (esquema v6). Prévia, hit-test e exportação de PNG usam a região de origem correspondente.
+- Nota: para GIF preto-opaco, ative *Dark Key* no sprite antes do Auto Trim. GIFs de personagens com fundo escuro que tenham pixels visíveis muito escuros podem exigir ajuste do limiar para evitar cortar detalhes.
+- Validação interativa no navegador precisa ser realizada no Edge do usuário; o Chromium do ambiente de build bloqueou acesso a `localhost` (ERR_BLOCKED_BY_ADMINISTRATOR).

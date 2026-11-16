@@ -1,0 +1,12 @@
+const assert=require('assert');const fs=require('fs');const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+for(const id of ['trimApply','trimReset','trimInfo','trimAlpha','trimPadding','trimUseDarkKey'])assert(html.includes(`id="${id}"`),`missing ${id}`);
+for(const f of ['computeTrimBounds','mapCropToCurrent','validateTrimRect','trimViewportStyle','trimPixelBounds','unionBounds','refreshTrimPanel'])assert(html.includes(`function ${f}(`),`missing ${f}`);
+assert(html.includes('decoder.tracks.selectedTrack?.frameCount'),'GIF must inspect all frames');
+assert(html.includes('throw new Error(\'Este navegador não disponibiliza ImageDecoder'),'GIF fallback must fail safely');
+assert(html.includes('tr.left,tr.top,tr.width,tr.height,-s.w/2,-s.h/2,s.w,s.h'),'PNG export must use source crop');
+assert(html.includes('if(tr){\n        const clipped=document.createElement'),'darkKey export must crop before keying');
+assert(html.includes('trimRect:validateTrimRect(s.trimRect)'),'crop saved through JSON');
+assert(html.includes('trimViewportStyle(el,s)'),'preview must use same crop');
+assert(html.includes('const tr=s.trimRect&&s.trimRect.width>0?s.trimRect:null;\n  const px'),'hit-test must use same crop');
+assert(!html.includes('function trimPixelBoundsTEST'));
+console.log('Auto Trim v0.3.4: 16 structural assertions passed');

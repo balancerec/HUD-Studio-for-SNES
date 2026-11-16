@@ -11,7 +11,7 @@ const checks={
  'parallax':['bgParallax','parallaxAmount','tickParallax','backgroundPosition'],
  'GIF':['image/gif','readAsDataURL','importImageBlob'],
  'exportacao':['pulseOpacity','pulseScale','parallaxCurrent','exportPng'],
- 'persistencia':['pulse: !!s.pulse','pulseHz:','parallaxAmount:12','JSON.stringify({version:3']
+ 'persistencia':['pulse: !!s.pulse','pulseHz:','parallaxAmount:12','JSON.stringify(projectPayload())']
 };
 let n=0;
 for(const [name,parts] of Object.entries(checks)){
