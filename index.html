@@ -53,8 +53,8 @@ input[type="color"]{padding:2px;height:34px}
 .workspace-toolbar .title{font-weight:700;color:#fff0c2;margin-right:auto}
 .workspace-toolbar .tag{padding:2px 8px;border-radius:999px;background:#343841;border:1px solid #4a4f59;color:#d7dae1;font-size:11px}
 .viewport{flex:1;overflow:auto;padding:20px;background:radial-gradient(circle at 50% 20%, #1e2025 0, #0e1014 60%)}
-.scale-wrap{position:relative;margin:auto}
-.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;background:#090a0d;border:1px solid #30343c;box-shadow:0 18px 70px rgba(0,0,0,.6);overflow:hidden;transform-origin:top left}
+.scale-wrap{position:relative;margin:auto;--ruler-size:26px}
+.stage{position:absolute;left:26px;top:26px;width:1920px;height:1080px;background:#090a0d;border:1px solid #30343c;box-shadow:0 18px 70px rgba(0,0,0,.6);overflow:hidden;transform-origin:top left}
 .stage::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.06));pointer-events:none;z-index:2}
 .stage.grid::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);background-size:var(--grid-size,16px) var(--grid-size,16px);pointer-events:none;z-index:4}
 .bg-layer{position:absolute;inset:0;z-index:0;background-position:center;background-repeat:no-repeat;background-size:cover}
@@ -74,7 +74,20 @@ input[type="color"]{padding:2px;height:34px}
 .sprite.selected .handle{display:block}
 .sprite.locked .handle{display:none}
 .guide{position:absolute;z-index:90002;pointer-events:none;background:#6ae4ff8a}.guide.h{left:0;width:100%;height:1px}.guide.v{top:0;height:100%;width:1px}
-.ruler{position:absolute;pointer-events:none;z-index:90003;background:#1d2229d9;color:#f5ce85;font:12px Consolas,monospace}.ruler.x{top:0;left:24px;right:0;height:24px;border-bottom:1px solid #5b6470}.ruler.y{top:24px;left:0;bottom:0;width:24px;border-right:1px solid #5b6470}.ruler b{position:absolute;font-size:11px;font-weight:400}.ruler.x b{top:4px}.ruler.y b{left:2px;writing-mode:vertical-rl}.ruler-corner{position:absolute;top:0;left:0;width:24px;height:24px;z-index:90004;background:#373d46}
+/* Outer rulers never occupy the 1920×1080 exported image. */
+.ruler{position:absolute;z-index:90003;background:#1c222b;color:#f4d28e;font:11px Consolas,monospace;user-select:none;touch-action:none;cursor:crosshair;overflow:hidden}
+.ruler.x{top:0;left:26px;height:26px;border-bottom:1px solid #717982}
+.ruler.y{top:26px;left:0;width:26px;border-right:1px solid #717982}
+.ruler b{position:absolute;font-size:10px;font-weight:400;pointer-events:none}
+.ruler.x b{top:4px;transform:translateX(2px)}
+.ruler.y b{left:3px;writing-mode:vertical-rl;transform:translateY(2px)}
+.ruler-corner{position:absolute;top:0;left:0;width:26px;height:26px;z-index:90004;background:#3c4552;border-right:1px solid #68707b;border-bottom:1px solid #68707b}
+.user-guide{position:absolute;z-index:90007;pointer-events:auto;touch-action:none;cursor:grab}
+.user-guide.v{top:0;height:100%;width:9px;transform:translateX(-4px);border-left:1px solid transparent;background:linear-gradient(90deg,transparent 3px,#56deff 4px,#56deff 5px,transparent 6px)}
+.user-guide.h{left:0;width:100%;height:9px;transform:translateY(-4px);background:linear-gradient(180deg,transparent 3px,#56deff 4px,#56deff 5px,transparent 6px)}
+.user-guide:hover{filter:drop-shadow(0 0 5px #fff)}
+.reflex-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
+
 .stage .selection-frame{position:absolute;pointer-events:none;border:2px dashed #ffd25e;z-index:90005}
 .status{padding:8px 12px;border-top:1px solid #2f333b;background:#16181d;color:#d8bc8b;font-size:12px}
 .row{display:flex;gap:8px;flex-wrap:wrap}
@@ -210,6 +223,19 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 #smartHudTools .field{min-width:0}
 #smartHudTools input[type=color],.fx-tools input[type=color]{height:34px;min-width:0;width:100%;padding:3px}
 #smartHudTools{border-color:#57503c}
+
+/* V0.3.4 Auto Trim — non-destructive viewport crop, animated GIF kept native. */
+.sprite.trimmed .sprite-visual{overflow:hidden}
+.sprite.trimmed .sprite-visual>img:not(.dynamic-bar-empty):not(.dynamic-bar-fill):not(.dynamic-bar-frame),
+.sprite.trimmed .sprite-visual>.chroma-canvas{position:absolute;inset:auto;max-width:none;max-height:none;object-fit:fill}
+.trim-tools{margin:12px 0;border:1px solid #5b513b;border-radius:7px;padding:10px;background:#211e19}
+.trim-tools h3{font-size:12px;text-transform:uppercase;letter-spacing:.55px;color:#ffd58a;margin:0 0 8px}
+.trim-tools .row{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
+.trim-tools .row button{flex:1;min-width:70px}
+.trim-tools .field{margin:6px 0}
+.trim-tools .hint{color:#bdb4a5;font-size:11px;line-height:1.45}
+#trimInfo{font-size:11px;color:#b3d1bd;padding-top:5px;word-break:break-word}
+
 </style>
 </head>
 <body>
@@ -267,7 +293,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
         <h2>Importar / Exportar</h2>
         <div class="stack">
           <div class="row">
-            <button id="exportJson">Exportar JSON</button>
+            <button id="saveProjectState" class="primary" title="Ctrl+S — salvar projeto completo">Salvar estado (.json)</button><button id="exportJson">Exportar JSON</button>
             <button id="importJson">Importar JSON</button>
           </div>
           <div class="row">
@@ -275,7 +301,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <button id="importImage" title="Importar PNG ou WEBP como sprite">Importar imagem</button>
             <input hidden type="file" id="imageFile" accept="image/png,image/webp,image/jpeg,image/gif">
           </div>
-          <input hidden type="file" id="jsonFile" accept=".json,application/json">
+          <p class="hint" id="saveStateStatus">Auto-salvamento local ativo; use Salvar estado para um backup portátil.</p><input hidden type="file" id="jsonFile" accept=".json,application/json">
         </div>
         <p class="hint" style="margin-top:10px">Seleção: Shift+clique adiciona/remove; arraste no vazio para seleção em caixa. Agrupe com Ctrl+G, desagrupe com Ctrl+Shift+G. Ctrl+roda: zoom; botão do meio: pan.</p><p class="hint">Atalhos: Ctrl+C copiar sprites • Ctrl+V colar sprites ou imagem • Ctrl+D duplicar seleção • Setas = mover • Shift+Setas = 10 px • Del = apagar • Ctrl+D = duplicar • Ctrl+Z = desfazer.</p>
       </div>
@@ -284,7 +310,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <main class="workspace">
       <div class="workspace-toolbar" role="toolbar" aria-label="Ferramentas do editor">
         <div class="toolbar-heading">
-          <strong>Canvas <span class="toolbar-slash">/</span> Playlist · V0.3.1</strong>
+          <strong>Canvas <span class="toolbar-slash">/</span> Playlist · V0.3.4</strong>
           <span class="toolbar-subtitle">Edição e posicionamento</span>
         </div>
         <div class="toolbar-groups">
@@ -296,7 +322,8 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               <label class="check"><input type="checkbox" id="grid" checked> Exibir</label>
               <label class="check"><input type="checkbox" id="referenceToggle"> Referência</label>
               <label class="check"><input type="checkbox" id="rulers" checked> Réguas</label>
-              <label class="check"><input type="checkbox" id="magnet" checked> Guias</label>
+              <label class="check"><input type="checkbox" id="magnet" checked> Snap magnético</label>
+              <button type="button" id="clearUserGuides" title="Remove somente guias auxiliares, sem alterar sprites">Limpar guias</button><label class="check"><input type="checkbox" id="symmetryDiagnostic"> Diagnóstico X/Y</label>
             </div>
           </div>
           <div class="tool-group">
@@ -327,10 +354,14 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
       </div>
       <div class="viewport" id="viewport">
         <div class="scale-wrap" id="scaleWrap">
+          <div id="rulerX" class="ruler x" title="Arraste para criar uma guia horizontal"></div>
+          <div id="rulerY" class="ruler y" title="Arraste para criar uma guia vertical"></div>
+          <div class="ruler-corner" id="rulerCorner" title="Origem (0,0)"></div>
           <div class="stage" id="stage">
             <div class="bg-layer" id="bgLayer"></div>
             <div class="guide h hidden" id="guideH"></div><div class="guide v hidden" id="guideV"></div>
-            <div id="rulerX" class="ruler x"></div><div id="rulerY" class="ruler y"></div><div class="ruler-corner" id="rulerCorner"></div>
+            <div id="userGuides" aria-label="Guias auxiliares"></div>
+            <canvas id="diagnosticOverlay" width="1920" height="1080" aria-hidden="true" style="display:none;position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;z-index:90006"></canvas>
             <img class="reference" src="assets/full_hud.png" alt="Referência do HUD">
           </div>
         </div>
@@ -362,11 +393,23 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <hr class="fx-group-divider">
             <h2 class="inspector-group-title">Mirror Quantize · P1 / P2</h2>
             <div class="smart-row"><label class="field">Eixo X<input id="hudMirrorAxis" type="number" value="960" min="0" max="1920"></label><label class="field">Quantize (px)<select id="hudMirrorGrid"><option value="1">1</option><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option></select></label></div>
-            <label class="check"><input type="checkbox" id="hudMirrorLink" checked> Manter par vinculado</label>
+            <div class="smart-row"><label class="field">Eixo Y<input id="hudMirrorAxisY" type="number" value="540" min="0" max="1080"></label><label class="field">Tolerância (px)<input id="hudMirrorTolerance" type="number" value="6" min="0" max="64"></label></div>
+            <label class="field">Espelhamento<select id="hudMirrorMode"><option value="horizontal">Horizontal · P1/P2</option><option value="vertical">Vertical · topo/base</option><option value="both">Duplo · X e Y</option></select></label>
+            <label class="check"><input type="checkbox" id="hudMirrorLink" checked> Manter par vinculado em tempo real</label>
             <div class="smart-row"><button id="hudMirrorDuplicate" type="button">Duplicar espelhado</button><button id="hudMirrorAlign" type="button">Quantizar posição</button></div>
           </section>
         <div id="inspector" class="hidden">
-          <section class="inspector-group hidden" id="dynamicInspector">
+
+<div class="trim-tools" id="autoTrimPanel">
+  <h3>✂ Auto Trim · PNG / GIF</h3>
+  <p class="hint">Remove margens transparentes da seleção sem alterar o arquivo original. GIF: analisa a união dos quadros para preservar toda a animação.</p>
+  <label class="field">Limiar de opacidade <output id="trimAlphaText">8</output><input id="trimAlpha" type="range" min="1" max="128" value="8"></label>
+  <label class="field">Margem de segurança (px da imagem) <input id="trimPadding" type="number" min="0" max="100" value="2"></label>
+  <label class="check"><input type="checkbox" id="trimUseDarkKey" checked> Usar fundo preto/Chroma Key quando habilitado no sprite</label>
+  <div class="row"><button type="button" class="primary" id="trimApply">✂ Cortar vazios</button><button type="button" id="trimReset">Restaurar margens</button></div>
+  <div id="trimInfo" aria-live="polite">Selecione um PNG ou GIF.</div>
+</div>
+<section class="inspector-group hidden" id="dynamicInspector">
             <h2 class="inspector-group-title">DynamicBar — Nível em tempo real</h2>
             <label class="field">Valor <output id="barValueText" style="color:#ffc56c">100%</output><input id="barValue" type="range" min="0" max="100" value="100" step="1"></label>
             <div class="grid2">
@@ -404,10 +447,27 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               <label class="field">Rotação °<input id="propRot" type="number" step="1"></label>
               <label class="field">Camada Z<input id="propZ" type="number" step="1"></label>
             </div>
+            <div class="grid2"><label class="field">Pivô X (%)<input id="propPivotX" type="number" min="0" max="100" step="1" value="50"></label><label class="field">Pivô Y (%)<input id="propPivotY" type="number" min="0" max="100" step="1" value="50"></label></div>
+            <div class="smart-row"><button id="pivotCenter" type="button">Pivô central 50/50</button><button id="preciseCenter" type="button">Centralizar no canvas</button></div>
             <label class="field">Opacidade<input id="propOpacity" type="range" min="0" max="100"></label>
+          </section>
+          <section class="inspector-group hidden" id="precisionMaterialInspector">
+            <h2 class="inspector-group-title">Máscara e textura · edição não destrutiva</h2>
+            <label class="field">Forma da máscara<select id="matMaskPreset"><option value="frame">Moldura hexagonal</option><option value="v">Central V</option><option value="rect">Retangular</option></select></label>
+            <div class="grid2"><label class="field">Corte esquerdo %<input type="number" id="matInsetL" min="0" max="48" step="1"></label><label class="field">Corte direito %<input type="number" id="matInsetR" min="0" max="48" step="1"></label><label class="field">Corte superior %<input type="number" id="matInsetT" min="0" max="48" step="1"></label><label class="field">Corte inferior %<input type="number" id="matInsetB" min="0" max="48" step="1"></label></div>
+            <div class="grid2"><label class="field">Escala da textura %<input type="number" id="matTextureScale" min="10" max="400" step="1"></label><label class="field">Rotação textura °<input type="number" id="matTextureRotation" min="-360" max="360" step="1"></label><label class="field">Deslocamento X (px)<input type="number" id="matTextureX" min="-2000" max="2000" step="1"></label><label class="field">Deslocamento Y (px)<input type="number" id="matTextureY" min="-2000" max="2000" step="1"></label></div>
+            <p class="hint">A máscara recorta só o miolo. A moldura mantém suas dimensões originais. Ajustes geram prévia e entram no JSON.</p>
           </section>
           <section class="inspector-group fx-tools" id="spriteEffects">
             <h2 class="inspector-group-title">Efeitos visuais · PNG / GIF</h2>
+            <div class="inspector-group" style="border-color:#755b38">
+              <h2 class="inspector-group-title">Reflexo percorrendo a moldura</h2>
+              <label class="check"><input id="reflexEnabled" type="checkbox"> Ativar reflexo no contorno</label>
+              <div class="smart-row"><label class="field">Cor da luz<input id="reflexColor" type="color" value="#ffe4a0"></label>
+              <label class="field">Velocidade <output id="reflexSpeedText">1.0×</output><input id="reflexSpeed" type="range" min="0.2" max="4" step="0.1" value="1"></label></div>
+              <label class="field">Intensidade <output id="reflexStrengthText">75%</output><input id="reflexStrength" type="range" min="0" max="100" value="75"></label>
+              <p class="hint">Brilho animado segue a borda opaca da moldura, sem afetar o miolo. O PNG exporta o quadro atual.</p>
+            </div>
             <label class="check"><input id="fxTintEnabled" type="checkbox"> Colorizar efeito / fumaça</label>
             <div class="smart-row"><label class="field">Cor da fumaça<input type="color" id="fxTintColor" value="#40f176"></label><label class="field">Intensidade <output id="fxTintAmountText">60%</output><input type="range" id="fxTintAmount" min="0" max="100" value="60"></label></div>
             <label class="field">Brilho <output id="fxBrightnessText">100%</output><input id="fxBrightness" type="range" min="0" max="250" value="100"></label>
@@ -479,8 +539,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
             <h2 class="inspector-group-title">Organização &amp; camadas</h2>
             <div class="action-grid columns-2">
               <button id="duplicate" title="Ctrl+D — duplica todos os itens selecionados">Duplicar seleção</button>
-              <button id="bringFront">Trazer à frente</button>
-              <button id="sendBack">Enviar atrás</button>
+              <button id="bringFront" title="Colocar acima de todas as camadas">Trazer ao topo</button>
+              <button id="sendBack" title="Colocar abaixo de todas as camadas">Enviar ao fundo</button>
+              <button id="stepForward" title="Subir uma posição na pilha">Subir 1 camada</button>
+              <button id="stepBackward" title="Descer uma posição na pilha">Descer 1 camada</button>
             </div>
           </section>
           <section class="inspector-group inspector-danger">
@@ -626,28 +688,63 @@ function sizeRatio(src){
   return ratioCache[src];
 }
 function clone(obj){ return JSON.parse(JSON.stringify(obj)); }
+function isSmokeAsset(s){return /(?:fuma[çc]a|smoke|fog|neblina)/i.test([s.label,s.src?.startsWith('data:')?'':s.src].join(' ')) && /\.gif/i.test(s.label||s.src||'');}
+function migratedSmoke(s){return isSmokeAsset(s) && (Number(s.fxPipelineVersion)||0)<3;}
+function safeSmartText(s){return s.smartKind==='text' && s.textValue;}
+
+function validateTrimRect(t){
+  if(!t||![t.left,t.top,t.width,t.height,t.sourceW,t.sourceH].every(Number.isFinite))return null;
+  if(t.sourceW<1||t.sourceH<1||t.width<1||t.height<1||t.left<0||t.top<0||t.left+t.width>t.sourceW||t.top+t.height>t.sourceH)return null;
+  return {left:t.left,top:t.top,width:t.width,height:t.height,sourceW:t.sourceW,sourceH:t.sourceH};
+}
+function trimViewportStyle(el,s){
+  const t=validateTrimRect(s.trimRect), visual=el.querySelector('.sprite-visual');
+  el.classList.toggle('trimmed',!!t && s.kind!=='dynamicBar');
+  if(!visual)return;
+  for(const target of [visual.querySelector('img:not(.dynamic-bar-empty):not(.dynamic-bar-fill):not(.dynamic-bar-frame)'),visual.querySelector('.chroma-canvas')]){
+    if(!target)continue;
+    if(!t){Object.assign(target.style,{left:'',top:'',width:'',height:'',position:''});continue;}
+    const fx=s.w/t.width,fy=s.h/t.height;
+    Object.assign(target.style,{left:(-t.left*fx)+'px',top:(-t.top*fy)+'px',width:(t.sourceW*fx)+'px',height:(t.sourceH*fy)+'px',position:'absolute'});
+  }
+}
 function normalize(s){
+  // Legacy smoke GIFs are black-backed and were colored as opaque rectangular layers.
+  // Only smoke-labelled GIFs are migrated; fighters' GIFs keep their original FX.
+  const smokeLegacy=migratedSmoke(s);
+  const fixedTextFlip=s.smartKind==='text'?false:!!s.flipX;
+  const fixedTextFlipY=s.smartKind==='text'?false:!!s.flipY;
+  const fixedLabel=(s.smartKind==='text' && s.textValue && /^Nome P[12]/i.test(s.label||''))
+    ?('Nome '+((Number(s.x)+Number(s.w)/2)<960?'P1':'P2')+' · '+s.textValue.toLocaleUpperCase('pt-BR')):s.label;
   return {
-    id: s.id || newId(), src: s.src, label: s.label || 'Sprite',
+    pivotX:Math.max(0,Math.min(100,Number.isFinite(+s.pivotX)?+s.pivotX:50)),pivotY:Math.max(0,Math.min(100,Number.isFinite(+s.pivotY)?+s.pivotY:50)),
+    mirrorMode:["horizontal","vertical","both"].includes(s.mirrorMode)?s.mirrorMode:"horizontal",
+    matKey:s.matKey||null,matMaskPreset:["frame","v","rect"].includes(s.matMaskPreset)?s.matMaskPreset:"frame",
+    matInsetL:Number.isFinite(+s.matInsetL)?+s.matInsetL:0,matInsetR:Number.isFinite(+s.matInsetR)?+s.matInsetR:0,matInsetT:Number.isFinite(+s.matInsetT)?+s.matInsetT:0,matInsetB:Number.isFinite(+s.matInsetB)?+s.matInsetB:0,
+    matTextureScale:Number.isFinite(+s.matTextureScale)?+s.matTextureScale:100,matTextureRotation:Number.isFinite(+s.matTextureRotation)?+s.matTextureRotation:0,matTextureX:Number.isFinite(+s.matTextureX)?+s.matTextureX:0,matTextureY:Number.isFinite(+s.matTextureY)?+s.matTextureY:0,
+    id: s.id || newId(), src: safeSmartText(s)?smartSvgImage(s.textValue,s.textColor||'#f9e0a7',Number(s.fontSize)||48):s.src, label: fixedLabel || 'Sprite',
     x: Number.isFinite(+s.x) ? +s.x : 0, y: Number.isFinite(+s.y) ? +s.y : 0,
     w: Math.max(1, +s.w || 100), h: Math.max(1, +s.h || Math.round((+s.w || 100) * sizeRatio(s.src))),
     z: Number.isFinite(+s.z) ? +s.z : 10, rot: Number.isFinite(+s.rot) ? +s.rot : 0,
     opacity: Number.isFinite(+s.opacity) ? +s.opacity : 100,
-    flipX: !!s.flipX, flipY: !!s.flipY, groupId:s.groupId || null,
+    flipX:fixedTextFlip, flipY:fixedTextFlipY, groupId:s.groupId || null,
+    materialParentId:s.materialParentId||null,fxPipelineVersion:smokeLegacy?3:(Number(s.fxPipelineVersion)||3),
     visible: s.visible !== false, locked: !!s.locked,
     pulse: !!s.pulse, pulseHz:Math.max(.2,Math.min(4,Number(s.pulseHz)||1)),
     pulseAmount:Math.max(0,Math.min(20,Number.isFinite(+s.pulseAmount)?+s.pulseAmount:7)),
-    blendMode: ['normal','multiply','screen','add','subtract','lighten','darken','difference'].includes(s.blendMode)?s.blendMode:'normal',
+    blendMode: smokeLegacy?'screen':(['normal','multiply','screen','add','subtract','lighten','darken','difference'].includes(s.blendMode)?s.blendMode:'normal'),
     fxStrength: Math.max(0,Math.min(100,Number.isFinite(+s.fxStrength)?+s.fxStrength:100)),
-    darkKey: !!s.darkKey,
-    darkThreshold: Math.max(0,Math.min(200,Number.isFinite(+s.darkThreshold)?+s.darkThreshold:25)),
-    darkFeather: Math.max(0,Math.min(180,Number.isFinite(+s.darkFeather)?+s.darkFeather:45)),
+    darkKey:smokeLegacy?true:!!s.darkKey,
+    darkThreshold: Math.max(0,Math.min(200,smokeLegacy?25:(Number.isFinite(+s.darkThreshold)?+s.darkThreshold:25))),
+    darkFeather: Math.max(0,Math.min(180,smokeLegacy?65:(Number.isFinite(+s.darkFeather)?+s.darkFeather:45))),
     smartKind: ['text','timer','material'].includes(s.smartKind)?s.smartKind:null,
     textValue: String(s.textValue||''), textColor:s.textColor||'#f9e0a7', fontSize:Number(s.fontSize)||48,
     timerDuration:Math.max(1,Number(s.timerDuration)||120),timerRemaining:Math.max(0,Number.isFinite(+s.timerRemaining)?+s.timerRemaining:120),timerRunning:!!s.timerRunning,
     mirrorPair:s.mirrorPair||null,mirrorLinked:!!s.mirrorLinked,
     tintEnabled:!!s.tintEnabled,tintColor:s.tintColor||'#40f176',tintAmount:Number.isFinite(+s.tintAmount)?+s.tintAmount:60,
     brightness:Number.isFinite(+s.brightness)?+s.brightness:100,contrast:Number.isFinite(+s.contrast)?+s.contrast:100,saturation:Number.isFinite(+s.saturation)?+s.saturation:100,
+    reflexEnabled:!!s.reflexEnabled,reflexColor:/^#[0-9a-fA-F]{6}$/.test(s.reflexColor)?s.reflexColor:'#ffe4a0',reflexSpeed:Math.max(.2,Math.min(4,Number(s.reflexSpeed)||1)),reflexStrength:Math.max(0,Math.min(100,Number.isFinite(+s.reflexStrength)?+s.reflexStrength:75)),
+    trimRect:validateTrimRect(s.trimRect),
     kind:s.kind === 'dynamicBar' ? 'dynamicBar' : 'sprite',
     frameSrc:s.kind==='dynamicBar'?resolvedBarFrame(s):(s.frameSrc || s.src),
     fillSrc:s.kind==='dynamicBar'?fillForColor(s,inferFillColor(s)):(s.fillSrc || null),
@@ -660,8 +757,37 @@ function normalize(s){
 function defaultSprites(){ return template.map(normalize); }
 let background = { color:'#0b0c10', image:null, fit:'cover', opacity:100, parallax:false, parallaxAmount:12 };
 let sprites = defaultSprites();
+let userGuides=[];
+const editorConfig={mirrorAxisX:960,mirrorAxisY:540,mirrorGrid:16,mirrorMode:'horizontal',mirrorTolerance:6};
+function projectPayload(){return {version:6,stage:{width:W,height:H},background,sprites,guides:userGuides,editor:{...editorConfig,mirrorAxisX:Number($('hudMirrorAxis').value),mirrorAxisY:Number($('hudMirrorAxisY').value),mirrorGrid:Number($('hudMirrorGrid').value),mirrorMode:$('hudMirrorMode').value,mirrorTolerance:Number($('hudMirrorTolerance').value)}};}
+function applyEditorConfig(e){if(!e)return;for(const [id,key] of [['hudMirrorAxis','mirrorAxisX'],['hudMirrorAxisY','mirrorAxisY'],['hudMirrorGrid','mirrorGrid'],['hudMirrorMode','mirrorMode'],['hudMirrorTolerance','mirrorTolerance']])if(e[key]!==undefined)$(id).value=e[key];}
+function repairMaterialHierarchy(){
+  const frames=sprites.filter(s=>s.smartKind!=='material');
+  for(const s of sprites.filter(s=>s.smartKind==='material')){
+    if(!s.materialParentId){
+      const label=s.label||'';
+      const frame=frames.find(f=>/Moldura central V/i.test(f.label||'') && /central/i.test(label))
+        ||frames.find(f=>/Moldura inclinada/i.test(f.label||'') && /inclinad/i.test(label));
+      if(frame)s.materialParentId=frame.id;
+    }
+  }
+  const ordered=[...sprites].sort((a,b)=>a.z-b.z);
+  for(const mat of [...ordered].filter(s=>s.smartKind==='material'&&s.materialParentId)){
+    const parent=ordered.find(s=>s.id===mat.materialParentId);if(!parent)continue;
+    ordered.splice(ordered.indexOf(mat),1);ordered.splice(ordered.indexOf(parent),0,mat);
+  }
+  ordered.forEach((s,i)=>s.z=i+1);
+}
+function repairExportSprites(){
+  // Text and timer SVG previews are derived from model values, never stale serialized src.
+  for(const s of sprites){
+    if(s.smartKind==='text')s.src=smartSvgImage(s.textValue,s.textColor,s.fontSize);
+    if(s.smartKind==='timer'){s.src=timerVisual(s);s.timerRunning=false;}
+  }
+}
+function sanitizeGuides(items){return Array.isArray(items)?items.filter(g=>g&&(g.axis==='x'||g.axis==='y')&&Number.isFinite(+g.pos)).slice(0,200).map(g=>({id:String(g.id||newId()),axis:g.axis,pos:Math.max(0,Math.min(g.axis==='x'?W:H,Math.round(+g.pos)))})):[];}
 function save(){
-  try { localStorage.setItem(KEY, JSON.stringify({ version:3, background, sprites })); }
+  try { localStorage.setItem(KEY, JSON.stringify(projectPayload())); }
   catch(err){console.warn('Projeto grande demais para localStorage:',err); status('Projeto grande: exporte JSON para preservar imagens importadas.');}
 }
 function load(){
@@ -670,22 +796,23 @@ function load(){
     if(raw){
       if(raw.background) background = Object.assign(background, raw.background);
       if(Array.isArray(raw.sprites)) sprites = raw.sprites.map(normalize);
+      userGuides=sanitizeGuides(raw.guides);applyEditorConfig(raw.editor);repairMaterialHierarchy();repairExportSprites();
     }
   }catch(e){}
 }
 load();
-function snapshot(){ history.push(JSON.stringify({background, sprites})); if(history.length>80) history.shift(); future=[]; }
+function snapshot(){ history.push(JSON.stringify(projectPayload())); if(history.length>80) history.shift(); future=[]; }
 function restoreState(serialized){
-  const state=JSON.parse(serialized); background=state.background||background;
-  sprites=(state.sprites||[]).map(normalize); selected=null;selection.clear(); save(); renderAll();
+  const state=JSON.parse(serialized); background=state.background||background;userGuides=sanitizeGuides(state.guides);
+  sprites=(state.sprites||[]).map(normalize);repairMaterialHierarchy();repairExportSprites();applyEditorConfig(state.editor);selected=null;selection.clear(); save(); renderAll();
 }
 function undo(){
   if(!history.length)return;
-  future.push(JSON.stringify({background,sprites})); restoreState(history.pop()); status('Desfazer aplicado.');
+  future.push(JSON.stringify(projectPayload())); restoreState(history.pop()); status('Desfazer aplicado.');
 }
 function redo(){
   if(!future.length)return;
-  history.push(JSON.stringify({background,sprites})); restoreState(future.pop()); status('Refazer aplicado.');
+  history.push(JSON.stringify(projectPayload())); restoreState(future.pop()); status('Refazer aplicado.');
 }
 function status(msg){ $('status').textContent = msg; }
 function newId(){ return 'sprite_' + Date.now().toString(36) + '_' + (++uid); }
@@ -732,8 +859,9 @@ function spriteHitOpaque(s, clientX, clientY, threshold=8){
   if(s.kind==='dynamicBar') return true; // preenchimento e moldura são um único componente selecionável
   const entry = getAlphaCanvas(s.src);
   if(!entry.ready || !entry.data) return false; // nunca capturar caixa vazia enquanto carrega
-  const px = Math.max(0, Math.min(entry.width-1, Math.floor(lx/s.w*entry.width)));
-  const py = Math.max(0, Math.min(entry.height-1, Math.floor(ly/s.h*entry.height)));
+  const tr=s.trimRect&&s.trimRect.width>0?s.trimRect:null;
+  const px = Math.max(0, Math.min(entry.width-1, Math.floor(tr?(tr.left+lx/s.w*tr.width)*entry.width/tr.sourceW:lx/s.w*entry.width)));
+  const py = Math.max(0, Math.min(entry.height-1, Math.floor(tr?(tr.top+ly/s.h*tr.height)*entry.height/tr.sourceH:ly/s.h*entry.height)));
   const offset=(py*entry.width+px)*4;
   let alpha=entry.data[offset+3];
   if(s.darkKey){
@@ -753,18 +881,18 @@ function findTopmostSpriteAt(clientX, clientY, excludeId=null){
 }
 function fitScale(){
   const z = $('zoom').value;
-  const available = Math.max(300, view.clientWidth - 42);
+  const available = Math.max(300, view.clientWidth - 68);
   scale = z === 'auto' ? Math.max(.15, Math.min(1, available / W)) : z === 'custom' ? scale : Number(z);
-  $('scaleWrap').style.width = (W * scale) + 'px';
-  $('scaleWrap').style.height = (H * scale) + 'px';
-  stage.style.transform = `scale(${scale})`;
+  $('scaleWrap').style.width = (W * scale + 26) + 'px';
+  $('scaleWrap').style.height = (H * scale + 26) + 'px';
+  stage.style.transform = `scale(${scale})`;updateRulers();
 }
 function zoomAt(clientX,clientY,next){
   const old=scale, rect=stage.getBoundingClientRect();
   const x=(clientX-rect.left)/old, y=(clientY-rect.top)/old;
   scale=Math.min(3,Math.max(.15,next));
   $('zoom').value='custom';
-  $('scaleWrap').style.width=(W*scale)+'px';$('scaleWrap').style.height=(H*scale)+'px';
+  $('scaleWrap').style.width=(W*scale+26)+'px';$('scaleWrap').style.height=(H*scale+26)+'px';
   stage.style.transform=`scale(${scale})`;
   const vr=view.getBoundingClientRect();
   // Preserve the canvas point under the cursor using scroll offsets.
@@ -839,10 +967,11 @@ function stageCssTransform(s){ return `rotate(${s.rot}deg) scaleX(${s.flipX?-1:1
 function setSpriteStyle(el, s){
   Object.assign(el.style, {
     left:s.x+'px', top:s.y+'px', width:s.w+'px', height:s.h+'px', zIndex:String(s.z),
-    opacity:s.visible?String(s.opacity/100):'0', display:s.visible?'block':'none',
+    opacity:s.visible?String(s.opacity/100):'0', display:s.visible?'block':'none', transformOrigin:`${s.pivotX??50}% ${s.pivotY??50}%`,
     transform: stageCssTransform(s),mixBlendMode:cssBlend(s.blendMode)
   });
   el.classList.toggle('locked', !!s.locked);
+  trimViewportStyle(el,s);
   const visual=el.querySelector('.sprite-visual');
   if(visual){
     visual.classList.toggle('pulse',!!s.pulse);
@@ -874,9 +1003,11 @@ function applySprite(s){
     const pair=sprites.find(x=>x.id===s.mirrorPair);
     if(pair){
       window.__mirrorSyncing=true;
-      const axis=Number($('hudMirrorAxis')?.value)||960;
-      pair.x=Math.round(2*axis-s.x-s.w);pair.y=s.y;pair.w=s.w;pair.h=s.h;
-      pair.rot=-s.rot;pair.flipX=!s.flipX;pair.flipY=s.flipY;
+      const axisX=Number($('hudMirrorAxis')?.value)||960,axisY=Number($('hudMirrorAxisY')?.value)||540;
+      const mode=s.mirrorMode||'horizontal',hor=mode!=='vertical',ver=mode!=='horizontal';
+      pair.x=hor?Math.round(2*axisX-s.x-s.w):s.x;pair.y=ver?Math.round(2*axisY-s.y-s.h):s.y;pair.w=s.w;pair.h=s.h;
+      pair.rot=(hor!==ver)?-s.rot:s.rot;pair.flipX=pair.smartKind==='text'?false:(hor?!s.flipX:s.flipX);pair.flipY=pair.smartKind==='text'?false:(ver?!s.flipY:s.flipY);
+      pair.pivotX=hor?100-s.pivotX:s.pivotX;pair.pivotY=ver?100-s.pivotY:s.pivotY;
       const pairedEl=stage.querySelector(`.sprite[data-id="${pair.id}"]`);
       if(pairedEl)setSpriteStyle(pairedEl,pair);
       window.__mirrorSyncing=false;
@@ -884,6 +1015,7 @@ function applySprite(s){
   }
   const el = stage.querySelector(`.sprite[data-id="${s.id}"]`);
   if(el) setSpriteStyle(el,s);
+  renderSymmetryDiagnostics();
   refreshKeyedInstances();
 }
 function renderBackground(){
@@ -945,7 +1077,8 @@ function drawSprite(s){
     const cc=document.createElement('canvas');cc.className='chroma-canvas';cc.hidden=true;
     visual.append(cc);
   }
-  el.append(visual,resize,...corners,rotate);
+  const reflex=document.createElement('canvas');reflex.className='reflex-overlay';reflex.width=512;reflex.height=256;
+  visual.append(reflex);el.append(visual,resize,...corners,rotate);
   setSpriteStyle(el,s);return el;
 }
 function magnetic(value, candidates){
@@ -1006,8 +1139,8 @@ function moveGesture(e){
     let x=snapValue(g.x+p.x-g.px),y=snapValue(g.y+p.y-g.py);
     const ids=new Set(g.members.map(v=>v.id));
     const other=sprites.filter(v=>!ids.has(v.id) && v.visible);
-    const vx=[0,W/2,W,...other.flatMap(v=>[v.x,v.x+v.w/2,v.x+v.w])];
-    const vy=[0,H/2,H,...other.flatMap(v=>[v.y,v.y+v.h/2,v.y+v.h])];
+    const vx=[0,W/2,W,...userGuides.filter(g=>g.axis==='x').map(g=>g.pos),...other.flatMap(v=>[v.x,v.x+v.w/2,v.x+v.w])];
+    const vy=[0,H/2,H,...userGuides.filter(g=>g.axis==='y').map(g=>g.pos),...other.flatMap(v=>[v.y,v.y+v.h/2,v.y+v.h])];
     let bestX=null,bestY=null;
     for(const offset of [0,s.w/2,s.w]){const hit=magnetic(x+offset,vx);if(hit.guide!==null){x=hit.value-offset;bestX=hit.guide;break;}}
     for(const offset of [0,s.h/2,s.h]){const hit=magnetic(y+offset,vy);if(hit.guide!==null){y=hit.value-offset;bestY=hit.guide;break;}}
@@ -1044,7 +1177,10 @@ stage.addEventListener('pointerup',endGesture);
 stage.addEventListener('pointercancel',endGesture);
 function render(){
   stage.querySelectorAll('.sprite').forEach(n=>n.remove());
-  sprites.forEach(s => stage.append(drawSprite(s)));
+  normalizeLayerOrder();
+  [...sprites].sort((a,b)=>a.z-b.z).forEach(s => stage.append(drawSprite(s)));
+  renderUserGuides();
+  renderSymmetryDiagnostics();
   setSelection([...selection].filter(id=>sprites.some(s=>s.id===id)), selected);
   $('stat').textContent = `${sprites.length} instâncias • ${paletteItems.length} tipos • Canvas ${W} × ${H}`;
   refreshKeyedInstances();
@@ -1091,7 +1227,7 @@ stage.addEventListener('drop', e => {
 });
 // A seleção é calculada no palco: caixas transparentes não interceptam eventos.
 
-const props = { propLabel:'label', propX:'x', propY:'y', propW:'w', propH:'h', propRot:'rot', propZ:'z', propOpacity:'opacity', propFlipX:'flipX', propFlipY:'flipY', propLock:'locked', propVisible:'visible' };
+const props = { propLabel:'label', propX:'x', propY:'y', propW:'w', propH:'h', propRot:'rot', propZ:'z', propPivotX:'pivotX',propPivotY:'pivotY',propOpacity:'opacity', propFlipX:'flipX', propFlipY:'flipY', propLock:'locked', propVisible:'visible' };
 function refreshBarInspector(s){
   if(!s || s.kind!=='dynamicBar')return;
   $('barValue').value=s.value;$('barValueNumber').value=s.value;
@@ -1150,12 +1286,18 @@ function renderInspector(){
   $('pulseAmount').value=s?.pulseAmount??7;
   $('pulseSpeedText').textContent=(s?.pulseHz??1).toFixed(1)+' Hz';
   $('pulseAmountText').textContent=(s?.pulseAmount??7)+'%';
+  $('reflexEnabled').checked=!!s?.reflexEnabled;$('reflexColor').value=s?.reflexColor||'#ffe4a0';
+  $('reflexSpeed').value=s?.reflexSpeed??1;$('reflexSpeedText').textContent=(s?.reflexSpeed??1).toFixed(1)+'×';
+  $('reflexStrength').value=s?.reflexStrength??75;$('reflexStrengthText').textContent=(s?.reflexStrength??75)+'%';
   $('fxTintEnabled').checked=!!s?.tintEnabled;
   $('fxTintColor').value=s?.tintColor||'#40f176';
   for(const [id,v] of [['fxTintAmount',s?.tintAmount??60],['fxBrightness',s?.brightness??100],['fxContrast',s?.contrast??100],['fxSaturation',s?.saturation??100]]){
     $(id).value=v;$(id+'Text').textContent=v+'%';
   }
+  $('precisionMaterialInspector').classList.toggle('hidden',s?.smartKind!=='material');
+  if(s?.smartKind==='material')for(const [id,key] of Object.entries(materialControls))$(id).value=s[key];
   if(s?.smartKind==='text'){$('hudName').value=s.textValue;$('hudTextColor').value=s.textColor;$('hudFontSize').value=s.fontSize;}
+  if(s?.smartKind==='timer'){$('hudTimerDuration').value=String(s.timerDuration);$('hudTimerColor').value=s.textColor||'#ffcd57';}
   $('fxBlend').value=s?.blendMode??'normal';
   $('fxStrength').value=s?.fxStrength??100;
   $('fxStrengthText').textContent=(s?.fxStrength??100)+'%';
@@ -1164,6 +1306,7 @@ function renderInspector(){
   $('fxThresholdText').textContent=String(s?.darkThreshold??25);
   $('fxFeather').value=s?.darkFeather??45;
   $('fxFeatherText').textContent=String(s?.darkFeather??45);
+  refreshTrimPanel();
 }
 for(const [id,key] of Object.entries(props)){
   $(id).addEventListener('change', e => {
@@ -1174,11 +1317,13 @@ for(const [id,key] of Object.entries(props)){
       else if(key === 'label') item[key] = e.target.value;
       else item[key] = Number(e.target.value);
       if(key === 'w' || key === 'h') item[key] = Math.max(1, item[key]);
+      if(item.smartKind==='text' && (key==='flipX'||key==='flipY'))item[key]=false;
     }
     const ids=new Set(selection);save();render();setSelection(ids,s.id);
   });
 }
 function renderLayers(){
+  normalizeLayerOrder();
   const box = $('layers'); box.innerHTML='';
   if(!sprites.length){ box.innerHTML = '<div class="empty">Sem sprites no palco.</div>'; return; }
   [...sprites].sort((a,b)=>b.z-a.z).forEach(s => {
@@ -1187,7 +1332,9 @@ function renderLayers(){
     const name = document.createElement('span'); name.textContent=s.label;
     const eye = document.createElement('button'); eye.textContent = s.visible ? '◉' : '○'; eye.title='Mostrar / ocultar';
     eye.onclick = ev => { ev.stopPropagation(); snapshot(); s.visible=!s.visible; save(); render(); select(s.id); };
-    row.append(icon,name,eye); row.onclick=e=>{if(e.shiftKey)toggleSelection(s.id);else select(s.id);}; box.append(row);
+    const up=document.createElement('button');up.textContent='▲';up.title='Subir 1 camada';up.onclick=e=>{e.stopPropagation();reorderLayer('up',[s.id]);};
+    const down=document.createElement('button');down.textContent='▼';down.title='Descer 1 camada';down.onclick=e=>{e.stopPropagation();reorderLayer('down',[s.id]);};
+    row.append(icon,name,eye,up,down); row.onclick=e=>{if(e.shiftKey)toggleSelection(s.id);else select(s.id);}; box.append(row);
   });
 }
 function mutateSelected(fn){
@@ -1279,13 +1426,53 @@ view.addEventListener('pointermove',e=>{
 view.addEventListener('pointerup',e=>{if(panGesture?.pointerId===e.pointerId)panGesture=null;});
 view.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault();});
 function updateRulers(){
-  $('rulerX').replaceChildren();$('rulerY').replaceChildren();
-  for(let x=0;x<=W;x+=100){const b=document.createElement('b');b.textContent=x;b.style.left=(x)+'px';$('rulerX').append(b);}
-  for(let y=0;y<=H;y+=100){const b=document.createElement('b');b.textContent=y;b.style.top=(y)+'px';$('rulerY').append(b);}
+  const rx=$('rulerX'),ry=$('rulerY');rx.replaceChildren();ry.replaceChildren();
+  rx.style.width=(W*scale)+'px';ry.style.height=(H*scale)+'px';
+  for(let x=0;x<=W;x+=100){const b=document.createElement('b');b.textContent=x;b.style.left=(x*scale)+'px';rx.append(b);}
+  for(let y=0;y<=H;y+=100){const b=document.createElement('b');b.textContent=y;b.style.top=(y*scale)+'px';ry.append(b);}
   const active=$('rulers').checked;
   for(const id of ['rulerX','rulerY','rulerCorner'])$(id).classList.toggle('hidden',!active);
 }
 $('rulers').onchange=updateRulers;
+function renderUserGuides(){
+  const root=$('userGuides');root.replaceChildren();
+  for(const g of userGuides){
+    const node=document.createElement('div');node.className='user-guide '+(g.axis==='x'?'v':'h');
+    node.dataset.guideId=g.id;node.title=`Guia ${g.axis.toUpperCase()} = ${g.pos} px · Arraste para mover · duplo clique para excluir`;
+    node.style[g.axis==='x'?'left':'top']=g.pos+'px';root.append(node);
+  }
+}
+let guideDrag=null;
+function guidePosition(axis,e){const p=onstageCoords(e.clientX,e.clientY);return Math.round(Math.max(0,Math.min(axis==='x'?W:H,axis==='x'?p.x:p.y)));}
+function startGuideDrag(axis,id,e){
+  if(e.button!==0)return;e.preventDefault();e.stopPropagation();
+  snapshot();guideDrag={axis,id,pointerId:e.pointerId};
+  document.body.style.cursor=axis==='x'?'ew-resize':'ns-resize';
+  showGuides(axis==='x'?guidePosition(axis,e):null,axis==='y'?guidePosition(axis,e):null);
+}
+$('rulerX').addEventListener('pointerdown',e=>startGuideDrag('y',null,e));
+$('rulerY').addEventListener('pointerdown',e=>startGuideDrag('x',null,e));
+$('userGuides').addEventListener('pointerdown',e=>{
+  const node=e.target.closest('.user-guide');if(!node)return;
+  const g=userGuides.find(g=>g.id===node.dataset.guideId);if(g)startGuideDrag(g.axis,g.id,e);
+});
+window.addEventListener('pointermove',e=>{
+  if(!guideDrag)return;const g=guideDrag,p=guidePosition(g.axis,e);
+  if(g.id){const item=userGuides.find(x=>x.id===g.id);if(item)item.pos=p;renderUserGuides();}
+  showGuides(g.axis==='x'?p:null,g.axis==='y'?p:null);
+});
+window.addEventListener('pointerup',e=>{
+  if(!guideDrag)return;const g=guideDrag;guideDrag=null;document.body.style.cursor='';
+  const pos=guidePosition(g.axis,e);showGuides(null,null);
+  if(g.id){const item=userGuides.find(x=>x.id===g.id);if(item)item.pos=pos;}
+  else if(pos>0 && pos<(g.axis==='x'?W:H))userGuides.push({id:newId(),axis:g.axis,pos});
+  renderUserGuides();save();status('Guia '+g.axis.toUpperCase()+' = '+pos+' px.');
+});
+$('userGuides').addEventListener('dblclick',e=>{
+  const id=e.target.closest('.user-guide')?.dataset.guideId;if(!id)return;
+  snapshot();userGuides=userGuides.filter(g=>g.id!==id);renderUserGuides();save();status('Guia removida.');
+});
+$('clearUserGuides').onclick=()=>{if(!userGuides.length)return;snapshot();userGuides=[];renderUserGuides();save();status('Guias auxiliares removidas.');};
 
 // Keep group membership when making copies, but never merge a copied group into its original.
 function copySelection(){
@@ -1328,16 +1515,39 @@ function mirrorSelection(horizontal){
   const targets=selectedSprites();if(!targets.length)return;
   const b=selectionBounds(targets),cx=(b.left+b.right)/2,cy=(b.top+b.bottom)/2;
   mutateSelected(s=>{
-    if(horizontal){s.x=2*cx-(s.x+s.w);s.flipX=!s.flipX;s.rot=-s.rot;}
-    else{s.y=2*cy-(s.y+s.h);s.flipY=!s.flipY;s.rot=-s.rot;}
+    if(horizontal){s.x=2*cx-(s.x+s.w);s.flipX=s.smartKind==='text'?false:!s.flipX;s.rot=-s.rot;}
+    else{s.y=2*cy-(s.y+s.h);s.flipY=s.smartKind==='text'?false:!s.flipY;s.rot=-s.rot;}
   });
 }
 $('duplicate').onclick=duplicateSelection;
 $('copySelection').onclick=copySelection;
 $('pasteSelection').onclick=()=>pasteCopiedSprites();
 $('delete').onclick=deleteSelection;
-$('bringFront').onclick=()=>{const zs=[...selectedSprites()].sort((a,b)=>a.z-b.z);let z=Math.max(0,...sprites.map(s=>s.z));mutateSelected(()=>{});for(const item of zs)item.z=++z;save();render();};
-$('sendBack').onclick=()=>{const zs=[...selectedSprites()].sort((a,b)=>a.z-b.z);let z=Math.min(0,...sprites.map(s=>s.z))-zs.length;mutateSelected(()=>{});for(const item of zs)item.z=++z;save();render();};
+// Deterministic Z-index ordering. DOM order and hit-testing use the same unique Z values.
+function normalizeLayerOrder(){
+  // Keep materials directly below their associated frame, not below other unrelated sprites.
+  const ordered=[...sprites].sort((a,b)=>a.z-b.z || sprites.indexOf(a)-sprites.indexOf(b));
+  ordered.forEach((s,i)=>{s.z=i+1;});
+}
+function reorderLayer(action, ids=[...selection]){
+  const chosen=new Set(ids);if(!chosen.size)return;
+  normalizeLayerOrder();const stack=[...sprites].sort((a,b)=>a.z-b.z);
+  if(action==='top'||action==='bottom'){
+    const moving=stack.filter(s=>chosen.has(s.id)),others=stack.filter(s=>!chosen.has(s.id));
+    stack.splice(0,stack.length,...(action==='top'?[...others,...moving]:[...moving,...others]));
+  }else if(action==='up'){
+    for(let i=stack.length-2;i>=0;i--)if(chosen.has(stack[i].id)&&!chosen.has(stack[i+1].id)) [stack[i],stack[i+1]]=[stack[i+1],stack[i]];
+  }else if(action==='down'){
+    for(let i=1;i<stack.length;i++)if(chosen.has(stack[i].id)&&!chosen.has(stack[i-1].id)) [stack[i],stack[i-1]]=[stack[i-1],stack[i]];
+  }
+  snapshot();stack.forEach((s,i)=>s.z=i+1);
+  const idsBefore=[...selection],primary=selected;save();render();setSelection(idsBefore,primary);
+  status('Ordem das camadas atualizada: '+action+'.');
+}
+$('bringFront').onclick=()=>reorderLayer('top');
+$('sendBack').onclick=()=>reorderLayer('bottom');
+$('stepForward').onclick=()=>reorderLayer('up');
+$('stepBackward').onclick=()=>reorderLayer('down');
 $('flipH').onclick=()=>mirrorSelection(true);
 $('flipV').onclick=()=>mirrorSelection(false);
 // Import a true image as an editable sprite, retaining alpha and natural aspect ratio.
@@ -1423,7 +1633,18 @@ $('bgFile').onchange = e => {
 };
 $('clearBg').onclick = ()=>{ snapshot(); background.image = null; renderBackground(); save(); status('Background removido.'); };
 function downloadBlob(data,name,type){ const blob = data instanceof Blob ? data : new Blob([data], {type}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 1500); }
-$('exportJson').onclick = ()=> downloadBlob(JSON.stringify({version:3, stage:{width:W,height:H}, background, sprites}, null, 2), 'umk3-hud-project.json', 'application/json');
+for(const [id,key] of [['reflexEnabled','reflexEnabled'],['reflexColor','reflexColor'],['reflexSpeed','reflexSpeed'],['reflexStrength','reflexStrength']]){
+  $(id).addEventListener('input',e=>{
+    const items=selectedSprites();if(!items.length)return;
+    for(const s of items)s[key]=e.target.type==='checkbox'?e.target.checked:e.target.type==='range'?Number(e.target.value):e.target.value;
+    if(key==='reflexSpeed')$('reflexSpeedText').textContent=Number(e.target.value).toFixed(1)+'×';
+    if(key==='reflexStrength')$('reflexStrengthText').textContent=e.target.value+'%';
+    if(key==='reflexEnabled')render();
+  });
+  $(id).addEventListener('change',()=>save());
+}
+$('exportJson').onclick = ()=> downloadBlob(JSON.stringify(projectPayload(), null, 2), 'umk3-hud-project.json', 'application/json');
+$('saveProjectState').onclick=()=>{save();downloadBlob(JSON.stringify(projectPayload(),null,2),'HUD-Studio-v0.3.2-project-state.json','application/json');$('saveStateStatus').textContent='Estado exportado em JSON. Salve esse arquivo para recuperar todos os sprites.';};
 $('importJson').onclick = ()=> $('jsonFile').click();
 $('jsonFile').onchange = async e => {
   const f = e.target.files[0]; if(!f) return;
@@ -1433,7 +1654,7 @@ $('jsonFile').onchange = async e => {
     background = Object.assign({color:'#0b0c10',image:null,fit:'cover',opacity:100}, data.background || {});
     const list = Array.isArray(data) ? data : data.sprites;
     if(!Array.isArray(list)) throw new Error('Formato inválido');
-    sprites = list.map(normalize); selected = null; save(); renderAll(); status('Projeto importado com sucesso.');
+    sprites = list.map(normalize);repairMaterialHierarchy();repairExportSprites();userGuides=sanitizeGuides(data.guides);applyEditorConfig(data.editor);selected = null; save(); renderAll(); status('Projeto importado com sucesso.');
   }catch(err){ alert('Falha ao importar: '+err.message); }
   e.target.value='';
 };
@@ -1479,8 +1700,8 @@ async function renderFxSprite(ctx,s,phase){
   const t=off.getContext('2d',{willReadFrequently:true});
   const pulseScale=s.pulse?1+(s.pulseAmount/100)*(phase+1)/2:1;
   const pulseOpacity=s.pulse?1-.22*(phase+1)/2:1;
-  t.save();t.filter=`brightness(${s.brightness??100}%) contrast(${s.contrast??100}%) saturate(${s.saturation??100}%)`;t.translate(s.x+s.w/2,s.y+s.h/2);t.rotate(s.rot*Math.PI/180);
-  t.scale((s.flipX?-1:1)*pulseScale,(s.flipY?-1:1)*pulseScale);
+  t.save();t.filter=`brightness(${s.brightness??100}%) contrast(${s.contrast??100}%) saturate(${s.saturation??100}%)`;t.translate(s.x+s.w*(s.pivotX??50)/100,s.y+s.h*(s.pivotY??50)/100);t.rotate(s.rot*Math.PI/180);
+  t.scale((s.flipX?-1:1)*pulseScale,(s.flipY?-1:1)*pulseScale);t.translate(s.w*(.5-(s.pivotX??50)/100),s.h*(.5-(s.pivotY??50)/100));
   if(s.kind==='dynamicBar'){
     const e=preload(resolvedBarEmpty(s)),f=preload(s.fillSrc),frame=preload(s.frameSrc);
     for(const im of [e,f,frame])if(!im.complete||!im.naturalWidth)await im.decode();
@@ -1492,12 +1713,22 @@ async function renderFxSprite(ctx,s,phase){
   }else{
     const im=preload(s.src);if(!im.complete||!im.naturalWidth)await im.decode();
     if(s.darkKey){
-      const w=Math.max(1,Math.round(s.w)),h=Math.max(1,Math.round(s.h));
+      const w=Math.max(1,Math.min(1920,Math.round(s.w))),h=Math.max(1,Math.min(1080,Math.round(s.h)));
       const keyed=document.createElement('canvas');keyed.width=w;keyed.height=h;
-      drawKeyed(keyed.getContext('2d',{willReadFrequently:true}),im,w,h,s.darkThreshold,s.darkFeather);
+      const tr=validateTrimRect(s.trimRect);
+      if(tr){
+        const clipped=document.createElement('canvas');clipped.width=w;clipped.height=h;
+        clipped.getContext('2d').drawImage(im,tr.left,tr.top,tr.width,tr.height,0,0,w,h);
+        drawKeyed(keyed.getContext('2d',{willReadFrequently:true}),clipped,w,h,s.darkThreshold,s.darkFeather);
+      }else drawKeyed(keyed.getContext('2d',{willReadFrequently:true}),im,w,h,s.darkThreshold,s.darkFeather);
       t.drawImage(keyed,-s.w/2,-s.h/2,s.w,s.h);
-    }else t.drawImage(im,-s.w/2,-s.h/2,s.w,s.h);
+    }else{
+      const tr=validateTrimRect(s.trimRect);
+      if(tr)t.drawImage(im,tr.left,tr.top,tr.width,tr.height,-s.w/2,-s.h/2,s.w,s.h);
+      else t.drawImage(im,-s.w/2,-s.h/2,s.w,s.h);
+    }
   }
+  if(s.reflexEnabled)drawReflexLocal(t,s,performance.now()/1000,-s.w/2,-s.h/2,s.w,s.h);
   t.restore();
   if(s.tintEnabled && s.smartKind!=='text' && s.smartKind!=='timer'){
     const tinted=document.createElement('canvas');tinted.width=W;tinted.height=H;
@@ -1512,6 +1743,167 @@ async function renderFxSprite(ctx,s,phase){
     ctx.drawImage(off,0,0);ctx.restore();
   }
 }
+// V0.3.2 contour reflection: raycast the actual frame alpha, not a rectangular outline.
+const reflexOutlineCache=new Map();
+function getReflexOutline(s){
+  const src=s.kind==='dynamicBar'?s.frameSrc:s.src;
+  const existing=reflexOutlineCache.get(src);if(existing)return existing;
+  const entry=getAlphaCanvas(src);if(!entry.ready||!entry.data)return null;
+  const {width:w,height:h,data}=entry;const result=[];
+  const N=240,rad=Math.hypot(w,h);
+  // Every angular sample tracks the outermost solid pixel along the ray.
+  for(let i=0;i<N;i++){
+    const a=2*Math.PI*i/N-Math.PI/2,dx=Math.cos(a),dy=Math.sin(a);
+    let hit=null;
+    for(let r=0;r<rad/2;r+=Math.max(.75,rad/1100)){
+      const px=Math.floor(w/2+dx*r),py=Math.floor(h/2+dy*r);
+      if(px<0||py<0||px>=w||py>=h)break;
+      if(data[(py*w+px)*4+3]>70)hit=[px/w,py/h];
+    }
+    result.push(hit);
+  }
+  // Fill any missing rays by neighboring solid contour samples.
+  for(let i=0;i<N;i++)if(!result[i]){
+    for(let delta=1;delta<N;delta++){
+      const probe=result[(i+delta)%N]||result[(i-delta+N)%N];if(probe){result[i]=probe;break;}
+    }
+  }
+  reflexOutlineCache.set(src,result);return result;
+}
+function drawReflexLocal(ctx,s,seconds,x,y,w,h){
+  const outline=getReflexOutline(s);if(!outline)return;
+  const N=outline.length,angle=((seconds*(s.reflexSpeed||1)*.23)%1+1)%1;
+  const index=Math.floor(angle*N),strength=(s.reflexStrength??75)/100;
+  if(strength<=0)return;
+  ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+  const stroke=Math.max(2,Math.min(w,h)*.045),color=s.reflexColor||'#ffe4a0';
+  // A bright moving tip with a fading tail tracks the sampled alpha contour.
+  for(let j=22;j>=0;j--){
+    const a=outline[(index-j+N)%N],b=outline[(index-j-1+N)%N];if(!a||!b)continue;
+    const dist=Math.hypot((a[0]-b[0])*w,(a[1]-b[1])*h);
+    if(dist>Math.max(w,h)*.12)continue; // do not bridge disconnected shapes
+    const f=(1-j/23)*strength;
+    ctx.globalAlpha=f*.38;ctx.strokeStyle=color;ctx.lineWidth=stroke*2.5;
+    ctx.shadowColor=color;ctx.shadowBlur=stroke*2.5;
+    ctx.beginPath();ctx.moveTo(x+b[0]*w,y+b[1]*h);ctx.lineTo(x+a[0]*w,y+a[1]*h);ctx.stroke();
+    ctx.globalAlpha=f;ctx.lineWidth=Math.max(1,stroke*.42);ctx.shadowBlur=stroke;
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+let reflexFrame=0,reflexLast=0;
+function reflexTick(now){
+  reflexFrame=requestAnimationFrame(reflexTick);
+  if(now-reflexLast<33)return;reflexLast=now;
+  for(const s of sprites){if(!s.reflexEnabled||!s.visible)continue;
+    const el=stage.querySelectorAll('.sprite');
+    const spriteEl=Array.from(el).find(e=>e.dataset.id===s.id);
+    const canvas=spriteEl?.querySelector('.reflex-overlay');if(!canvas)continue;
+    const width=Math.max(1,Math.round(Math.min(700,s.w))),height=Math.max(1,Math.round(Math.min(500,s.h)));
+    if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+    const ctx=canvas.getContext('2d');ctx.clearRect(0,0,width,height);
+    ctx.save();ctx.scale(width/s.w,height/s.h);drawReflexLocal(ctx,s,now/1000,0,0,s.w,s.h);ctx.restore();
+  }
+}
+requestAnimationFrame(reflexTick);
+
+// V0.3.4 - Auto Trim. Crop is represented in original-image pixel coordinates.
+// It is non-destructive and preserves animated GIF playback and project JSON.
+function isGifSprite(s){return /\.gif(?:$|[?#])/i.test(s.label||'')||/^data:image\/gif/i.test(s.src)||/\.gif(?:$|[?#])/i.test(s.src||'');}
+function trimPixelBounds(data,w,h,alphaLimit,useDark,threshold,feather){
+  let l=w,r=-1,t=h,b=-1;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    const i=(y*w+x)*4;let alpha=data[i+3];
+    if(useDark){const lum=Math.max(data[i],data[i+1],data[i+2]);alpha*=Math.max(0,Math.min(1,(lum-threshold)/Math.max(1,feather)));}
+    if(alpha<alphaLimit)continue;
+    l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);
+  }
+  return r<l?null:{left:l,top:t,right:r+1,bottom:b+1};
+}
+function unionBounds(a,b){if(!a)return b;if(!b)return a;return {left:Math.min(a.left,b.left),top:Math.min(a.top,b.top),right:Math.max(a.right,b.right),bottom:Math.max(a.bottom,b.bottom)};}
+async function computeTrimBounds(s,alphaLimit,useDark){
+  const im=preload(s.src);if(!im.complete||!im.naturalWidth)await im.decode();
+  const w=im.naturalWidth,h=im.naturalHeight;
+  const render=(bitmap)=>{
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bitmap,0,0,w,h);
+    return trimPixelBounds(x.getImageData(0,0,w,h).data,w,h,alphaLimit,useDark,s.darkThreshold??25,s.darkFeather??45);
+  };
+  let box=null,frames=1,complete=true;
+  if(isGifSprite(s)){
+    if('ImageDecoder' in window){
+      const response=await fetch(s.src),bytes=await response.arrayBuffer();
+      const decoder=new ImageDecoder({data:bytes,type:'image/gif'});
+      try{
+        await decoder.tracks.ready;
+        const count=decoder.tracks.selectedTrack?.frameCount||1;
+        frames=count;
+        for(let i=0;i<count;i++){
+          const {image}=await decoder.decode({frameIndex:i,completeFramesOnly:true});
+          try{box=unionBounds(box,render(image));}finally{image.close();}
+          if(i%10===0){$('trimInfo').textContent=`Analisando GIF: quadro ${i+1}/${count}…`;await new Promise(resolve=>setTimeout(resolve,0));}
+        }
+      }finally{decoder.close();}
+    }else{
+      // A first-frame-only crop is unsafe for animated characters. Never silently cut them.
+      throw new Error('Este navegador não disponibiliza ImageDecoder para analisar TODOS os quadros do GIF. Atualize o Edge/Chrome ou importe PNG; nenhum corte foi aplicado.');
+    }
+  }else box=render(im);
+  return {box,frames,complete,w,h};
+}
+function mapCropToCurrent(s,newRect){
+  const old=validateTrimRect(s.trimRect)||{left:0,top:0,width:newRect.sourceW,height:newRect.sourceH,sourceW:newRect.sourceW,sourceH:newRect.sourceH};
+  const sx=s.w/old.width,sy=s.h/old.height;
+  const leftOffset=(newRect.left-old.left)*sx,topOffset=(newRect.top-old.top)*sy;
+  const dw=newRect.width*sx,dh=newRect.height*sy;
+  // Preserve the visual position of all surviving pixels, even if the sprite is flipped/rotated.
+  const ox=leftOffset+(dw-s.w)/2,oy=topOffset+(dh-s.h)/2;
+  const signedX=s.flipX?-ox:ox,signedY=s.flipY?-oy:oy;
+  const a=(s.rot||0)*Math.PI/180;
+  const deltaX=signedX*Math.cos(a)-signedY*Math.sin(a),deltaY=signedX*Math.sin(a)+signedY*Math.cos(a);
+  const oldCx=s.x+s.w/2,oldCy=s.y+s.h/2;
+  s.x=+(oldCx+deltaX-dw/2).toFixed(3);s.y=+(oldCy+deltaY-dh/2).toFixed(3);
+  s.w=+dw.toFixed(3);s.h=+dh.toFixed(3);
+  s.trimRect=newRect;
+}
+$('trimAlpha').addEventListener('input',e=>$('trimAlphaText').textContent=e.target.value);
+function refreshTrimPanel(){
+  const sel=selectedSprite();const isRegular=sel&&sel.kind!=='dynamicBar'&&!['text','timer','material'].includes(sel.smartKind);
+  $('trimApply').disabled=!isRegular;$('trimReset').disabled=!sel?.trimRect;
+  const tr=sel?.trimRect;
+  $('trimInfo').textContent=!sel?'Selecione um PNG ou GIF.':tr?`Corte ativo: origem (${tr.left}, ${tr.top}), área ${tr.width} × ${tr.height} de ${tr.sourceW} × ${tr.sourceH}.`:'Sem corte aplicado ao sprite selecionado.';
+}
+$('trimApply').onclick=async()=>{
+  const targets=selectedSprites().filter(s=>s.kind!=='dynamicBar'&&!['text','timer','material'].includes(s.smartKind));
+  if(!targets.length){$('trimInfo').textContent='Selecione ao menos um sprite de imagem.';return;}
+  $('trimApply').disabled=true;
+  try{
+    const alpha=Number($('trimAlpha').value)||8,padding=Math.max(0,Math.min(100,Number($('trimPadding').value)||0));
+    const proposals=[];
+    for(const s of targets){
+      const item=await computeTrimBounds(s,alpha,!!s.darkKey&&$('trimUseDarkKey').checked);
+      if(!item.box){$('trimInfo').textContent=`${s.label}: não há pixels visíveis; preservado.`;continue;}
+      const b=item.box;
+      const left=Math.max(0,b.left-padding),top=Math.max(0,b.top-padding),right=Math.min(item.w,b.right+padding),bottom=Math.min(item.h,b.bottom+padding);
+      proposals.push({s,rect:{left,top,width:right-left,height:bottom-top,sourceW:item.w,sourceH:item.h},frames:item.frames});
+    }
+    if(!proposals.length)return;
+    snapshot();
+    for(const p of proposals)mapCropToCurrent(p.s,p.rect);
+    const ids=new Set(selection),primary=selected;save();render();setSelection(ids,primary);
+    const msg=`✂ ${proposals.length} sprite(s) recortado(s); GIFs analisados em todos os quadros. Original preservado no JSON.`;
+    $('trimInfo').textContent=msg;status(msg);
+  }catch(err){$('trimInfo').textContent='Erro: '+err.message;status('Auto Trim: '+err.message);}
+  finally{$('trimApply').disabled=false;}
+};
+$('trimReset').onclick=()=>{
+  const targets=selectedSprites().filter(s=>validateTrimRect(s.trimRect));
+  if(!targets.length)return;
+  snapshot();for(const s of targets)mapCropToCurrent(s,{left:0,top:0,width:s.trimRect.sourceW,height:s.trimRect.sourceH,sourceW:s.trimRect.sourceW,sourceH:s.trimRect.sourceH});
+  for(const s of targets)s.trimRect=null;
+  const ids=new Set(selection),primary=selected;save();render();setSelection(ids,primary);status('Margens originais restauradas.');
+};
+
 $('exportPng').onclick = async ()=>{
   try{
     const canvas = document.createElement('canvas'); canvas.width=W; canvas.height=H; const ctx = canvas.getContext('2d');
@@ -1530,6 +1922,7 @@ document.addEventListener('keydown', e => {
   const tag=document.activeElement?.tagName;
   if(['INPUT','TEXTAREA','SELECT'].includes(tag))return;
   const ctrl=e.ctrlKey||e.metaKey,key=e.key.toLowerCase();
+  if(ctrl&&key==='s'){e.preventDefault();$('saveProjectState').click();return;}
   if(ctrl&&key==='c'){e.preventDefault();copySelection();return;}
   // Ctrl+V is handled by the paste event to prioritize external image content.
   if(ctrl&&key==='v')return;
@@ -1574,8 +1967,8 @@ $('mkCharacter').onchange=()=>{$('hudName').value=$('mkCharacter').value;};
 refreshMKNames();
 function escapeSvgText(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));}
 function smartSvgImage(value,color,font=48){
-  const safe=escapeSvgText(value),size=Math.max(12,Math.min(120,font));
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="145" viewBox="0 0 800 145"><defs><filter id="g"><feGaussianBlur stdDeviation="2"/></filter></defs><text x="400" y="83" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="${size}" font-weight="bold" textLength="${Math.min(750,Math.max(80,safe.length*size*.67))}" lengthAdjust="spacingAndGlyphs" fill="${color}" stroke="#180d06" stroke-width="5" paint-order="stroke">${safe}</text></svg>`;
+  const safe=escapeSvgText(String(value).toLocaleUpperCase("pt-BR")),size=Math.max(12,Math.min(120,font));
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="145" viewBox="0 0 800 145"><defs><filter id="g"><feGaussianBlur stdDeviation="2"/></filter></defs><text x="400" y="83" text-anchor="middle" dominant-baseline="middle" font-family="Impact,Arial Black,sans-serif" font-size="${size}" font-weight="bold" textLength="${Math.min(750,Math.max(80,safe.length*size*.67))}" lengthAdjust="spacingAndGlyphs" fill="${color}" stroke="#180d06" stroke-width="5" paint-order="stroke">${safe}</text></svg>`;
   return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
 }
 function addSmartSprite(info){
@@ -1604,31 +1997,58 @@ const HUD_MATERIALS={
   lilas:'assets/miolos-4-cores/miolo_lava_lilas.png',
   pink:'assets/miolos-4-cores/miolo_lava_pink.png'
 };
+// The texture is rasterized independently of the original metallic frame.
 async function materialSource(frame,key){
-  const src=HUD_MATERIALS[key];const img=preload(src);
+  const src=HUD_MATERIALS[key],img=preload(src);
   if(!img.complete||!img.naturalWidth)await img.decode();
   const w=Math.max(2,Math.round(frame.w)),h=Math.max(2,Math.round(frame.h));
   const can=document.createElement('canvas');can.width=w;can.height=h;
-  const c=can.getContext('2d');c.save();c.beginPath();
-  const central=/central|v\b/i.test(frame.label)||/central_v/.test(frame.src);
-  if(central){
-    c.moveTo(w*.14,h*.16);c.lineTo(w*.34,h*.18);c.lineTo(w*.5,h*.37);c.lineTo(w*.66,h*.18);c.lineTo(w*.86,h*.16);
-    c.lineTo(w*.65,h*.83);c.lineTo(w*.50,h*.94);c.lineTo(w*.35,h*.83);
-  }else{
-    c.moveTo(w*.09,h*.18);c.lineTo(w*.91,h*.18);c.lineTo(w*.96,h*.5);c.lineTo(w*.91,h*.82);c.lineTo(w*.09,h*.82);c.lineTo(w*.04,h*.5);
-  }
+  const c=can.getContext('2d');c.save();
+  const L=Math.min(48,Math.max(0,frame.matInsetL??0))/100*w,R=Math.min(48,Math.max(0,frame.matInsetR??0))/100*w;
+  const T=Math.min(48,Math.max(0,frame.matInsetT??0))/100*h,B=Math.min(48,Math.max(0,frame.matInsetB??0))/100*h;
+  const innerW=Math.max(1,w-L-R),innerH=Math.max(1,h-T-B),preset=frame.matMaskPreset||( /central|v\b/i.test(frame.label)||/central_v/.test(frame.src)?'v':'frame');
+  c.beginPath();
+  let pts=preset==='v'?[[.14,.16],[.34,.18],[.5,.37],[.66,.18],[.86,.16],[.65,.83],[.50,.94],[.35,.83]]:
+    preset==='rect'?[[0,0],[1,0],[1,1],[0,1]]:[[.09,.18],[.91,.18],[.96,.5],[.91,.82],[.09,.82],[.04,.5]];
+  pts.forEach(([x,y],i)=>i?c.lineTo(L+x*innerW,T+y*innerH):c.moveTo(L+x*innerW,T+y*innerH));
   c.closePath();c.clip();
-  // Tile original master texture at native pixel dimensions; no horizontal stretch.
-  const pattern=c.createPattern(img,'repeat');c.fillStyle=pattern;c.fillRect(0,0,w,h);c.restore();
+  const scale=Math.max(.1,Math.min(4,(frame.matTextureScale??100)/100));
+  c.translate(w/2+(frame.matTextureX??0),h/2+(frame.matTextureY??0));
+  c.rotate((frame.matTextureRotation??0)*Math.PI/180);c.scale(scale,scale);
+  const pattern=c.createPattern(img,'repeat');c.fillStyle=pattern;
+  const extent=Math.max(w,h)*12;c.fillRect(-extent,-extent,extent*2,extent*2);c.restore();
   return can.toDataURL('image/png');
 }
+const materialControls={matMaskPreset:'matMaskPreset',matInsetL:'matInsetL',matInsetR:'matInsetR',matInsetT:'matInsetT',matInsetB:'matInsetB',matTextureScale:'matTextureScale',matTextureRotation:'matTextureRotation',matTextureX:'matTextureX',matTextureY:'matTextureY'};
+let materialBuildTicket=0;
+async function refreshMaterialPreview(sprite){
+  if(sprite.smartKind!=='material'||!sprite.matKey)return;
+  const ticket=++materialBuildTicket,src=await materialSource(sprite,sprite.matKey);
+  if(ticket!==materialBuildTicket)return;
+  sprite.src=src;preload(src);save();render();select(sprite.id);
+}
+for(const [id,key] of Object.entries(materialControls)){
+  $(id).addEventListener('change',e=>{
+    const target=selectedSprite();if(!target||target.smartKind!=='material')return;
+    snapshot();target[key]=id==='matMaskPreset'?e.target.value:Number(e.target.value);
+    refreshMaterialPreview(target).catch(err=>status('Erro ao renderizar máscara: '+err.message));
+  });
+}
+$('pivotCenter').onclick=()=>mutateSelected(s=>{s.pivotX=50;s.pivotY=50;});
+$('preciseCenter').onclick=()=>mutateSelected(s=>{s.x=Math.round(W/2-s.w/2);s.y=Math.round(H/2-s.h/2);});
+
 $('applyHudMaterial').onclick=async()=>{
   const target=selectedSprite();if(!target){status('Selecione uma moldura antes de inserir o miolo.');return;}
   if(target.smartKind==='text'||target.smartKind==='timer'){status('Selecione uma moldura, não um texto ou timer.');return;}
   const kind=$('hudMaterial').value;
   try{
-    const src=await materialSource(target,kind);
-    addSmartSprite({src,label:`Miolo ${kind} · ${target.label}`,x:target.x,y:target.y,w:target.w,h:target.h,z:target.z-.1,smartKind:'material'});
+    const central=/central|v\b/i.test(target.label)||/central_v/.test(target.src);
+    const info={w:target.w,h:target.h,matMaskPreset:central?'v':'frame'};
+    const src=await materialSource(info,kind);
+    addSmartSprite({src,label:`Miolo ${kind} · ${target.label}`,x:target.x,y:target.y,w:target.w,h:target.h,z:target.z-.1,materialParentId:target.id,smartKind:'material',matKey:kind,matMaskPreset:info.matMaskPreset});
+    // Ensure frame and fill remain adjacent in the actual render/hit-test stack.
+    const fill=sprites.at(-1),ordered=[...sprites].filter(o=>o!==fill).sort((a,b)=>a.z-b.z);
+    const index=ordered.findIndex(o=>o.id===target.id);ordered.splice(Math.max(0,index),0,fill);ordered.forEach((o,i)=>o.z=i+1);save();render();
     status('Miolo adicionado abaixo da moldura. Ajuste o encaixe se necessário.');
   }catch(err){status('Falha ao carregar material: '+err.message);}
 };
@@ -1647,6 +2067,8 @@ $('addHudTimer').onclick=()=>{
 function refreshTimer(s){s.src=timerVisual(s);preload(s.src);const im=stage.querySelector(`.sprite[data-id="${s.id}"] img`);if(im)im.src=s.src;}
 $('hudTimerPlay').onclick=()=>{const s=currentTimer();if(!s)return;s.timerRunning=!s.timerRunning;save();};
 $('hudTimerReset').onclick=()=>{const s=currentTimer();if(!s)return;s.timerDuration=Number($('hudTimerDuration').value);s.timerRemaining=s.timerDuration;s.timerRunning=false;refreshTimer(s);save();};
+$('hudTimerDuration').addEventListener('change',()=>{const s=currentTimer();if(!s)return;snapshot();s.timerDuration=Number($('hudTimerDuration').value);s.timerRemaining=s.timerDuration;s.timerRunning=false;refreshTimer(s);save();status('Cronômetro redefinido para '+s.timerDuration+' segundos.');});
+$('hudTimerColor').addEventListener('change',()=>{const s=currentTimer();if(!s)return;snapshot();s.textColor=$('hudTimerColor').value;refreshTimer(s);save();});
 let timerLast=performance.now();
 setInterval(()=>{
   const now=performance.now(),dt=Math.max(0,Math.min(2,(now-timerLast)/1000));timerLast=now;
@@ -1658,7 +2080,7 @@ setInterval(()=>{
   }
   if(changed)save();
 },120);
-function mirrorQuant(v){const n=Number($('hudMirrorGrid').value)||1;return Math.round(v/n)*n;}
+function mirrorQuant(v){const n=Number($('hudMirrorGrid').value)||1,near=Math.round(v/n)*n,tolerance=Number($('hudMirrorTolerance').value)||0;return Math.abs(v-near)<=tolerance?near:v;}
 $('hudMirrorAlign').onclick=()=>{
   const items=selectedSprites();if(!items.length)return;
   snapshot();for(const s of items){s.x=mirrorQuant(s.x);s.y=mirrorQuant(s.y);applySprite(s);}save();render();status('Posições quantizadas à grade.');
@@ -1667,9 +2089,10 @@ $('hudMirrorDuplicate').onclick=()=>{
   const items=selectedSprites().filter(s=>!s.locked);
   if(!items.length)return;
   snapshot();const axis=Number($('hudMirrorAxis').value)||960;
-  const copies=[];
-  for(const s of items){const pair=normalize({...clone(s),id:newId(),label:s.label+' · Espelho',x:mirrorQuant(2*axis-s.x-s.w),y:mirrorQuant(s.y),rot:-s.rot,flipX:!s.flipX,z:s.z+.1,groupId:null,mirrorPair:s.id,mirrorLinked:$('hudMirrorLink').checked});
-    if($('hudMirrorLink').checked){s.mirrorPair=pair.id;s.mirrorLinked=true;}
+  const copies=[],axisY=Number($('hudMirrorAxisY').value)||540;
+  const mode=$('hudMirrorMode').value,hor=mode!=='vertical',ver=mode!=='horizontal';
+  for(const s of items){const pair=normalize({...clone(s),id:newId(),label:s.label+' · Espelho',x:mirrorQuant(hor?2*axis-s.x-s.w:s.x),y:mirrorQuant(ver?2*axisY-s.y-s.h:s.y),rot:(hor!==ver)?-s.rot:s.rot,flipX:s.smartKind==='text'?false:(hor?!s.flipX:s.flipX),flipY:s.smartKind==='text'?false:(ver?!s.flipY:s.flipY),pivotX:hor?100-s.pivotX:s.pivotX,pivotY:ver?100-s.pivotY:s.pivotY,mirrorMode:mode,z:s.z+.1,groupId:null,mirrorPair:s.id,mirrorLinked:$('hudMirrorLink').checked});
+    if($('hudMirrorLink').checked){s.mirrorPair=pair.id;s.mirrorLinked=true;s.mirrorMode=mode;}
     copies.push(pair);
   }
   sprites.push(...copies);save();render();setSelection(copies.map(s=>s.id),copies.at(-1).id);
@@ -1687,6 +2110,28 @@ for(const [id,key,type] of [['fxTintEnabled','tintEnabled','checkbox'],['fxTintC
   });
 }
 
+function renderSymmetryDiagnostics(){
+  const canvas=$('diagnosticOverlay');if(!canvas)return;
+  const active=$('symmetryDiagnostic').checked;canvas.style.display=active?'block':'none';if(!active)return;
+  const c=canvas.getContext('2d');c.clearRect(0,0,W,H);
+  const x=Number($('hudMirrorAxis').value)||W/2,y=Number($('hudMirrorAxisY').value)||H/2;
+  c.save();c.strokeStyle='#ffbb55';c.lineWidth=2;c.setLineDash([16,12]);
+  c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.moveTo(0,y);c.lineTo(W,y);c.stroke();c.setLineDash([]);
+  const seen=new Set();
+  for(const s of sprites){if(!s.mirrorPair||seen.has(s.id))continue;
+    const p=sprites.find(t=>t.id===s.mirrorPair);if(!p)continue;
+    seen.add(s.id);seen.add(p.id);
+    const hor=s.mirrorMode!=='vertical',ver=s.mirrorMode!=='horizontal';
+    const ex=hor?2*x-s.x-s.w:s.x,ey=ver?2*y-s.y-s.h:s.y;
+    const err=Math.hypot(p.x-ex,p.y-ey),tol=Number($('hudMirrorTolerance').value)||0;
+    c.strokeStyle=err<=tol?'#52f2b6':'#ff5265';c.lineWidth=3;
+    c.strokeRect(p.x,p.y,p.w,p.h);
+    c.fillStyle=c.strokeStyle;c.font='bold 20px Arial';c.fillText('Δ '+err.toFixed(1)+'px',p.x,p.y-7);
+  }c.restore();
+}
+$('symmetryDiagnostic').onchange=renderSymmetryDiagnostics;
+for(const id of ['hudMirrorAxis','hudMirrorAxisY','hudMirrorTolerance','hudMirrorMode'])$(id).addEventListener('change',()=>{renderSymmetryDiagnostics();save();});
+for(const id of ['hudMirrorGrid'])$(id).addEventListener('change',save);
 renderPalette(); renderAll(); updateRulers();
 </script>
 </body>

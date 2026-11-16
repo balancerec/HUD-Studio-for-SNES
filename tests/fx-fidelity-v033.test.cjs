@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');
+const source=fs.readFileSync('index.html','utf8');
+const part=source.slice(source.indexOf('function isSmokeAsset('),source.indexOf('function defaultSprites('));
+const sandbox={newId:()=> 'generated',sizeRatio:()=>1,clampBarValue:n=>Math.min(100,Math.max(0,n)),resolvedBarFrame:x=>x.frameSrc,fillForColor:(x)=>x.fillSrc,inferFillColor:()=> 'vermelho',smartSvgImage:(v)=>'data:svg:'+v};
+vm.createContext(sandbox);vm.runInContext(part,sandbox);
+const mk=(label,extra={})=>sandbox.normalize({id:label,src:'data:gif',label,w:400,h:200,...extra});
+const fx=mk('fumaça2.gif · Espelho',{darkKey:false,blendMode:'difference'});
+assert.equal(fx.darkKey,true);assert.equal(fx.blendMode,'screen');assert.equal(fx.fxPipelineVersion,3);assert.equal(fx.darkFeather,65);
+const again=mk('fumaça2.gif',{darkKey:false,blendMode:'difference',fxPipelineVersion:3});assert.equal(again.darkKey,false);assert.equal(again.blendMode,'difference');
+const fighter=mk('Scorpion stance.gif',{darkKey:false,blendMode:'difference'});assert.equal(fighter.darkKey,false);assert.equal(fighter.blendMode,'difference');
+const text=mk('Nome P2 · Baraka · Espelho',{x:0,flipX:true,flipY:true,smartKind:'text',textValue:'JOHNNY'});assert.equal(text.flipX,false);assert.equal(text.flipY,false);assert.equal(text.label,'Nome P1 · JOHNNY');
+assert.match(source,/\$\('hudTimerDuration'\)\.addEventListener\('change'/);assert.match(source,/materialParentId:target\.id/);assert.match(source,/function repairMaterialHierarchy/);assert.match(source,/function projectPayload\(\)\{return \{version:[56]/);
+console.log('V0.3.3 FX Fidelity: 15 assertions approved');
