@@ -17,7 +17,7 @@ A exportação JSON inclui `version`, `stage`, `background` e `sprites`.
 
 - O palco é composto de elementos HTML posicionados absolutamente e dimensionado conforme o zoom.
 - A exportação rasteriza a composição em `canvas` PNG.
-- A seleção por alpha usa canvas auxiliar e amostragem da transparência do PNG, mas ainda está em avaliação.
+- A seleção alpha ocorre no `stage` por ordenação Z e amostragem de um buffer de pixels RGBA em cache. Os elementos de sprites usam `pointer-events:none`; apenas alças recebem os eventos. Translação, rotação e flips são invertidos antes da amostragem. A correção depende de validação visual final.
 - O layout é persistido por `localStorage` do navegador; não existe sincronização em nuvem.
 
 ## Limites

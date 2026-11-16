@@ -7,14 +7,15 @@
 - [x] Drag & Drop, transformação, propriedades e camadas
 - [x] Grid/Snap, espelhamento e exportações
 - [x] Documentação e estrutura inicial Git
-- [ ] Resolver HIT-001 (seleção por alpha) com testes em navegador
+- [~] Resolver HIT-001 (seleção por alpha): correção + regressão Node feitas; falta validação em navegador Windows
 - [ ] Persistência de backgrounds grandes fora do `localStorage`
 
 ## v0.2 — Ferramentas do editor
 
-- [ ] Régua, guias e alinhamento magnético
+- [x] Régua, guias e alinhamento magnético
 - [ ] Pan/zoom com mouse e coordenadas precisas
-- [ ] Seleção múltipla, agrupar/desagrupar, histórico robusto
+- [ ] Seleção múltipla e agrupar/desagrupar
+- [x] Undo/Redo com histórico de estados
 - [ ] Auto-crop e ajuste de bounding box pelos pixels visíveis
 - [ ] Importação de PNG customizado para a biblioteca
 

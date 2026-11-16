@@ -4,6 +4,15 @@ Editor visual experimental de HUDs e elementos de interface para jogos, com insp
 
 > **Estado:** protótipo estático, sem compilação. O nome expressa o objetivo do projeto; a versão atual **não gera automaticamente arquivos ou código compatíveis com hardware SNES**. O editor trabalha com PNGs RGBA e canvas Full HD.
 
+## Desenvolvimento V0.2.0 — branch `feat/editor-v0.2.0`
+
+- Hit-test por pixel visível, com eventos centralizados no palco e respeito a rotação/espelhamento/zoom.
+- Régua horizontal e vertical, guias magnéticas e alinhamento ao canvas.
+- Undo/Redo com botões e atalhos (`Ctrl+Z`, `Ctrl+Y` ou `Ctrl+Shift+Z`).
+- Regressão automatizada do alpha com Node.js (`node tests/hit-test.test.cjs`).
+
+**Importante:** implementação em desenvolvimento; o teste estático/regressão não substitui validação manual no navegador Windows.
+
 ## Funcionalidades atuais
 
 - Canvas **1920 × 1080**, zoom e background substituível (PNG/JPEG/WebP).
@@ -16,7 +25,7 @@ Editor visual experimental de HUDs e elementos de interface para jogos, com insp
 
 ### Limitação conhecida
 
-**A seleção por pixels visíveis (canal alpha) ainda não funciona corretamente em todos os casos.** A versão atual mantém o algoritmo experimental; para alguns sprites a área vazia/transparente ainda pode receber clique/arraste. Este comportamento deve ser corrigido e testado antes de uma versão estável. Consulte [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
+**HIT-001 em validação:** substituímos a captura das caixas por seleção centralizada por máscara alpha, mas a correção ainda requer aceite visual do usuário no navegador Windows. Consulte [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
 
 ## Execução
 
@@ -54,6 +63,7 @@ HUD-Studio-for-SNES/
 
 ```powershell
 py tests/smoke-test.py
+node tests/hit-test.test.cjs
 ```
 
 O teste verifica a estrutura, referências aos PNGs e integridade básica dos assets. Quando `node` está disponível, também verifica a sintaxe do JavaScript embutido.
