@@ -63,10 +63,13 @@ input[type="color"]{padding:2px;height:34px}
 .stage.drop-target{outline:3px dashed #ffb54a;outline-offset:-6px}
 .sprite{position:absolute;transform-origin:center center;touch-action:none;user-select:none;cursor:grab;z-index:10;pointer-events:none}
 .sprite img{width:100%;height:100%;object-fit:fill;pointer-events:none;display:block}
-.sprite.selected{outline:2px dashed #ffd25e;outline-offset:3px;cursor:move}
+.sprite.multi-selected{outline:2px solid #79cdff;outline-offset:3px}.marquee{position:absolute;z-index:99999;border:1px dashed #ffbb57;background:#ffbb5722;pointer-events:none}.sprite.selected{outline:2px dashed #ffd25e;outline-offset:3px;cursor:move}
 .sprite.locked{cursor:not-allowed}
 .handle{pointer-events:auto;position:absolute;width:14px;height:14px;border-radius:4px;border:2px solid #16181d;background:#ffbe54;display:none}
 .handle.br{right:-9px;bottom:-9px;cursor:nwse-resize}
+.handle.bl{left:-9px;bottom:-9px;cursor:nesw-resize}
+.handle.tr{right:-9px;top:-9px;cursor:nesw-resize}
+.handle.tl{left:-9px;top:-9px;cursor:nwse-resize}
 .handle.rot{left:50%;top:-26px;transform:translateX(-50%);border-radius:50%;background:#83dfff;cursor:grab}
 .sprite.selected .handle{display:block}
 .sprite.locked .handle{display:none}
@@ -90,6 +93,123 @@ input[type="color"]{padding:2px;height:34px}
 .hidden{display:none!important}
 @media (max-width: 1200px){.app{grid-template-columns:250px minmax(0,1fr) 290px}}
 @media (max-width: 980px){.app{grid-template-columns:1fr}.panel.right,.panel{max-height:40vh;border-left:none;border-right:none}.workspace{min-height:50vh}}
+
+
+/* V0.2.2 Visual Polish — controles agrupados, espaçamento uniforme, sem mudar IDs nem eventos */
+.workspace-toolbar{
+  display:flex;align-items:stretch;gap:14px;padding:10px 14px 12px;
+  flex-wrap:nowrap;background:#17191f;border-bottom:1px solid #393d45;
+}
+.toolbar-heading{display:flex;flex-direction:column;justify-content:center;min-width:124px;gap:3px}
+.toolbar-heading strong{font-size:12px;color:#ffcf84;white-space:nowrap}
+.toolbar-slash{color:#777c85}
+.toolbar-subtitle{font-size:10px;color:#8d94a0;white-space:nowrap}
+.toolbar-groups{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;min-width:0;flex:1}
+.tool-group{
+  display:flex;flex-direction:column;gap:7px;justify-content:center;
+  border:1px solid #343840;background:linear-gradient(180deg,#24272d,#1c1f25);
+  border-radius:9px;padding:8px 11px;min-width:0;
+}
+.tool-group-title{font-size:10px;text-transform:uppercase;letter-spacing:1.1px;color:#b4bbc6;font-weight:700}
+.tool-group-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.tool-group-actions .check,.tool-group-actions .tool-select{font-size:11px;white-space:nowrap}
+.tool-group-actions button{min-height:32px;padding:6px 10px;white-space:nowrap}
+.tool-group-actions select{padding:5px 7px;min-width:52px}
+.tool-select{display:flex;align-items:center;gap:5px;color:#d6d9e0}
+.selection-chip{font-size:10px!important;min-width:53px;text-align:center;white-space:nowrap}
+.inspector-group{
+  margin:0 0 14px;padding:12px;background:#1e2127;border:1px solid #333840;border-radius:10px;
+}
+.inspector-group-title{
+  color:#d8b67e!important;text-transform:uppercase;font-size:10px!important;
+  letter-spacing:1px;margin:0 0 12px!important;
+}
+.inspector-group .field{margin-bottom:10px}
+.inspector-group .grid2{column-gap:10px;row-gap:2px}
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 7px;margin-bottom:14px}
+.option-grid .check{font-size:11px}
+.action-grid{display:grid;gap:9px}
+.action-grid.columns-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.action-grid.columns-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.action-grid button{min-width:0;min-height:36px;padding:7px 5px;font-size:11px;text-align:center;line-height:1.25;overflow-wrap:normal}
+.inspector-danger{border-color:#613d3a;background:#271d20;margin-bottom:2px}
+.inspector-danger .inspector-group-title{color:#e1a49f!important}
+.wide-action{display:block;width:100%;min-height:39px;font-weight:700}
+.panel.right .section{padding:14px 13px}
+.panel.right{scrollbar-gutter:stable}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #ffbe56;outline-offset:2px}
+@media(max-width:1450px){
+  .workspace-toolbar{flex-direction:column;gap:9px}
+  .toolbar-heading{flex-direction:row;align-items:center;justify-content:flex-start;gap:10px}
+}
+@media(max-width:1100px){
+  .toolbar-groups{gap:8px}
+  .tool-group{padding:7px 9px}
+  .action-grid.columns-3{gap:5px}
+  .action-grid button{font-size:10px}
+}
+
+/* DynamicBar V0.2.4 */
+.dynamic-bar-empty,.dynamic-bar-fill,.dynamic-bar-frame {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;object-fit:fill}
+.dynamic-bar-empty {z-index:0}
+.dynamic-bar-fill {z-index:1}
+.dynamic-bar-frame {z-index:2}
+.dynamic-tools{border-left:3px solid #b46b27}
+.dynamic-tools button{min-height:34px}
+#dynamicInspector{border-color:#84542d;background:#262019}
+#dynamicInspector output{float:right}
+
+/* Master Asset System v0.2.5 */
+.master-filter{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.master-filter label{font-size:11px;color:#d4b27b;font-weight:600}
+.master-filter select{flex:1;min-width:0;padding:7px;background:#11151b;color:#f3e8d4}
+#masterHint{font-size:10px;line-height:1.35}
+.asset .asset-tag{display:inline-flex;font-size:9px;color:#b9a07b;background:#3a2a1b;border:1px solid #59452f;border-radius:4px;padding:1px 4px}
+.asset[hidden]{display:none!important}
+
+/* V0.2.9 — inspector containment and animation FX */
+.panel.right,.panel.right .section,.inspector-group,.field{min-width:0;max-width:100%;box-sizing:border-box}
+.inspector-group input:not([type=checkbox]):not([type=range]),.inspector-group select,.panel.right .field input:not([type=checkbox]):not([type=range]),.panel.right .field select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+.inspector-group .grid2,.panel.right .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.inspector-group .grid2>.field,.panel.right .grid2>.field{min-width:0;overflow:hidden}
+.inspector-group input[type=range],.panel.right input[type=range]{width:100%;min-width:0}
+.inspector-group label{overflow-wrap:anywhere}
+.sprite-visual{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;transform-origin:center center}
+.sprite-visual>img{width:100%;height:100%;object-fit:fill}
+.sprite-visual .dynamic-bar-empty,.sprite-visual .dynamic-bar-fill,.sprite-visual .dynamic-bar-frame{position:absolute;inset:0}
+@keyframes hudPulse {0%,100%{transform:scale(1);opacity:1}50%{transform:scale(var(--pulse-amplitude,1.07));opacity:.78}}
+.sprite-visual.pulse{animation:hudPulse var(--pulse-duration,1.5s) ease-in-out infinite}
+.fx-tools{border-color:#65513a;background:#231f1d}
+.fx-tools .hint{margin:6px 0 0;font-size:11px}
+.fx-toolbar{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fx-toolbar button{font-size:11px;min-height:30px}
+/* V0.2.7 — Fill Editor */
+.fill-editor{padding:11px;margin:12px 0 10px;border:1px solid #4c4232;background:#17191f;border-radius:8px}
+.fill-editor .field{margin:0 0 10px}
+.color-swatches{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:9px}
+.color-swatch{position:relative;height:34px;min-width:0;background:linear-gradient(150deg,#0007,transparent 50%,#fff5),var(--swatch);border:2px solid #41454f;border-radius:7px;cursor:pointer}
+.color-swatch.active{border-color:#ffe6a5;box-shadow:0 0 0 2px #edab36,0 0 12px #b6712780}
+.color-swatch.active::after{content:'✓';font-size:17px;color:#fff;text-shadow:0 1px 3px #000;position:absolute;inset:0;display:grid;place-items:center}
+
+/* V0.3.0 — individual blend modes, animated black-key processing */
+.sprite{isolation:auto}
+.sprite-visual{mix-blend-mode:normal}
+.sprite-visual .chroma-canvas[hidden]{display:none}
+.sprite-visual .chroma-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:block}
+.fx-tools select,.fx-tools input:not([type=checkbox]):not([type=range]){width:100%;min-width:0;max-width:100%}
+.fx-group-label{display:block;font-size:10px;color:#e0bb80;text-transform:uppercase;letter-spacing:.8px;margin:12px 0 6px}
+.fx-group-divider{border:0;border-top:1px solid #48403a;margin:12px 0}
+.fx-tools .check{margin:7px 0}
+.fx-warning{font-size:11px;line-height:1.45;color:#b6bdc5}
+
+/* Smart HUD v0.3.1 */
+#smartHudTools .smart-row, .fx-tools .smart-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:8px 0}
+#smartHudTools .smart-row>*, .fx-tools .smart-row>*{min-width:0}
+#smartHudTools button{min-height:34px;white-space:normal;font-size:11px;line-height:1.3}
+#smartHudTools select, #smartHudTools input, .fx-tools input{max-width:100%;box-sizing:border-box}
+#smartHudTools .field{min-width:0}
+#smartHudTools input[type=color],.fx-tools input[type=color]{height:34px;min-width:0;width:100%;padding:3px}
+#smartHudTools{border-color:#57503c}
 </style>
 </head>
 <body>
@@ -112,8 +232,29 @@ input[type="color"]{padding:2px;height:34px}
     <aside class="panel">
       <div class="section">
         <div class="browser-head"><strong>Browser</strong><span class="tag">Sprites</span></div>
-        <p class="hint">Arraste os itens para o palco, como no workflow de Browser/Playlist.</p>
-        <div class="library" id="palette"></div>
+        <p class="hint">Arraste os itens para o palco. Também é possível importar PNG, WEBP, JPEG ou GIF animado.</p>
+        <div class="master-filter"><label for="assetFilter">Biblioteca</label>
+<select id="assetFilter" aria-label="Filtrar categoria de sprites">
+<option value="all">Todos os assets</option><option value="studio">Studio original</option>
+<option value="dynamic">DynamicBar v0.2.4</option>
+<option value="molduras" selected>Master · Molduras</option><option value="miolos">Master · Miolos</option>
+<option value="estados">Master · Estados</option><option value="extras">Master · Extras</option>
+<option value="referencia">Master · Referência</option>
+<option value="miolos-cores">Miolos · 4 cores (8 sprites)</option>
+<option value="miolos-sheets">Miolos · Sheets (4 refs)</option></select></div>
+<p class="hint" id="masterHint">MASTER V1 · 37 recortes; Miolos 4 Cores · 8 peças + 4 sheets. Recortes brutos preservados.</p>
+<p class="hint">Miolos 4 cores: Verde, Azul, Lilás e Pink. “Miolo com borda” já possui acabamento dourado. As sheets são referências completas.</p>
+<div class="library" id="palette"></div>
+      </div>
+      <div class="section dynamic-tools">
+        <h2>Barras dinâmicas — Vida / Corrida</h2>
+        <p class="hint">Cada componente combina moldura fixa e preenchimento recortado em tempo real. Arraste da biblioteca ou insira um conjunto simétrico.</p>
+        <button id="addDynamicPreset" class="primary wide-action">+ Adicionar 4 barras dinâmicas</button>
+        <div class="row" style="margin-top:8px">
+          <button id="demoDynamics">▶ Simular combate</button>
+          <button id="stopDynamics">■ Parar</button>
+        </div>
+        <p class="hint" style="margin-top:8px">Prévia de níveis com 0–100%. A exportação PNG captura o quadro atual; o JSON preserva configuração, sprites e orientação.</p>
       </div>
       <div class="section">
         <h2>Projeto</h2>
@@ -131,25 +272,58 @@ input[type="color"]{padding:2px;height:34px}
           </div>
           <div class="row">
             <button id="exportPng" class="primary">Exportar PNG</button>
+            <button id="importImage" title="Importar PNG ou WEBP como sprite">Importar imagem</button>
+            <input hidden type="file" id="imageFile" accept="image/png,image/webp,image/jpeg,image/gif">
           </div>
           <input hidden type="file" id="jsonFile" accept=".json,application/json">
         </div>
-        <p class="hint" style="margin-top:10px">Atalhos: Setas = mover • Shift+Setas = 10 px • Del = apagar • Ctrl+D = duplicar • Ctrl+Z = desfazer.</p>
+        <p class="hint" style="margin-top:10px">Seleção: Shift+clique adiciona/remove; arraste no vazio para seleção em caixa. Agrupe com Ctrl+G, desagrupe com Ctrl+Shift+G. Ctrl+roda: zoom; botão do meio: pan.</p><p class="hint">Atalhos: Ctrl+C copiar sprites • Ctrl+V colar sprites ou imagem • Ctrl+D duplicar seleção • Setas = mover • Shift+Setas = 10 px • Del = apagar • Ctrl+D = duplicar • Ctrl+Z = desfazer.</p>
       </div>
     </aside>
 
     <main class="workspace">
-      <div class="workspace-toolbar">
-        <div class="title">Canvas / Playlist</div>
-        <label class="check"><input type="checkbox" id="snap" checked> Snap</label>
-        <label class="check">Grid <select id="gridSize"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option><option value="64">64</option></select></label>
-        <label class="check"><input type="checkbox" id="grid" checked> Mostrar grade</label>
-        <label class="check"><input type="checkbox" id="referenceToggle"> Referência</label>
-        <label class="check"><input type="checkbox" id="rulers" checked> Réguas</label>
-        <label class="check"><input type="checkbox" id="magnet" checked> Guias magnéticas</label>
-        <button id="undoBtn" title="Ctrl+Z">Desfazer</button><button id="redoBtn" title="Ctrl+Y">Refazer</button>
-        <label class="check"><input type="checkbox" id="includeBg" checked> Exportar com BG</label>
-        <label class="check">Zoom <select id="zoom"><option value="auto">Ajustar</option><option value="0.35">35%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option></select></label>
+      <div class="workspace-toolbar" role="toolbar" aria-label="Ferramentas do editor">
+        <div class="toolbar-heading">
+          <strong>Canvas <span class="toolbar-slash">/</span> Playlist · V0.3.1</strong>
+          <span class="toolbar-subtitle">Edição e posicionamento</span>
+        </div>
+        <div class="toolbar-groups">
+          <div class="tool-group">
+            <span class="tool-group-title">Visualização</span>
+            <div class="tool-group-actions tool-options">
+              <label class="check"><input type="checkbox" id="snap" checked> Snap</label>
+              <label class="tool-select">Grade <select id="gridSize" aria-label="Espaçamento da grade"><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option><option value="64">64</option></select></label>
+              <label class="check"><input type="checkbox" id="grid" checked> Exibir</label>
+              <label class="check"><input type="checkbox" id="referenceToggle"> Referência</label>
+              <label class="check"><input type="checkbox" id="rulers" checked> Réguas</label>
+              <label class="check"><input type="checkbox" id="magnet" checked> Guias</label>
+            </div>
+          </div>
+          <div class="tool-group">
+            <span class="tool-group-title">Seleção</span>
+            <div class="tool-group-actions">
+              <span class="tag selection-chip" id="selectionCount" aria-live="polite">0 itens</span>
+              <button id="groupBtn" title="Ctrl+G">Agrupar</button>
+              <button id="ungroupBtn" title="Ctrl+Shift+G">Desagrupar</button>
+              <button id="copySelection" title="Ctrl+C">Copiar</button>
+              <button id="pasteSelection" title="Ctrl+V">Colar</button>
+            </div>
+          </div>
+          <div class="tool-group">
+            <span class="tool-group-title">Histórico</span>
+            <div class="tool-group-actions">
+              <button id="undoBtn" title="Ctrl+Z">↶ Desfazer</button>
+              <button id="redoBtn" title="Ctrl+Y">↷ Refazer</button>
+            </div>
+          </div>
+          <div class="tool-group">
+            <span class="tool-group-title">Saída &amp; zoom</span>
+            <div class="tool-group-actions">
+              <label class="check"><input type="checkbox" id="includeBg" checked> Incluir BG</label>
+              <label class="tool-select">Zoom <select id="zoom"><option value="auto">Ajustar</option><option value="0.35">35%</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option><option value="custom" hidden>Personalizado</option></select></label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="viewport" id="viewport">
         <div class="scale-wrap" id="scaleWrap">
@@ -168,39 +342,151 @@ input[type="color"]{padding:2px;height:34px}
       <div class="section">
         <h1>Inspector</h1>
         <p class="hint" id="selectionHint">Selecione um item no palco.</p>
+          <section class="inspector-group" id="smartHudTools">
+            <h2 class="inspector-group-title">Smart HUD · V0.3.1</h2>
+            <div class="smart-row"><button id="addP1Name" type="button">+ Nome P1</button><button id="addP2Name" type="button">+ Nome P2</button></div>
+            <label class="field">Jogo<select id="mkGame"><option value="all">Todos / sem duplicados</option><option value="mk1">Mortal Kombat 1</option><option value="mk2">Mortal Kombat II</option><option value="mk3">Mortal Kombat 3</option><option value="umk3">Ultimate MK3</option><option value="mkt">Mortal Kombat Trilogy</option><option value="advance">Mortal Kombat Advance</option></select></label>
+            <label class="field">Personagem<select id="mkCharacter"></select></label>
+            <label class="field">Nome livre<input id="hudName" type="text" maxlength="64" placeholder="Nome do lutador"></label>
+            <div class="smart-row"><label class="field">Cor<input id="hudTextColor" type="color" value="#f9e0a7"></label><label class="field">Fonte (px)<input id="hudFontSize" type="number" min="12" max="120" value="48"></label></div>
+            <button id="applyHudText" type="button" class="wide-action">Aplicar texto ao nome selecionado</button>
+            <hr class="fx-group-divider">
+            <h2 class="inspector-group-title">Material · Molduras / V</h2>
+            <label class="field">Material<select id="hudMaterial"><option value="obsidiana">Obsidiana</option><option value="lava">Lava vermelha</option><option value="lava-inclinada">Lava inclinada</option><option value="verde">Lava verde</option><option value="azul">Lava azul</option><option value="lilas">Lava lilás</option><option value="pink">Lava pink</option></select></label>
+            <button id="applyHudMaterial" type="button" class="wide-action">Inserir miolo dentro da moldura</button>
+            <p class="hint">Selecione primeiro a moldura. O miolo vira uma camada independente, abaixo da moldura.</p>
+            <hr class="fx-group-divider">
+            <h2 class="inspector-group-title">Central V · Cronômetro</h2>
+            <div class="smart-row"><label class="field">Duração<select id="hudTimerDuration"><option value="60">1 minuto</option><option value="120" selected>2 minutos</option><option value="180">3 minutos</option></select></label><label class="field">Cor<input id="hudTimerColor" type="color" value="#ffcd57"></label></div>
+            <div class="smart-row"><button id="addHudTimer" type="button">+ Timer no V</button><button id="hudTimerPlay" type="button">Iniciar / Pausar</button><button id="hudTimerReset" type="button">Reiniciar</button></div>
+            <hr class="fx-group-divider">
+            <h2 class="inspector-group-title">Mirror Quantize · P1 / P2</h2>
+            <div class="smart-row"><label class="field">Eixo X<input id="hudMirrorAxis" type="number" value="960" min="0" max="1920"></label><label class="field">Quantize (px)<select id="hudMirrorGrid"><option value="1">1</option><option value="8">8</option><option value="16" selected>16</option><option value="32">32</option></select></label></div>
+            <label class="check"><input type="checkbox" id="hudMirrorLink" checked> Manter par vinculado</label>
+            <div class="smart-row"><button id="hudMirrorDuplicate" type="button">Duplicar espelhado</button><button id="hudMirrorAlign" type="button">Quantizar posição</button></div>
+          </section>
         <div id="inspector" class="hidden">
-          <label class="field">Nome do item<input id="propLabel" type="text"></label>
-          <div class="grid2">
-            <label class="field">X<input id="propX" type="number" step="1"></label>
-            <label class="field">Y<input id="propY" type="number" step="1"></label>
-            <label class="field">Largura<input id="propW" type="number" step="1" min="1"></label>
-            <label class="field">Altura<input id="propH" type="number" step="1" min="1"></label>
-            <label class="field">Rotação °<input id="propRot" type="number" step="1"></label>
-            <label class="field">Camada Z<input id="propZ" type="number" step="1"></label>
-          </div>
-          <label class="field">Opacidade<input id="propOpacity" type="range" min="0" max="100"></label>
-          <div class="row">
-            <label class="check"><input type="checkbox" id="propFlipX"> Espelhar H</label>
-            <label class="check"><input type="checkbox" id="propFlipY"> Espelhar V</label>
-          </div>
-          <div class="row">
-            <label class="check"><input type="checkbox" id="propLock"> Bloquear</label>
-            <label class="check"><input type="checkbox" id="propVisible"> Visível</label>
-          </div>
-          <div class="row">
-            <button id="flipH">Espelhar H</button>
-            <button id="flipV">Espelhar V</button>
-          </div>
-          <div class="row">
-            <button id="alignLeft">Alinhar E</button><button id="alignCenter">Centralizar X</button><button id="alignRight">Alinhar D</button>
-            <button id="alignTop">Alinhar topo</button><button id="alignMiddle">Centralizar Y</button><button id="alignBottom">Alinhar base</button>
-          </div>
-          <div class="row">
-            <button id="duplicate">Duplicar</button>
-            <button id="bringFront">Trazer à frente</button>
-            <button id="sendBack">Enviar atrás</button>
-            <button id="delete" class="danger">Excluir</button>
-          </div>
+          <section class="inspector-group hidden" id="dynamicInspector">
+            <h2 class="inspector-group-title">DynamicBar — Nível em tempo real</h2>
+            <label class="field">Valor <output id="barValueText" style="color:#ffc56c">100%</output><input id="barValue" type="range" min="0" max="100" value="100" step="1"></label>
+            <div class="grid2">
+              <label class="field">Valor exato (%)<input id="barValueNumber" type="number" min="0" max="100" value="100"></label>
+              <label class="field">Escoamento<select id="barDirection"><option value="ltr">Esquerda → direita</option><option value="rtl">Direita → esquerda</option></select></label>
+            </div>
+            <label class="field">Categoria<select id="barCategory"><option value="health">Vida / Sangue</option><option value="stamina">Corrida / Stamina</option></select></label>
+            <div class="fill-editor" aria-label="Editor de Preenchimentos">
+              <label class="field" for="barColor">Paleta do miolo
+                <select id="barColor">
+                  <option value="vermelho">Vermelho original</option><option value="verde">Verde</option><option value="azul">Azul</option><option value="lilas">Lilás</option><option value="pink">Pink</option>
+                </select>
+              </label>
+              <div id="barColorSwatches" class="color-swatches" role="group" aria-label="Cor do preenchimento">
+                <button class="color-swatch" data-color="vermelho" type="button" title="Vermelho" aria-label="Vermelho" style="--swatch:#e32726"></button>
+                <button class="color-swatch" data-color="verde" type="button" title="Verde" aria-label="Verde" style="--swatch:#16de27"></button>
+                <button class="color-swatch" data-color="azul" type="button" title="Azul" aria-label="Azul" style="--swatch:#145bea"></button>
+                <button class="color-swatch" data-color="lilas" type="button" title="Lilás" aria-label="Lilás" style="--swatch:#ab27e3"></button>
+                <button class="color-swatch" data-color="pink" type="button" title="Pink" aria-label="Pink" style="--swatch:#e71884"></button>
+              </div>
+              <p class="hint">V0.2.8: textura original da master, máscara por barra e moldura fixa independente.</p>
+            </div>
+            <p class="hint">A textura interna não é comprimida: o valor altera apenas a máscara de recorte. A moldura permanece fixa.</p>
+          </section>
+
+          <section class="inspector-group">
+            <h2 class="inspector-group-title">Transformação</h2>
+            <p class="hint">Arraste qualquer uma das 4 quinas. Shift + arrastar redimensiona a partir do centro.</p>
+            <label class="field">Nome do item<input id="propLabel" type="text"></label>
+            <div class="grid2">
+              <label class="field">X<input id="propX" type="number" step="1"></label>
+              <label class="field">Y<input id="propY" type="number" step="1"></label>
+              <label class="field">Largura<input id="propW" type="number" step="1" min="1"></label>
+              <label class="field">Altura<input id="propH" type="number" step="1" min="1"></label>
+              <label class="field">Rotação °<input id="propRot" type="number" step="1"></label>
+              <label class="field">Camada Z<input id="propZ" type="number" step="1"></label>
+            </div>
+            <label class="field">Opacidade<input id="propOpacity" type="range" min="0" max="100"></label>
+          </section>
+          <section class="inspector-group fx-tools" id="spriteEffects">
+            <h2 class="inspector-group-title">Efeitos visuais · PNG / GIF</h2>
+            <label class="check"><input id="fxTintEnabled" type="checkbox"> Colorizar efeito / fumaça</label>
+            <div class="smart-row"><label class="field">Cor da fumaça<input type="color" id="fxTintColor" value="#40f176"></label><label class="field">Intensidade <output id="fxTintAmountText">60%</output><input type="range" id="fxTintAmount" min="0" max="100" value="60"></label></div>
+            <label class="field">Brilho <output id="fxBrightnessText">100%</output><input id="fxBrightness" type="range" min="0" max="250" value="100"></label>
+            <label class="field">Contraste <output id="fxContrastText">100%</output><input id="fxContrast" type="range" min="0" max="250" value="100"></label>
+            <label class="field">Saturação <output id="fxSaturationText">100%</output><input id="fxSaturation" type="range" min="0" max="250" value="100"></label>
+            <hr class="fx-group-divider">
+            <label class="check"><input type="checkbox" id="pulseEnabled"> Pulsar item selecionado</label>
+            <label class="field">Velocidade da pulsação <output id="pulseSpeedText">1,0 Hz</output>
+              <input id="pulseSpeed" type="range" min="0.2" max="4" step="0.1" value="1">
+            </label>
+            <label class="field">Intensidade do pulso <output id="pulseAmountText">7%</output>
+              <input id="pulseAmount" type="range" min="0" max="20" step="1" value="7">
+            </label>
+            <p class="hint">Efeito em tempo real; exportar PNG captura um quadro do efeito.</p>
+            <hr class="fx-group-divider">
+            <span class="fx-group-label">Composição · modos de mistura</span>
+            <label class="field">Modo de mistura
+              <select id="fxBlend">
+                <option value="normal">Normal</option>
+                <option value="multiply">Multiplicar</option>
+                <option value="screen">Tela / Screen (fumaça)</option>
+                <option value="add">Somar / Adicionar</option>
+                <option value="subtract">Subtrair (prévia aproximada)</option>
+                <option value="lighten">Clarear</option>
+                <option value="darken">Escurecer</option>
+                <option value="difference">Diferença</option>
+              </select>
+            </label>
+            <label class="field">Força do efeito <output id="fxStrengthText">100%</output>
+              <input id="fxStrength" type="range" min="0" max="100" step="1" value="100">
+            </label>
+            <hr class="fx-group-divider">
+            <span class="fx-group-label">Remover fundo preto · PNG / GIF</span>
+            <label class="check"><input type="checkbox" id="fxDarkKey"> Remover preto da imagem</label>
+            <label class="field">Tolerância <output id="fxThresholdText">25</output>
+              <input id="fxThreshold" type="range" min="0" max="200" step="1" value="25">
+            </label>
+            <label class="field">Suavização <output id="fxFeatherText">45</output>
+              <input id="fxFeather" type="range" min="0" max="180" step="1" value="45">
+            </label>
+            <p class="fx-warning">Para fumaça com fundo preto, experimente Tela ou Somar. O recorte escuro processa cada quadro do GIF durante a prévia. PNG exporta um único quadro; não exporta GIF animado.</p>
+
+          </section>
+          <section class="inspector-group">
+            <h2 class="inspector-group-title">Espelho &amp; visibilidade</h2>
+            <div class="option-grid">
+              <label class="check"><input type="checkbox" id="propFlipX"> Espelhar H</label>
+              <label class="check"><input type="checkbox" id="propFlipY"> Espelhar V</label>
+              <label class="check"><input type="checkbox" id="propLock"> Bloquear</label>
+              <label class="check"><input type="checkbox" id="propVisible"> Visível</label>
+            </div>
+            <div class="action-grid columns-2">
+              <button id="flipH">Espelhar H</button>
+              <button id="flipV">Espelhar V</button>
+            </div>
+          </section>
+          <section class="inspector-group">
+            <h2 class="inspector-group-title">Alinhamento</h2>
+            <div class="action-grid columns-3">
+              <button id="alignLeft" title="Alinhar à esquerda">Esquerda</button>
+              <button id="alignCenter" title="Centralizar horizontalmente">Centro X</button>
+              <button id="alignRight" title="Alinhar à direita">Direita</button>
+              <button id="alignTop" title="Alinhar ao topo">Topo</button>
+              <button id="alignMiddle" title="Centralizar verticalmente">Centro Y</button>
+              <button id="alignBottom" title="Alinhar à base">Base</button>
+            </div>
+          </section>
+          <section class="inspector-group">
+            <h2 class="inspector-group-title">Organização &amp; camadas</h2>
+            <div class="action-grid columns-2">
+              <button id="duplicate" title="Ctrl+D — duplica todos os itens selecionados">Duplicar seleção</button>
+              <button id="bringFront">Trazer à frente</button>
+              <button id="sendBack">Enviar atrás</button>
+            </div>
+          </section>
+          <section class="inspector-group inspector-danger">
+            <h2 class="inspector-group-title">Remoção</h2>
+            <button id="delete" class="danger wide-action">Excluir seleção</button>
+          </section>
         </div>
       </div>
       <div class="section">
@@ -210,6 +496,14 @@ input[type="color"]{padding:2px;height:34px}
           <label class="field">Modo<select id="bgFit"><option value="cover">Cover</option><option value="contain">Contain</option><option value="stretch">Stretch</option></select></label>
         </div>
         <label class="field">Opacidade do BG<input id="bgOpacity" type="range" min="0" max="100" value="100"></label>
+        <div class="inspector-group fx-tools">
+          <h2 class="inspector-group-title">Parallax do background</h2>
+          <label class="check"><input type="checkbox" id="bgParallax"> Ativar movimento parallax</label>
+          <label class="field">Intensidade (px) <output id="parallaxAmountText">12 px</output>
+            <input id="parallaxAmount" type="range" min="0" max="60" value="12" step="1">
+          </label>
+          <p class="hint">O background acompanha suavemente o ponteiro. A exportação PNG registra a posição do momento.</p>
+        </div>
         <div class="row">
           <button id="loadBg">Trocar background</button>
           <button id="clearBg">Remover background</button>
@@ -231,7 +525,9 @@ const $ = id => document.getElementById(id);
 const stage = $('stage');
 const view = $('viewport');
 const bgLayer = $('bgLayer');
-let uid = 0, scale = 1, selected = null, history = [], future = [], gesture=null;
+let uid = 0, scale = 1, selected = null, selection = new Set(), history = [], future = [], gesture=null, panGesture=null, marquee=null;
+let internalClipboard = null, pasteOffset = 0;
+const CLIP_PREFIX = 'HUD-STUDIO-SPRITES-V1:';
 const imageCache = {};
 const alphaCanvasCache = {};
 const template = [
@@ -260,6 +556,41 @@ const paletteItems = [
   {src:'assets/center_panel.png',label:'Painel central',w:197},
   {src:'assets/medallion.png',label:'Medalhão',w:68}
 ];
+const masterV1Assets = [{"src":"assets/master-v1/clean/molduras/central_v.png","label":"Moldura central V","w":388,"libraryCategory":"molduras","masterId":"central_v"},{"src":"assets/master-v1/clean/molduras/nome_inclinado.png","label":"Moldura inclinada superior","w":403,"libraryCategory":"molduras","masterId":"nome_inclinado"},{"src":"assets/master-v1/clean/molduras/vida_longa.png","label":"Moldura vida longa","w":440,"libraryCategory":"molduras","masterId":"vida_longa"},{"src":"assets/master-v1/clean/molduras/corrida_longa.png","label":"Moldura corrida longa","w":291,"libraryCategory":"molduras","masterId":"corrida_longa"},{"src":"assets/master-v1/clean/molduras/placa_curta_esquerda.png","label":"Moldura pequena esquerda","w":275,"libraryCategory":"molduras","masterId":"placa_curta_esquerda"},{"src":"assets/master-v1/clean/molduras/placa_curta_centro.png","label":"Moldura pequena central","w":375,"libraryCategory":"molduras","masterId":"placa_curta_centro"},{"src":"assets/master-v1/clean/molduras/placa_curta_direita.png","label":"Moldura pequena direita","w":350,"libraryCategory":"molduras","masterId":"placa_curta_direita"},{"src":"assets/master-v1/clean/molduras/medalhao_aro.png","label":"Moldura circular medalhão","w":157,"libraryCategory":"molduras","masterId":"medalhao_aro"},{"src":"assets/master-v1/clean/miolos/obsidiana_v.png","label":"Miolo obsidiana central","w":266,"libraryCategory":"miolos","masterId":"obsidiana_v"},{"src":"assets/master-v1/clean/miolos/obsidiana_placa.png","label":"Miolo obsidiana inclinada","w":286,"libraryCategory":"miolos","masterId":"obsidiana_placa"},{"src":"assets/master-v1/clean/miolos/lava_placa.png","label":"Miolo lava vermelha inclinada","w":273,"libraryCategory":"miolos","masterId":"lava_placa"},{"src":"assets/master-v1/clean/miolos/lava_longa.png","label":"Textura lava vermelha","w":283,"libraryCategory":"miolos","masterId":"lava_longa"},{"src":"assets/master-v1/clean/miolos/energia_verde.png","label":"Textura corrida verde","w":254,"libraryCategory":"miolos","masterId":"energia_verde"},{"src":"assets/master-v1/clean/miolos/vazio_preto.png","label":"Textura vazio preto","w":266,"libraryCategory":"miolos","masterId":"vazio_preto"},{"src":"assets/master-v1/clean/estados/vida_100.png","label":"Vida 100%","w":313,"libraryCategory":"estados","masterId":"vida_100"},{"src":"assets/master-v1/clean/estados/vida_75.png","label":"Vida 75%","w":319,"libraryCategory":"estados","masterId":"vida_75"},{"src":"assets/master-v1/clean/estados/vida_50.png","label":"Vida 50%","w":316,"libraryCategory":"estados","masterId":"vida_50"},{"src":"assets/master-v1/clean/estados/vida_25.png","label":"Vida 25%","w":305,"libraryCategory":"estados","masterId":"vida_25"},{"src":"assets/master-v1/clean/estados/vida_0.png","label":"Vida 0%","w":299,"libraryCategory":"estados","masterId":"vida_0"},{"src":"assets/master-v1/clean/estados/corrida_100.png","label":"Corrida 100%","w":313,"libraryCategory":"estados","masterId":"corrida_100"},{"src":"assets/master-v1/clean/estados/corrida_75.png","label":"Corrida 75%","w":320,"libraryCategory":"estados","masterId":"corrida_75"},{"src":"assets/master-v1/clean/estados/corrida_50.png","label":"Corrida 50%","w":311,"libraryCategory":"estados","masterId":"corrida_50"},{"src":"assets/master-v1/clean/estados/corrida_25.png","label":"Corrida 25%","w":308,"libraryCategory":"estados","masterId":"corrida_25"},{"src":"assets/master-v1/clean/estados/corrida_0.png","label":"Corrida 0%","w":295,"libraryCategory":"estados","masterId":"corrida_0"},{"src":"assets/master-v1/extras/glow_esquerda.png","label":"Brilho horizontal A","w":329,"libraryCategory":"extras","masterId":"glow_esquerda"},{"src":"assets/master-v1/extras/glow_centro.png","label":"Brilho horizontal B","w":239,"libraryCategory":"extras","masterId":"glow_centro"},{"src":"assets/master-v1/extras/glow_direita.png","label":"Brilho horizontal C","w":190,"libraryCategory":"extras","masterId":"glow_direita"},{"src":"assets/master-v1/extras/flare_duplo.png","label":"Flare duplo","w":166,"libraryCategory":"extras","masterId":"flare_duplo"},{"src":"assets/master-v1/extras/dragon_ouro.png","label":"Medalhão dragão dourado","w":82,"libraryCategory":"extras","masterId":"dragon_ouro"},{"src":"assets/master-v1/extras/dragon_vermelho.png","label":"Medalhão dragão vermelho","w":80,"libraryCategory":"extras","masterId":"dragon_vermelho"},{"src":"assets/master-v1/extras/dragon_prata.png","label":"Medalhão dragão prata","w":82,"libraryCategory":"extras","masterId":"dragon_prata"},{"src":"assets/master-v1/extras/dragon_bronze.png","label":"Medalhão dragão bronze","w":96,"libraryCategory":"extras","masterId":"dragon_bronze"},{"src":"assets/master-v1/extras/hex_ouro.png","label":"Hexagonal dourado","w":82,"libraryCategory":"extras","masterId":"hex_ouro"},{"src":"assets/master-v1/extras/hex_prata.png","label":"Hexagonal prata","w":72,"libraryCategory":"extras","masterId":"hex_prata"},{"src":"assets/master-v1/extras/hex_vermelho.png","label":"Hexagonal vermelho","w":72,"libraryCategory":"extras","masterId":"hex_vermelho"},{"src":"assets/master-v1/extras/retangulo_pequeno.png","label":"Slot retangular","w":102,"libraryCategory":"extras","masterId":"retangulo_pequeno"},{"src":"assets/master-v1/referencia/composicao_hud.png","label":"Composição ilustrativa do HUD","w":900,"libraryCategory":"referencia","masterId":"composicao_hud"}];
+// Assets auditados do pacote miolos_HUD_4_cores(1).zip; sem alterações nos PNGs.
+const fourColorMiolos = [{"src":"assets/miolos-4-cores/miolo_lava_verde.png","label":"Miolo lava · Verde","w":281,"libraryCategory":"miolos-cores","masterId":"color_verde_lava","colorFamily":"verde","variant":"lava"},{"src":"assets/miolos-4-cores/miolo_moldura_verde.png","label":"Miolo com borda · Verde","w":283,"libraryCategory":"miolos-cores","masterId":"color_verde_moldura","colorFamily":"verde","variant":"moldura"},{"src":"assets/miolos-4-cores/HUD_miolos_verde.png","label":"Sheet de referência · Verde","w":480,"libraryCategory":"miolos-sheets","masterId":"color_verde_sheet","colorFamily":"verde","variant":"sheet"},{"src":"assets/miolos-4-cores/miolo_lava_azul.png","label":"Miolo lava · Azul","w":281,"libraryCategory":"miolos-cores","masterId":"color_azul_lava","colorFamily":"azul","variant":"lava"},{"src":"assets/miolos-4-cores/miolo_moldura_azul.png","label":"Miolo com borda · Azul","w":283,"libraryCategory":"miolos-cores","masterId":"color_azul_moldura","colorFamily":"azul","variant":"moldura"},{"src":"assets/miolos-4-cores/HUD_miolos_azul.png","label":"Sheet de referência · Azul","w":480,"libraryCategory":"miolos-sheets","masterId":"color_azul_sheet","colorFamily":"azul","variant":"sheet"},{"src":"assets/miolos-4-cores/miolo_lava_lilas.png","label":"Miolo lava · Lilas","w":281,"libraryCategory":"miolos-cores","masterId":"color_lilas_lava","colorFamily":"lilas","variant":"lava"},{"src":"assets/miolos-4-cores/miolo_moldura_lilas.png","label":"Miolo com borda · Lilas","w":283,"libraryCategory":"miolos-cores","masterId":"color_lilas_moldura","colorFamily":"lilas","variant":"moldura"},{"src":"assets/miolos-4-cores/HUD_miolos_lilas.png","label":"Sheet de referência · Lilas","w":480,"libraryCategory":"miolos-sheets","masterId":"color_lilas_sheet","colorFamily":"lilas","variant":"sheet"},{"src":"assets/miolos-4-cores/miolo_lava_pink.png","label":"Miolo lava · Pink","w":281,"libraryCategory":"miolos-cores","masterId":"color_pink_lava","colorFamily":"pink","variant":"lava"},{"src":"assets/miolos-4-cores/miolo_moldura_pink.png","label":"Miolo com borda · Pink","w":283,"libraryCategory":"miolos-cores","masterId":"color_pink_moldura","colorFamily":"pink","variant":"moldura"},{"src":"assets/miolos-4-cores/HUD_miolos_pink.png","label":"Sheet de referência · Pink","w":480,"libraryCategory":"miolos-sheets","masterId":"color_pink_sheet","colorFamily":"pink","variant":"sheet"}];
+paletteItems.push(...fourColorMiolos);
+// V0.2.8 — assets reconstruídos: fundo vazio / miolo com máscara / moldura sem preenchimento.
+const reconstructionPrefix=['01_barra_longa_A','02_barra_longa_B','03_barra_curta_A','04_barra_curta_B'];
+const fillColorOptions=['vermelho','verde','azul','lilas','pink'];
+const reconRoot='assets/dynamic-bars/reconstructed/';
+const dynamicBarAssets = [
+  {id:'health_p1',label:'Vida P1 • frame + fill',category:'health',prefix:reconstructionPrefix[0],w:870,direction:'rtl'},
+  {id:'health_p2',label:'Vida P2 • frame + fill',category:'health',prefix:reconstructionPrefix[1],w:870,direction:'ltr'},
+  {id:'stamina_p1',label:'Corrida P1 • frame + fill',category:'stamina',prefix:reconstructionPrefix[2],w:355,direction:'rtl'},
+  {id:'stamina_p2',label:'Corrida P2 • frame + fill',category:'stamina',prefix:reconstructionPrefix[3],w:355,direction:'ltr'}
+].map(a=>({...a,frame:reconRoot+a.prefix+'_frame.png',fill:reconRoot+a.prefix+'_vermelho.png',empty:reconRoot+a.prefix+'_empty.png'}));
+function barPrefix(path){return reconstructionPrefix.find(p=>typeof path==='string'&&path.includes(p)) || null;}
+function resolvedBarFrame(s){const prefix=barPrefix(s.frameSrc||s.src);return prefix?reconRoot+prefix+'_frame.png':(s.frameSrc||s.src);}
+function resolvedBarEmpty(s){const prefix=barPrefix(s.frameSrc||s.src);return prefix?reconRoot+prefix+'_empty.png':null;}
+const coloredFillPaths=Object.fromEntries(dynamicBarAssets.map(a=>[a.frame,Object.fromEntries(fillColorOptions.map(c=>[c,reconRoot+a.prefix+'_'+c+'.png']))]));
+function fillForColor(s,colour){
+  const frame=resolvedBarFrame(s),paths=coloredFillPaths[frame];
+  return paths?(paths[colour]||paths.vermelho):s.fillSrc;
+}
+function inferFillColor(s){
+  if(fillColorOptions.includes(s.fillColor))return s.fillColor;
+  const path=s.fillSrc||'';
+  const found=fillColorOptions.find(c=>path.endsWith('_'+c+'.png') || (c==='vermelho' && path.endsWith('_miolo_vermelho.png')));
+  return found||'vermelho';
+}
+for(const a of dynamicBarAssets){
+  paletteItems.push({src:a.frame,label:a.label,w:a.w,kind:'dynamicBar',fillSrc:a.fill,frameSrc:a.frame,category:a.category,direction:a.direction});
+}
+paletteItems.forEach(a=>a.libraryCategory=a.kind==='dynamicBar'?'dynamic':'studio');
+paletteItems.push(...masterV1Assets);
+const clampBarValue=v=>Math.max(0,Math.min(100,Number(v)||0));
+const barClip=(value,direction)=>direction==='rtl' ? `inset(0 0 0 ${100-clampBarValue(value)}%)` : `inset(0 ${100-clampBarValue(value)}% 0 0)`;
 const ratioCache = {};
 function preload(path){
   if(imageCache[path]) return imageCache[path];
@@ -302,15 +633,36 @@ function normalize(s){
     w: Math.max(1, +s.w || 100), h: Math.max(1, +s.h || Math.round((+s.w || 100) * sizeRatio(s.src))),
     z: Number.isFinite(+s.z) ? +s.z : 10, rot: Number.isFinite(+s.rot) ? +s.rot : 0,
     opacity: Number.isFinite(+s.opacity) ? +s.opacity : 100,
-    flipX: !!s.flipX, flipY: !!s.flipY,
-    visible: s.visible !== false, locked: !!s.locked
+    flipX: !!s.flipX, flipY: !!s.flipY, groupId:s.groupId || null,
+    visible: s.visible !== false, locked: !!s.locked,
+    pulse: !!s.pulse, pulseHz:Math.max(.2,Math.min(4,Number(s.pulseHz)||1)),
+    pulseAmount:Math.max(0,Math.min(20,Number.isFinite(+s.pulseAmount)?+s.pulseAmount:7)),
+    blendMode: ['normal','multiply','screen','add','subtract','lighten','darken','difference'].includes(s.blendMode)?s.blendMode:'normal',
+    fxStrength: Math.max(0,Math.min(100,Number.isFinite(+s.fxStrength)?+s.fxStrength:100)),
+    darkKey: !!s.darkKey,
+    darkThreshold: Math.max(0,Math.min(200,Number.isFinite(+s.darkThreshold)?+s.darkThreshold:25)),
+    darkFeather: Math.max(0,Math.min(180,Number.isFinite(+s.darkFeather)?+s.darkFeather:45)),
+    smartKind: ['text','timer','material'].includes(s.smartKind)?s.smartKind:null,
+    textValue: String(s.textValue||''), textColor:s.textColor||'#f9e0a7', fontSize:Number(s.fontSize)||48,
+    timerDuration:Math.max(1,Number(s.timerDuration)||120),timerRemaining:Math.max(0,Number.isFinite(+s.timerRemaining)?+s.timerRemaining:120),timerRunning:!!s.timerRunning,
+    mirrorPair:s.mirrorPair||null,mirrorLinked:!!s.mirrorLinked,
+    tintEnabled:!!s.tintEnabled,tintColor:s.tintColor||'#40f176',tintAmount:Number.isFinite(+s.tintAmount)?+s.tintAmount:60,
+    brightness:Number.isFinite(+s.brightness)?+s.brightness:100,contrast:Number.isFinite(+s.contrast)?+s.contrast:100,saturation:Number.isFinite(+s.saturation)?+s.saturation:100,
+    kind:s.kind === 'dynamicBar' ? 'dynamicBar' : 'sprite',
+    frameSrc:s.kind==='dynamicBar'?resolvedBarFrame(s):(s.frameSrc || s.src),
+    fillSrc:s.kind==='dynamicBar'?fillForColor(s,inferFillColor(s)):(s.fillSrc || null),
+    fillColor:inferFillColor(s),
+    value: Number.isFinite(Number(s.value)) ? clampBarValue(s.value) : 100,
+    direction:s.direction === 'rtl' ? 'rtl' : 'ltr',
+    category:s.category === 'stamina' ? 'stamina' : 'health'
   };
 }
 function defaultSprites(){ return template.map(normalize); }
-let background = { color:'#0b0c10', image:null, fit:'cover', opacity:100 };
+let background = { color:'#0b0c10', image:null, fit:'cover', opacity:100, parallax:false, parallaxAmount:12 };
 let sprites = defaultSprites();
 function save(){
-  localStorage.setItem(KEY, JSON.stringify({ version:3, background, sprites }));
+  try { localStorage.setItem(KEY, JSON.stringify({ version:3, background, sprites })); }
+  catch(err){console.warn('Projeto grande demais para localStorage:',err); status('Projeto grande: exporte JSON para preservar imagens importadas.');}
 }
 function load(){
   try{
@@ -325,7 +677,7 @@ load();
 function snapshot(){ history.push(JSON.stringify({background, sprites})); if(history.length>80) history.shift(); future=[]; }
 function restoreState(serialized){
   const state=JSON.parse(serialized); background=state.background||background;
-  sprites=(state.sprites||[]).map(normalize); selected=null; save(); renderAll();
+  sprites=(state.sprites||[]).map(normalize); selected=null;selection.clear(); save(); renderAll();
 }
 function undo(){
   if(!history.length)return;
@@ -338,6 +690,25 @@ function redo(){
 function status(msg){ $('status').textContent = msg; }
 function newId(){ return 'sprite_' + Date.now().toString(36) + '_' + (++uid); }
 function selectedSprite(){ return sprites.find(s => s.id === selected); }
+function selectedSprites(){return sprites.filter(s=>selection.has(s.id));}
+function expandGroup(ids){
+  const result=new Set(ids);
+  for(const id of ids){const s=sprites.find(x=>x.id===id);if(s?.groupId)for(const other of sprites)if(other.groupId===s.groupId)result.add(other.id);}
+  return result;
+}
+function setSelection(ids,primary=null){
+  selection=expandGroup(ids);
+  selected=primary && selection.has(primary)?primary:(Array.from(selection).at(-1)||null);
+  stage.querySelectorAll('.sprite').forEach(el=>{el.classList.toggle('selected',el.dataset.id===selected);el.classList.toggle('multi-selected',selection.has(el.dataset.id)&&el.dataset.id!==selected);});
+  $('selectionCount').textContent=selection.size+' item'+(selection.size===1?'':'s');
+  renderInspector();renderLayers();
+}
+function toggleSelection(id){
+  const next=new Set(selection);const item=sprites.find(s=>s.id===id);
+  const members=item?.groupId?sprites.filter(s=>s.groupId===item.groupId).map(s=>s.id):[id];
+  const all=members.every(x=>next.has(x));members.forEach(x=>all?next.delete(x):next.add(x));
+  setSelection(next,all?null:id);
+}
 function snapValue(v){ const grid = Number($('gridSize').value) || 16; return $('snap').checked ? Math.round(v/grid)*grid : Math.round(v); }
 function onstageCoords(clientX, clientY){ const r = stage.getBoundingClientRect(); return { x:(clientX-r.left)/scale, y:(clientY-r.top)/scale }; }
 function pointInSpriteLocal(s, stageX, stageY){
@@ -358,11 +729,18 @@ function spriteHitOpaque(s, clientX, clientY, threshold=8){
   const pt = onstageCoords(clientX, clientY);
   const { lx, ly } = pointInSpriteLocal(s, pt.x, pt.y);
   if(lx < 0 || ly < 0 || lx > s.w || ly > s.h) return false;
+  if(s.kind==='dynamicBar') return true; // preenchimento e moldura são um único componente selecionável
   const entry = getAlphaCanvas(s.src);
   if(!entry.ready || !entry.data) return false; // nunca capturar caixa vazia enquanto carrega
   const px = Math.max(0, Math.min(entry.width-1, Math.floor(lx/s.w*entry.width)));
   const py = Math.max(0, Math.min(entry.height-1, Math.floor(ly/s.h*entry.height)));
-  return entry.data[(py*entry.width+px)*4+3] * s.opacity/100 > threshold;
+  const offset=(py*entry.width+px)*4;
+  let alpha=entry.data[offset+3];
+  if(s.darkKey){
+    const brightness=Math.max(entry.data[offset],entry.data[offset+1],entry.data[offset+2]);
+    alpha*=Math.max(0,Math.min(1,(brightness-s.darkThreshold)/Math.max(1,s.darkFeather)));
+  }
+  return alpha*s.opacity/100*(s.fxStrength??100)/100 > threshold;
 }
 function findTopmostSpriteAt(clientX, clientY, excludeId=null){
   const ordered = [...sprites]
@@ -376,23 +754,137 @@ function findTopmostSpriteAt(clientX, clientY, excludeId=null){
 function fitScale(){
   const z = $('zoom').value;
   const available = Math.max(300, view.clientWidth - 42);
-  scale = z === 'auto' ? Math.max(.15, Math.min(1, available / W)) : Number(z);
+  scale = z === 'auto' ? Math.max(.15, Math.min(1, available / W)) : z === 'custom' ? scale : Number(z);
   $('scaleWrap').style.width = (W * scale) + 'px';
   $('scaleWrap').style.height = (H * scale) + 'px';
   stage.style.transform = `scale(${scale})`;
+}
+function zoomAt(clientX,clientY,next){
+  const old=scale, rect=stage.getBoundingClientRect();
+  const x=(clientX-rect.left)/old, y=(clientY-rect.top)/old;
+  scale=Math.min(3,Math.max(.15,next));
+  $('zoom').value='custom';
+  $('scaleWrap').style.width=(W*scale)+'px';$('scaleWrap').style.height=(H*scale)+'px';
+  stage.style.transform=`scale(${scale})`;
+  const vr=view.getBoundingClientRect();
+  // Preserve the canvas point under the cursor using scroll offsets.
+  const localViewportX=clientX-vr.left,localViewportY=clientY-vr.top;
+  const wrap=$('scaleWrap');const wx=wrap.offsetLeft,wy=wrap.offsetTop;
+  view.scrollLeft=wx+x*scale-localViewportX;
+  view.scrollTop=wy+y*scale-localViewportY;
+  updateRulers();
+}
+const FX_CANVAS_BLEND={normal:'source-over',multiply:'multiply',screen:'screen',add:'lighter',subtract:'source-over',lighten:'lighten',darken:'darken',difference:'difference'};
+const FX_CSS_BLEND={normal:'normal',multiply:'multiply',screen:'screen',add:'plus-lighter',subtract:'difference',lighten:'lighten',darken:'darken',difference:'difference'};
+const cssBlend=m=>FX_CSS_BLEND[m]||'normal';
+const clampByte=v=>Math.max(0,Math.min(255,v));
+// Use luminance (max channel) to preserve smoke highlights and color, not HSV hue.
+function keyDarkPixels(pixels,threshold,feather){
+  const d=pixels.data, low=Math.max(0,threshold), width=Math.max(1,feather);
+  for(let i=0;i<d.length;i+=4){
+    const light=Math.max(d[i],d[i+1],d[i+2]);
+    const factor=Math.max(0,Math.min(1,(light-low)/width));
+    d[i+3]=Math.round(d[i+3]*factor);
+  }
+  return pixels;
+}
+function drawKeyed(ctx,img,w,h,threshold,feather){
+  const tmp=document.createElement('canvas');tmp.width=w;tmp.height=h;
+  const t=tmp.getContext('2d',{willReadFrequently:true});
+  t.drawImage(img,0,0,w,h);
+  const px=t.getImageData(0,0,w,h);
+  t.putImageData(keyDarkPixels(px,threshold,feather),0,0);
+  ctx.drawImage(tmp,0,0);
+}
+// For GIFs the browser advances HTMLImageElement frames; rAF samples the current frame.
+const keyedInstances=new Map();
+let keyedLoopHandle=0, keyedLast=0;
+function refreshKeyedInstances(){
+  keyedInstances.clear();
+  for(const s of sprites){
+    if(!s.visible || s.kind==='dynamicBar' || !s.darkKey)continue;
+    const el=stage.querySelector(`.sprite[data-id="${s.id}"]`);
+    const canvas=el?.querySelector('.chroma-canvas');
+    const img=el?.querySelector('.sprite-visual img');
+    if(canvas&&img)keyedInstances.set(s.id,{s,canvas,img});
+  }
+  if(keyedInstances.size&&!keyedLoopHandle)keyedLoopHandle=requestAnimationFrame(keyedTick);
+}
+function keyedTick(ts){
+  keyedLoopHandle=0;
+  if(ts-keyedLast<40){if(keyedInstances.size)keyedLoopHandle=requestAnimationFrame(keyedTick);return;}
+  keyedLast=ts;
+  for(const {s,canvas,img} of keyedInstances.values()){
+    if(!img.complete || !img.naturalWidth || !img.naturalHeight)continue;
+    // Native frame resolution capped to keep animated FX responsive.
+    const factor=Math.min(1,640/img.naturalWidth,480/img.naturalHeight);
+    const w=Math.max(1,Math.round(img.naturalWidth*factor));
+    const h=Math.max(1,Math.round(img.naturalHeight*factor));
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+    const ctx=canvas.getContext('2d',{willReadFrequently:true});
+    ctx.clearRect(0,0,w,h);
+    try{
+      drawKeyed(ctx,img,w,h,s.darkThreshold,s.darkFeather);
+      if(s.tintEnabled){
+        const over=document.createElement('canvas');over.width=w;over.height=h;
+        const o=over.getContext('2d');o.drawImage(canvas,0,0);
+        o.globalCompositeOperation='source-in';o.fillStyle=s.tintColor||'#40f176';o.fillRect(0,0,w,h);
+        ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,(s.tintAmount??60)/100));ctx.drawImage(over,0,0);ctx.restore();
+      }
+    }catch(e){console.warn('Não foi possível aplicar máscara escura:',e);keyedInstances.delete(s.id);}
+  }
+  if(keyedInstances.size)keyedLoopHandle=requestAnimationFrame(keyedTick);
 }
 function stageCssTransform(s){ return `rotate(${s.rot}deg) scaleX(${s.flipX?-1:1}) scaleY(${s.flipY?-1:1})`; }
 function setSpriteStyle(el, s){
   Object.assign(el.style, {
     left:s.x+'px', top:s.y+'px', width:s.w+'px', height:s.h+'px', zIndex:String(s.z),
     opacity:s.visible?String(s.opacity/100):'0', display:s.visible?'block':'none',
-    transform: stageCssTransform(s)
+    transform: stageCssTransform(s),mixBlendMode:cssBlend(s.blendMode)
   });
   el.classList.toggle('locked', !!s.locked);
+  const visual=el.querySelector('.sprite-visual');
+  if(visual){
+    visual.classList.toggle('pulse',!!s.pulse);
+    visual.style.setProperty('--pulse-duration',(1/Math.max(.2,s.pulseHz))+'s');
+    visual.style.setProperty('--pulse-amplitude',String(1+s.pulseAmount/100));
+    visual.style.mixBlendMode='normal';
+    visual.style.filter=`brightness(${s.brightness??100}%) contrast(${s.contrast??100}%) saturate(${s.saturation??100}%)`;
+    let tint=visual.querySelector('.smart-tint');
+    if(s.tintEnabled && s.smartKind!=='text' && s.smartKind!=='timer'){
+      if(!tint){tint=document.createElement('div');tint.className='smart-tint';Object.assign(tint.style,{position:'absolute',inset:'0',pointerEvents:'none',mixBlendMode:'color'});visual.append(tint);}
+      tint.style.background=s.tintColor||'#40f176';tint.style.opacity=String((s.tintAmount??60)/100);
+      tint.style.maskImage=`url(${JSON.stringify(s.src)})`;tint.style.maskSize='100% 100%';
+      tint.hidden=!!s.darkKey;
+    }else if(tint)tint.hidden=true;
+
+    visual.style.opacity=String((s.fxStrength??100)/100);
+    const keyCanvas=visual.querySelector('.chroma-canvas');
+    if(keyCanvas)keyCanvas.hidden=!s.darkKey;
+    const original=visual.querySelector('img:not(.dynamic-bar-empty):not(.dynamic-bar-fill):not(.dynamic-bar-frame)');
+    if(original)original.style.visibility=s.darkKey?'hidden':'visible';
+  }
+  if(s.kind==='dynamicBar'){
+    const fill=el.querySelector('.dynamic-bar-fill');
+    if(fill)fill.style.clipPath=barClip(s.value,s.direction);
+  }
 }
 function applySprite(s){
+  if(s.mirrorLinked && s.mirrorPair && !window.__mirrorSyncing){
+    const pair=sprites.find(x=>x.id===s.mirrorPair);
+    if(pair){
+      window.__mirrorSyncing=true;
+      const axis=Number($('hudMirrorAxis')?.value)||960;
+      pair.x=Math.round(2*axis-s.x-s.w);pair.y=s.y;pair.w=s.w;pair.h=s.h;
+      pair.rot=-s.rot;pair.flipX=!s.flipX;pair.flipY=s.flipY;
+      const pairedEl=stage.querySelector(`.sprite[data-id="${pair.id}"]`);
+      if(pairedEl)setSpriteStyle(pairedEl,pair);
+      window.__mirrorSyncing=false;
+    }
+  }
   const el = stage.querySelector(`.sprite[data-id="${s.id}"]`);
   if(el) setSpriteStyle(el,s);
+  refreshKeyedInstances();
 }
 function renderBackground(){
   bgLayer.style.backgroundColor = background.color || '#0b0c10';
@@ -402,18 +894,59 @@ function renderBackground(){
   $('bgColor').value = background.color || '#0b0c10';
   $('bgFit').value = background.fit || 'cover';
   $('bgOpacity').value = background.opacity ?? 100;
+  $('bgParallax').checked=!!background.parallax;
+  $('parallaxAmount').value=background.parallaxAmount??12;
+  $('parallaxAmountText').textContent=(background.parallaxAmount??12)+' px';
+  applyParallax();
 }
-function select(id){
-  selected = id;
-  stage.querySelectorAll('.sprite').forEach(el => el.classList.toggle('selected', el.dataset.id === id));
-  renderInspector(); renderLayers();
+let parallaxTarget={x:0,y:0},parallaxCurrent={x:0,y:0},parallaxFrame=0;
+function applyParallax(){
+  const x=background.parallax?parallaxCurrent.x:0, y=background.parallax?parallaxCurrent.y:0;
+  bgLayer.style.backgroundPosition=`calc(50% + ${x.toFixed(2)}px) calc(50% + ${y.toFixed(2)}px)`;
 }
+function tickParallax(){
+  parallaxFrame=0;
+  const factor=background.parallax?Number(background.parallaxAmount??12):0;
+  const desiredX=parallaxTarget.x*factor,desiredY=parallaxTarget.y*factor;
+  parallaxCurrent.x+=(desiredX-parallaxCurrent.x)*.17;
+  parallaxCurrent.y+=(desiredY-parallaxCurrent.y)*.17;
+  applyParallax();
+  if(Math.abs(desiredX-parallaxCurrent.x)>.12 || Math.abs(desiredY-parallaxCurrent.y)>.12)
+    parallaxFrame=requestAnimationFrame(tickParallax);
+}
+function scheduleParallax(){if(!parallaxFrame)parallaxFrame=requestAnimationFrame(tickParallax);}
+stage.addEventListener('pointermove',e=>{
+  if(!background.parallax)return;
+  const r=stage.getBoundingClientRect();
+  parallaxTarget.x=Math.max(-1,Math.min(1,((e.clientX-r.left)/r.width-.5)*2));
+  parallaxTarget.y=Math.max(-1,Math.min(1,((e.clientY-r.top)/r.height-.5)*2));
+  scheduleParallax();
+});
+stage.addEventListener('pointerleave',()=>{parallaxTarget={x:0,y:0};scheduleParallax();});
+function select(id){setSelection(id?[id]:[],id);}
 function drawSprite(s){
   const el=document.createElement('div');el.className='sprite';el.dataset.id=s.id;
   const img=document.createElement('img');img.src=s.src;img.alt=s.label;img.draggable=false;
-  const resize=document.createElement('span');resize.className='handle br';resize.dataset.operation='resize';
+  const resize=document.createElement('span');resize.className='handle br';resize.dataset.operation='resize-br';
+  const corners=['tl','tr','bl'].map(c=>{const h=document.createElement('span');h.className='handle '+c;h.dataset.operation='resize-'+c;return h;});
+  const visual=document.createElement('div');visual.className='sprite-visual';
   const rotate=document.createElement('span');rotate.className='handle rot';rotate.dataset.operation='rotate';
-  el.append(img,resize,rotate);setSpriteStyle(el,s);return el;
+  if(s.kind==='dynamicBar'){
+    img.src=s.frameSrc;img.className='dynamic-bar-frame';
+    const empty=document.createElement('img');
+    empty.src=resolvedBarEmpty(s); empty.alt='Área vazia'; empty.draggable=false;
+    empty.className='dynamic-bar-empty';
+    const fill=document.createElement('img');
+    fill.src=s.fillSrc; fill.alt='Textura interna'; fill.draggable=false;
+    fill.className='dynamic-bar-fill';
+    visual.append(empty,fill,img);
+  } else {
+    visual.append(img);
+    const cc=document.createElement('canvas');cc.className='chroma-canvas';cc.hidden=true;
+    visual.append(cc);
+  }
+  el.append(visual,resize,...corners,rotate);
+  setSpriteStyle(el,s);return el;
 }
 function magnetic(value, candidates){
   if(!$('magnet').checked)return {value,guide:null};
@@ -428,41 +961,80 @@ function showGuides(x,y){
   if(y!=null)$('guideH').style.top=y+'px';
 }
 function beginGesture(e){
+  if(e.button===1){
+    e.preventDefault();panGesture={pointerId:e.pointerId,x:e.clientX,y:e.clientY,left:view.scrollLeft,top:view.scrollTop};
+    stage.setPointerCapture(e.pointerId);return;
+  }
   if(e.button!==0)return;
   const target=e.target.closest('.handle');
   const forcedId=target?.closest('.sprite')?.dataset.id;
   const s=forcedId?sprites.find(s=>s.id===forcedId):findTopmostSpriteAt(e.clientX,e.clientY);
-  if(!s){select(null);return;}
-  select(s.id);
+  const p=onstageCoords(e.clientX,e.clientY);
+  if(!s){
+    if(!e.shiftKey) setSelection([]);
+    marquee={pointerId:e.pointerId,start:p,base:e.shiftKey?new Set(selection):new Set()};
+    const el=document.createElement('div');el.className='marquee';el.id='selectionMarquee';stage.append(el);
+    stage.setPointerCapture(e.pointerId);e.preventDefault();return;
+  }
+  if(e.shiftKey&&!target){toggleSelection(s.id);return;}
+  if(!selection.has(s.id)){setSelection([s.id],s.id);}
+  else{selected=s.id;setSelection(selection,s.id);}
   if(s.locked)return;
   e.preventDefault();snapshot();
-  const p=onstageCoords(e.clientX,e.clientY);
-  gesture={pointerId:e.pointerId,id:s.id,type:target?.dataset.operation||'move',px:p.x,py:p.y,x:s.x,y:s.y,w:s.w,h:s.h,rot:s.rot,cx:s.x+s.w/2,cy:s.y+s.h/2};
+  const members=selectedSprites().filter(x=>!x.locked);
+  gesture={pointerId:e.pointerId,id:s.id,type:target?.dataset.operation||'move',px:p.x,py:p.y,x:s.x,y:s.y,w:s.w,h:s.h,rot:s.rot,cx:s.x+s.w/2,cy:s.y+s.h/2,
+    shiftCenter:e.shiftKey,
+    members:members.map(v=>({id:v.id,x:v.x,y:v.y}))};
   stage.setPointerCapture(e.pointerId);
 }
 function moveGesture(e){
+  if(panGesture && panGesture.pointerId===e.pointerId){
+    view.scrollLeft=panGesture.left+panGesture.x-e.clientX;
+    view.scrollTop=panGesture.top+panGesture.y-e.clientY;return;
+  }
+  if(marquee&&marquee.pointerId===e.pointerId){
+    const p=onstageCoords(e.clientX,e.clientY),x=Math.min(marquee.start.x,p.x),y=Math.min(marquee.start.y,p.y);
+    const w=Math.abs(p.x-marquee.start.x),h=Math.abs(p.y-marquee.start.y);
+    const el=$('selectionMarquee');if(el)Object.assign(el.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});
+    const hits=sprites.filter(s=>s.visible&&s.x<x+w&&s.x+s.w>x&&s.y<y+h&&s.y+s.h>y).map(s=>s.id);
+    setSelection(new Set([...marquee.base,...hits]));return;
+  }
   if(!gesture || gesture.pointerId!==e.pointerId)return;
   const s=sprites.find(s=>s.id===gesture.id);if(!s)return;
   const g=gesture,p=onstageCoords(e.clientX,e.clientY);
   if(g.type==='move'){
     let x=snapValue(g.x+p.x-g.px),y=snapValue(g.y+p.y-g.py);
-    // Guias alinham centros e bordas com o palco e os outros sprites
-    const other=sprites.filter(v=>v.id!==s.id && v.visible);
+    const ids=new Set(g.members.map(v=>v.id));
+    const other=sprites.filter(v=>!ids.has(v.id) && v.visible);
     const vx=[0,W/2,W,...other.flatMap(v=>[v.x,v.x+v.w/2,v.x+v.w])];
     const vy=[0,H/2,H,...other.flatMap(v=>[v.y,v.y+v.h/2,v.y+v.h])];
     let bestX=null,bestY=null;
     for(const offset of [0,s.w/2,s.w]){const hit=magnetic(x+offset,vx);if(hit.guide!==null){x=hit.value-offset;bestX=hit.guide;break;}}
     for(const offset of [0,s.h/2,s.h]){const hit=magnetic(y+offset,vy);if(hit.guide!==null){y=hit.value-offset;bestY=hit.guide;break;}}
-    s.x=Math.round(x);s.y=Math.round(y);showGuides(bestX,bestY);
-  }else if(g.type==='resize'){
-    s.w=Math.max(10,snapValue(g.w+p.x-g.px));
-    s.h=Math.max(10,snapValue(g.h+p.y-g.py));
+    const dx=Math.round(x-g.x),dy=Math.round(y-g.y);
+    for(const member of g.members){const item=sprites.find(v=>v.id===member.id);if(item){item.x=member.x+dx;item.y=member.y+dy;applySprite(item);}}
+    showGuides(bestX,bestY);
+  }else if(g.type.startsWith('resize')){
+    // Shift + corner: the center is fixed and both opposite edges move symmetrically.
+    // Without Shift, the opposite corner stays stationary.
+    const corner=g.type.split('-')[1]||'br';
+    const sx=corner.includes('l')?-1:1,sy=corner.includes('t')?-1:1;
+    const dx=(p.x-g.px)*sx,dy=(p.y-g.py)*sy;
+    const centered=e.shiftKey || g.shiftCenter;
+    const f=centered?2:1;
+    const nw=Math.max(10,snapValue(g.w+dx*f));
+    const nh=Math.max(10,snapValue(g.h+dy*f));
+    if(centered){s.x=g.cx-nw/2;s.y=g.cy-nh/2;}
+    else {s.x=sx<0?g.x+g.w-nw:g.x;s.y=sy<0?g.y+g.h-nh:g.y;}
+    s.w=nw;s.h=nh;
   }else if(g.type==='rotate'){
     s.rot=Math.round(Math.atan2(p.y-g.cy,p.x-g.cx)*180/Math.PI+90);
   }
   applySprite(s);refreshInspectorFields();
 }
 function endGesture(e){
+  if(panGesture&&panGesture.pointerId===e.pointerId){panGesture=null;return;}
+  if(marquee&&marquee.pointerId===e.pointerId){marquee=null;$('selectionMarquee')?.remove();return;}
   if(!gesture || e.pointerId!==gesture.pointerId)return;
   gesture=null;showGuides(null,null);save();renderLayers();
 }
@@ -473,24 +1045,40 @@ stage.addEventListener('pointercancel',endGesture);
 function render(){
   stage.querySelectorAll('.sprite').forEach(n=>n.remove());
   sprites.forEach(s => stage.append(drawSprite(s)));
-  select(selected && sprites.some(s=>s.id===selected) ? selected : null);
+  setSelection([...selection].filter(id=>sprites.some(s=>s.id===id)), selected);
   $('stat').textContent = `${sprites.length} instâncias • ${paletteItems.length} tipos • Canvas ${W} × ${H}`;
+  refreshKeyedInstances();
 }
 function renderPalette(){
-  const palette = $('palette'); palette.innerHTML='';
+  const palette = $('palette'); palette.replaceChildren();
   paletteItems.forEach((asset,i) => {
-    const item = document.createElement('div'); item.className='asset'; item.draggable=true; item.dataset.index=i; item.title='Arraste para o palco';
-    item.innerHTML = `<img src="${asset.src}" alt=""><span>${asset.label}</span>`;
-    item.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', 'hud-asset:'+i); e.dataTransfer.effectAllowed='copy'; });
+    const item = document.createElement('div'); item.className='asset'; item.draggable=true;
+    item.dataset.index=i;item.dataset.libraryCategory=asset.libraryCategory||'studio';
+    item.title=asset.variant==='sheet'?'Prévia da sheet original: arrastar insere a imagem de referência completa':'Arraste para o palco';
+    const image=document.createElement('img');image.src=asset.src;image.alt='';image.draggable=false;
+    const caption=document.createElement('span');caption.textContent=asset.label;
+    item.append(image,caption);
+    if(asset.masterId){const tag=document.createElement('span');tag.className='asset-tag';tag.textContent=asset.colorFamily ? `${asset.colorFamily} · ${asset.variant}` : asset.libraryCategory;item.append(tag);}
+    item.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain','hud-asset:'+i);e.dataTransfer.effectAllowed='copy';});
     palette.append(item);
   });
+  filterPalette();
 }
+function filterPalette(){
+  const mode=$('assetFilter').value;
+  $('palette').querySelectorAll('.asset').forEach(el=>{
+    el.hidden = mode!=='all' && el.dataset.libraryCategory!==mode;
+  });
+}
+$('assetFilter').addEventListener('change',filterPalette);
+
 function makeFromLibrary(index, x, y){
   const p = paletteItems[index]; if(!p) return;
   const w = p.w, h = Math.round(w * sizeRatio(p.src));
   snapshot();
   const z = Math.max(10, ...sprites.map(s=>s.z)) + 1;
-  const s = normalize({ id:newId(), src:p.src, label:p.label, x:snapValue(x - w/2), y:snapValue(y - h/2), w,h,z });
+  const s = normalize({ id:newId(), src:p.src, label:p.label, x:snapValue(x - w/2), y:snapValue(y - h/2), w,h,z,
+    kind:p.kind,frameSrc:p.frameSrc,fillSrc:p.fillSrc,category:p.category,direction:p.direction,value:100 });
   sprites.push(s); save(); render(); select(s.id); status(`Sprite inserido: ${s.label}`);
 }
 stage.addEventListener('dragenter', e => { e.preventDefault(); stage.classList.add('drop-target'); });
@@ -504,9 +1092,48 @@ stage.addEventListener('drop', e => {
 // A seleção é calculada no palco: caixas transparentes não interceptam eventos.
 
 const props = { propLabel:'label', propX:'x', propY:'y', propW:'w', propH:'h', propRot:'rot', propZ:'z', propOpacity:'opacity', propFlipX:'flipX', propFlipY:'flipY', propLock:'locked', propVisible:'visible' };
+function refreshBarInspector(s){
+  if(!s || s.kind!=='dynamicBar')return;
+  $('barValue').value=s.value;$('barValueNumber').value=s.value;
+  $('barValueText').textContent=Math.round(s.value)+'%';
+  $('barDirection').value=s.direction;$('barCategory').value=s.category;
+  $('barColor').value=inferFillColor(s);
+  document.querySelectorAll('#barColorSwatches .color-swatch').forEach(b=>{
+    const active=b.dataset.color===inferFillColor(s);
+    b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));
+  });
+}
+function changeBarValue(next,record=false){
+  const s=selectedSprite();if(!s || s.kind!=='dynamicBar')return;
+  if(record)snapshot();s.value=clampBarValue(next);
+  applySprite(s);refreshBarInspector(s);save();
+}
+$('barValue').addEventListener('input',e=>changeBarValue(e.target.value));
+$('barValueNumber').addEventListener('change',e=>changeBarValue(e.target.value,true));
+$('barDirection').addEventListener('change',e=>{
+  const s=selectedSprite();if(!s || s.kind!=='dynamicBar')return;
+  snapshot();s.direction=e.target.value;applySprite(s);save();
+});
+$('barCategory').addEventListener('change',e=>{
+  const s=selectedSprite();if(!s || s.kind!=='dynamicBar')return;
+  snapshot();s.category=e.target.value;save();
+});
+function updateFillColor(color){
+  if(!fillColorOptions.includes(color))return;
+  const targets=selectedSprites().filter(s=>s.kind==='dynamicBar' && coloredFillPaths[s.frameSrc]);
+  if(!targets.length){const one=selectedSprite();if(one?.kind==='dynamicBar' && coloredFillPaths[one.frameSrc])targets.push(one);}
+  if(!targets.length)return;
+  snapshot();
+  targets.forEach(s=>{s.fillColor=color;s.fillSrc=fillForColor(s,color);preload(s.fillSrc);});
+  const ids=new Set(selection),active=selected;
+  save();render();setSelection(ids,active);
+  status(`Paleta ${color}: ${targets.length} barra(s) atualizada(s). Molduras preservadas.`);
+}
+$('barColor').addEventListener('change',e=>updateFillColor(e.target.value));
+document.querySelectorAll('#barColorSwatches .color-swatch').forEach(b=>b.addEventListener('click',()=>updateFillColor(b.dataset.color)));
 function refreshInspectorFields(){
   const s = selectedSprite(); if(!s) return;
-  for(const [id,key] of Object.entries(props)){
+for(const [id,key] of Object.entries(props)){
     const el = $(id);
     if(el.type === 'checkbox') el.checked = !!s[key];
     else if(document.activeElement !== el) el.value = s[key];
@@ -515,45 +1142,142 @@ function refreshInspectorFields(){
 function renderInspector(){
   const s = selectedSprite();
   $('inspector').classList.toggle('hidden', !s);
-  $('selectionHint').textContent = s ? `Selecionado: ${s.label}` : 'Selecione um item no palco.';
-  if(s) refreshInspectorFields();
+  $('selectionHint').textContent = selection.size>1 ? `${selection.size} sprites selecionados` : s ? `Selecionado: ${s.label}` : 'Selecione um item no palco.';
+  $('dynamicInspector').classList.toggle('hidden',!s || s.kind!=='dynamicBar');
+  if(s){refreshInspectorFields();if(s.kind==='dynamicBar')refreshBarInspector(s);}
+  $('pulseEnabled').checked=!!s?.pulse;
+  $('pulseSpeed').value=s?.pulseHz??1;
+  $('pulseAmount').value=s?.pulseAmount??7;
+  $('pulseSpeedText').textContent=(s?.pulseHz??1).toFixed(1)+' Hz';
+  $('pulseAmountText').textContent=(s?.pulseAmount??7)+'%';
+  $('fxTintEnabled').checked=!!s?.tintEnabled;
+  $('fxTintColor').value=s?.tintColor||'#40f176';
+  for(const [id,v] of [['fxTintAmount',s?.tintAmount??60],['fxBrightness',s?.brightness??100],['fxContrast',s?.contrast??100],['fxSaturation',s?.saturation??100]]){
+    $(id).value=v;$(id+'Text').textContent=v+'%';
+  }
+  if(s?.smartKind==='text'){$('hudName').value=s.textValue;$('hudTextColor').value=s.textColor;$('hudFontSize').value=s.fontSize;}
+  $('fxBlend').value=s?.blendMode??'normal';
+  $('fxStrength').value=s?.fxStrength??100;
+  $('fxStrengthText').textContent=(s?.fxStrength??100)+'%';
+  $('fxDarkKey').checked=!!s?.darkKey;
+  $('fxThreshold').value=s?.darkThreshold??25;
+  $('fxThresholdText').textContent=String(s?.darkThreshold??25);
+  $('fxFeather').value=s?.darkFeather??45;
+  $('fxFeatherText').textContent=String(s?.darkFeather??45);
 }
 for(const [id,key] of Object.entries(props)){
   $(id).addEventListener('change', e => {
     const s = selectedSprite(); if(!s) return; snapshot();
-    if(e.target.type === 'checkbox') s[key] = e.target.checked;
-    else if(key === 'label') s[key] = e.target.value;
-    else s[key] = Number(e.target.value);
-    if(key === 'w' || key === 'h') s[key] = Math.max(1, s[key]);
-    save(); render(); select(s.id);
+    const targets=(['flipX','flipY','visible','locked','opacity'].includes(key))?selectedSprites():[s];
+    for(const item of targets){
+      if(e.target.type === 'checkbox') item[key] = e.target.checked;
+      else if(key === 'label') item[key] = e.target.value;
+      else item[key] = Number(e.target.value);
+      if(key === 'w' || key === 'h') item[key] = Math.max(1, item[key]);
+    }
+    const ids=new Set(selection);save();render();setSelection(ids,s.id);
   });
 }
 function renderLayers(){
   const box = $('layers'); box.innerHTML='';
   if(!sprites.length){ box.innerHTML = '<div class="empty">Sem sprites no palco.</div>'; return; }
   [...sprites].sort((a,b)=>b.z-a.z).forEach(s => {
-    const row = document.createElement('div'); row.className='layer'+(selected===s.id?' selected':'');
+    const row = document.createElement('div'); row.className='layer'+(selection.has(s.id)?' selected':'');
     const icon = document.createElement('img'); icon.src=s.src;
     const name = document.createElement('span'); name.textContent=s.label;
     const eye = document.createElement('button'); eye.textContent = s.visible ? '◉' : '○'; eye.title='Mostrar / ocultar';
     eye.onclick = ev => { ev.stopPropagation(); snapshot(); s.visible=!s.visible; save(); render(); select(s.id); };
-    row.append(icon,name,eye); row.onclick=()=>select(s.id); box.append(row);
+    row.append(icon,name,eye); row.onclick=e=>{if(e.shiftKey)toggleSelection(s.id);else select(s.id);}; box.append(row);
   });
 }
-function mutateSelected(fn){ const s = selectedSprite(); if(!s) return; snapshot(); fn(s); save(); render(); select(s.id); }
+function mutateSelected(fn){
+  const targets=selectedSprites(); if(!targets.length) return;
+  snapshot();for(const item of targets)fn(item);
+  const ids=new Set(selection),primary=selected;save();render();setSelection(ids,primary);
+}
+function selectionBounds(items){
+  return {left:Math.min(...items.map(s=>s.x)),right:Math.max(...items.map(s=>s.x+s.w)),
+    top:Math.min(...items.map(s=>s.y)),bottom:Math.max(...items.map(s=>s.y+s.h))};
+}
 function alignSelected(mode){
-  mutateSelected(s=>{
-    if(mode==='left')s.x=0;
-    if(mode==='center')s.x=Math.round((W-s.w)/2);
-    if(mode==='right')s.x=W-s.w;
-    if(mode==='top')s.y=0;
-    if(mode==='middle')s.y=Math.round((H-s.h)/2);
-    if(mode==='bottom')s.y=H-s.h;
-  });
+  // Align the whole selected group, maintaining the internal arrangement.
+  const targets=selectedSprites();if(!targets.length)return;
+  const b=selectionBounds(targets),cx=(b.left+b.right)/2,cy=(b.top+b.bottom)/2;
+  const dx=mode==='left'?-b.left:mode==='center'?W/2-cx:mode==='right'?W-b.right:0;
+  const dy=mode==='top'?-b.top:mode==='middle'?H/2-cy:mode==='bottom'?H-b.bottom:0;
+  mutateSelected(s=>{s.x+=dx;s.y+=dy;});
 }
 [['alignLeft','left'],['alignCenter','center'],['alignRight','right'],['alignTop','top'],['alignMiddle','middle'],['alignBottom','bottom']]
  .forEach(([id,mode])=>$(id).onclick=()=>alignSelected(mode));
 $('undoBtn').onclick=undo;$('redoBtn').onclick=redo;
+function groupSelection(){
+  if(selection.size<2){status('Selecione pelo menos dois sprites com Shift+clique.');return;}
+  snapshot();const groupId='group_'+newId();
+  selectedSprites().forEach(s=>s.groupId=groupId);
+  save();render();status(selection.size+' sprites agrupados.');
+}
+function ungroupSelection(){
+  if(!selectedSprites().some(s=>s.groupId))return;
+  snapshot();selectedSprites().forEach(s=>s.groupId=null);
+  save();render();status('Grupo desfeito.');
+}
+$('addDynamicPreset').onclick=()=>{
+  snapshot();
+  const positions=[
+    {x:36,y:36,w:870},{x:1014,y:36,w:870},
+    {x:100,y:130,w:355},{x:1465,y:130,w:355}
+  ];
+  const z=Math.max(30,...sprites.map(s=>s.z))+1;
+  const ids=[];
+  dynamicBarAssets.forEach((a,i)=>{
+    const p=positions[i];const im=preload(a.frame);const ratio=im.naturalWidth ? im.naturalHeight/im.naturalWidth : (i<2?114/1766:52/725);
+    const obj=normalize({id:newId(),kind:'dynamicBar',label:a.label,src:a.frame,frameSrc:a.frame,fillSrc:a.fill,
+      value:100,direction:a.direction,category:a.category,x:p.x,y:p.y,w:p.w,h:Math.round(p.w*ratio),z:z+i});
+    sprites.push(obj);ids.push(obj.id);
+  });
+  save();render();setSelection(ids,ids[0]);status('4 barras dinâmicas adicionadas. Selecione uma barra para ajustar 0–100%.');
+};
+let demoFrame=null,demoStart=0,demoInitial=null;
+function stopBarDemo(){
+  if(demoFrame!==null)cancelAnimationFrame(demoFrame);demoFrame=null;
+  if(demoInitial){for(const obj of sprites){if(demoInitial.has(obj.id)){obj.value=demoInitial.get(obj.id);applySprite(obj);}}demoInitial=null;}
+  if(selectedSprite()?.kind==='dynamicBar')refreshBarInspector(selectedSprite());
+  status('Simulação encerrada; valores anteriores restaurados.');
+}
+$('stopDynamics').onclick=stopBarDemo;
+$('demoDynamics').onclick=()=>{
+  if(demoFrame!==null)stopBarDemo();
+  const bars=sprites.filter(s=>s.kind==='dynamicBar');
+  if(!bars.length){status('Insira barras dinâmicas antes de simular.');return;}
+  demoInitial=new Map(bars.map(s=>[s.id,s.value]));demoStart=performance.now();
+  const tick=t=>{
+    const elapsed=(t-demoStart)/1000;
+    for(const [i,s] of bars.entries()){
+      const v=s.category==='stamina' ? 45+40*Math.sin(elapsed*2.8+i) : 95-(elapsed*9+i*4)%95;
+      s.value=clampBarValue(v);applySprite(s);
+    }
+    if(selectedSprite()?.kind==='dynamicBar')refreshBarInspector(selectedSprite());
+    demoFrame=requestAnimationFrame(tick);
+  };
+  demoFrame=requestAnimationFrame(tick);status('Simulação em execução — clique em Parar para restaurar os níveis.');
+};
+$('groupBtn').onclick=groupSelection;$('ungroupBtn').onclick=ungroupSelection;
+view.addEventListener('wheel',e=>{
+  if(!e.ctrlKey)return;
+  e.preventDefault();zoomAt(e.clientX,e.clientY,scale*(e.deltaY<0?1.13:1/1.13));
+},{passive:false});
+view.addEventListener('pointerdown',e=>{
+  if(e.button!==1||stage.contains(e.target))return;
+  e.preventDefault();panGesture={pointerId:e.pointerId,x:e.clientX,y:e.clientY,left:view.scrollLeft,top:view.scrollTop};
+  view.setPointerCapture(e.pointerId);
+});
+view.addEventListener('pointermove',e=>{
+  if(panGesture?.pointerId!==e.pointerId)return;
+  view.scrollLeft=panGesture.left+panGesture.x-e.clientX;
+  view.scrollTop=panGesture.top+panGesture.y-e.clientY;
+});
+view.addEventListener('pointerup',e=>{if(panGesture?.pointerId===e.pointerId)panGesture=null;});
+view.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault();});
 function updateRulers(){
   $('rulerX').replaceChildren();$('rulerY').replaceChildren();
   for(let x=0;x<=W;x+=100){const b=document.createElement('b');b.textContent=x;b.style.left=(x)+'px';$('rulerX').append(b);}
@@ -562,18 +1286,131 @@ function updateRulers(){
   for(const id of ['rulerX','rulerY','rulerCorner'])$(id).classList.toggle('hidden',!active);
 }
 $('rulers').onchange=updateRulers;
-$('duplicate').onclick = ()=>{ const s = selectedSprite(); if(!s) return; snapshot(); const copy = normalize({...s,id:newId(),label:s.label+' cópia',x:s.x+24,y:s.y+24,z:s.z+1}); sprites.push(copy); save(); render(); select(copy.id); };
-$('delete').onclick = ()=>{ if(!selected) return; snapshot(); sprites = sprites.filter(s=>s.id!==selected); selected=null; save(); render(); };
-$('bringFront').onclick = ()=> mutateSelected(s=> s.z = Math.max(...sprites.map(x=>x.z))+1);
-$('sendBack').onclick = ()=> mutateSelected(s=> s.z = Math.min(...sprites.map(x=>x.z))-1);
-$('flipH').onclick = ()=> mutateSelected(s=> s.flipX = !s.flipX);
-$('flipV').onclick = ()=> mutateSelected(s=> s.flipY = !s.flipY);
-$('reset').onclick = ()=>{ if(!confirm('Restaurar o layout padrão?')) return; snapshot(); sprites = defaultSprites(); selected=null; save(); render(); status('Layout restaurado.'); };
-$('clear').onclick = ()=>{ if(!confirm('Remover todos os sprites do palco?')) return; snapshot(); sprites=[]; selected=null; save(); render(); status('Palco limpo.'); };
+
+// Keep group membership when making copies, but never merge a copied group into its original.
+function copySelection(){
+  const items=selectedSprites();if(!items.length){status('Selecione pelo menos um sprite para copiar.');return;}
+  internalClipboard=clone(items);pasteOffset=0;
+  // Also allow copying between open tabs when clipboard writes are permitted.
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(CLIP_PREFIX+JSON.stringify(internalClipboard)).catch(()=>{});
+  }
+  status(items.length+' sprite(s) copiado(s). Ctrl+V para colar.');
+}
+function pasteCopiedSprites(offset=null){
+  if(!internalClipboard?.length){status('Não há sprites copiados.');return;}
+  const copied=clone(internalClipboard),groups=new Map();
+  for(const item of copied){if(item.groupId&&!groups.has(item.groupId))groups.set(item.groupId,'group_'+newId());}
+  pasteOffset++;
+  const shift=offset??pasteOffset*24;
+  const maxZ=Math.max(0,...sprites.map(s=>s.z));
+  snapshot();
+  const added=copied.map((s,i)=>normalize({...s,
+    id:newId(),label:s.label+' cópia', x:s.x+shift, y:s.y+shift,
+    z:maxZ+1+i,groupId:s.groupId?groups.get(s.groupId):null
+  }));
+  sprites.push(...added);save();render();
+  setSelection(added.map(s=>s.id),added[0]?.id);
+  status(added.length+' sprite(s) colado(s).');
+}
+function duplicateSelection(){
+  const items=selectedSprites();if(!items.length)return;
+  internalClipboard=clone(items);pasteOffset=0;
+  pasteCopiedSprites(24);
+}
+function deleteSelection(){
+  const targets=selectedSprites();if(!targets.length)return;
+  snapshot();const ids=new Set(targets.map(s=>s.id));
+  sprites=sprites.filter(s=>!ids.has(s.id));selected=null;selection.clear();save();render();
+  status(targets.length+' sprite(s) excluído(s).');
+}
+function mirrorSelection(horizontal){
+  const targets=selectedSprites();if(!targets.length)return;
+  const b=selectionBounds(targets),cx=(b.left+b.right)/2,cy=(b.top+b.bottom)/2;
+  mutateSelected(s=>{
+    if(horizontal){s.x=2*cx-(s.x+s.w);s.flipX=!s.flipX;s.rot=-s.rot;}
+    else{s.y=2*cy-(s.y+s.h);s.flipY=!s.flipY;s.rot=-s.rot;}
+  });
+}
+$('duplicate').onclick=duplicateSelection;
+$('copySelection').onclick=copySelection;
+$('pasteSelection').onclick=()=>pasteCopiedSprites();
+$('delete').onclick=deleteSelection;
+$('bringFront').onclick=()=>{const zs=[...selectedSprites()].sort((a,b)=>a.z-b.z);let z=Math.max(0,...sprites.map(s=>s.z));mutateSelected(()=>{});for(const item of zs)item.z=++z;save();render();};
+$('sendBack').onclick=()=>{const zs=[...selectedSprites()].sort((a,b)=>a.z-b.z);let z=Math.min(0,...sprites.map(s=>s.z))-zs.length;mutateSelected(()=>{});for(const item of zs)item.z=++z;save();render();};
+$('flipH').onclick=()=>mirrorSelection(true);
+$('flipV').onclick=()=>mirrorSelection(false);
+// Import a true image as an editable sprite, retaining alpha and natural aspect ratio.
+function importImageBlob(blob,label='Imagem colada'){
+  if(!blob || !/^image\/(png|webp|jpeg|gif)$/.test(blob.type)){status('Formato não suportado; use PNG, JPEG, WEBP ou GIF.');return;}
+  const reader=new FileReader();
+  reader.onerror=()=>status('Não foi possível ler a imagem.');
+  reader.onload=()=>{
+    const src=String(reader.result),img=new Image();
+    img.onload=()=>{
+      const width=Math.max(1,img.naturalWidth),height=Math.max(1,img.naturalHeight);
+      // Keep images manageable and within stage initially.
+      const w=Math.min(width,900),h=Math.round(w*height/width);
+      const highest=Math.max(10,...sprites.map(s=>s.z))+1;
+      const item=normalize({id:newId(),src,label,x:snapValue((W-w)/2),y:snapValue((H-h)/2),w,h,z:highest});
+      imageCache[src]=img;getAlphaCanvas(src);
+      snapshot();sprites.push(item);save();render();select(item.id);
+      status('Imagem '+(blob.type==='image/gif'?'GIF animada':'importada')+' como sprite: '+width+' × '+height+'. Exporte JSON para preservar o projeto.');
+    };
+    img.onerror=()=>status('Imagem inválida.');img.src=src;
+  };
+  reader.readAsDataURL(blob);
+}
+$('importImage').onclick=()=>$('imageFile').click();
+$('imageFile').onchange=e=>{const files=[...e.target.files];for(const f of files)importImageBlob(f,f.name);e.target.value='';};
+document.addEventListener('paste',e=>{
+  if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName))return;
+  const image=[...(e.clipboardData?.items||[])].find(item=>item.kind==='file'&&item.type.startsWith('image/'));
+  if(image){e.preventDefault();importImageBlob(image.getAsFile(),'Imagem colada');return;}
+  const data=e.clipboardData?.getData('text/plain')||'';
+  if(data.startsWith(CLIP_PREFIX)){
+    try{const decoded=JSON.parse(data.slice(CLIP_PREFIX.length));if(Array.isArray(decoded)&&decoded.length){internalClipboard=decoded.map(normalize);pasteOffset=0;pasteCopiedSprites();e.preventDefault();}}catch(err){status('Conteúdo de área de transferência inválido.');}
+    return;
+  }
+  if(internalClipboard?.length){e.preventDefault();pasteCopiedSprites();}
+});
+$('reset').onclick = ()=>{ if(!confirm('Restaurar o layout padrão?')) return; snapshot(); sprites = defaultSprites(); selected=null;selection.clear(); save(); render(); status('Layout restaurado.'); };
+$('clear').onclick = ()=>{ if(!confirm('Remover todos os sprites do palco?')) return; snapshot(); sprites=[]; selected=null;selection.clear(); save(); render(); status('Palco limpo.'); };
 $('grid').onchange = e => stage.classList.toggle('grid', e.target.checked);
 $('gridSize').onchange = () => { stage.style.setProperty('--grid-size', $('gridSize').value+'px'); status(`Grid ajustada para ${$('gridSize').value}px.`); };
 $('referenceToggle').onchange = e => stage.classList.toggle('show-reference', e.target.checked);
 $('zoom').onchange = fitScale; window.addEventListener('resize', fitScale);
+function setPulseProp(key,val){
+  const targets=selectedSprites().filter(s=>!s.locked);
+  if(!targets.length)return;
+  // Record at initial toggle/change only; input sliders update smoothly during drag.
+  targets.forEach(s=>{s[key]=val;applySprite(s);});save();
+}
+$('pulseEnabled').onchange=e=>{snapshot();setPulseProp('pulse',e.target.checked);};
+$('pulseSpeed').oninput=e=>{
+  const value=Number(e.target.value);
+  $('pulseSpeedText').textContent=value.toFixed(1)+' Hz';setPulseProp('pulseHz',value);
+};
+$('pulseAmount').oninput=e=>{
+  const value=Number(e.target.value);
+  $('pulseAmountText').textContent=value+'%';setPulseProp('pulseAmount',value);
+};
+$('pulseSpeed').addEventListener('change',save);
+function updateFx(key,value){
+  const arr=selectedSprites().filter(s=>!s.locked);
+  if(!arr.length)return;
+  for(const s of arr){s[key]=value;applySprite(s);}
+  save();refreshKeyedInstances();
+}
+$('fxBlend').addEventListener('change',e=>{snapshot();updateFx('blendMode',e.target.value);});
+$('fxDarkKey').addEventListener('change',e=>{snapshot();updateFx('darkKey',e.target.checked);});
+for(const [id,key,out,suffix] of [['fxStrength','fxStrength','fxStrengthText','%'],['fxThreshold','darkThreshold','fxThresholdText',''],['fxFeather','darkFeather','fxFeatherText','']]){
+  $(id).addEventListener('pointerdown',()=>snapshot());
+  $(id).addEventListener('input',e=>{$(out).textContent=e.target.value+suffix;updateFx(key,Number(e.target.value));});
+}
+
+$('bgParallax').onchange=e=>{snapshot();background.parallax=e.target.checked;scheduleParallax();save();};
+$('parallaxAmount').oninput=e=>{background.parallaxAmount=Number(e.target.value);$('parallaxAmountText').textContent=e.target.value+' px';scheduleParallax();save();};
 $('bgColor').oninput = e => { background.color = e.target.value; renderBackground(); save(); };
 $('bgFit').onchange = e => { background.fit = e.target.value; renderBackground(); save(); };
 $('bgOpacity').oninput = e => { background.opacity = Number(e.target.value); renderBackground(); save(); };
@@ -608,15 +1445,71 @@ async function drawBackgroundToCanvas(ctx){
     const img = new Image(); img.src = background.image; await img.decode();
     ctx.save(); ctx.globalAlpha = alpha;
     if(background.fit === 'stretch'){
-      ctx.drawImage(img,0,0,W,H);
+      ctx.drawImage(img,parallaxCurrent.x,parallaxCurrent.y,W,H);
     }else{
       const ir = img.width/img.height, sr = W/H;
       let dw, dh, dx, dy;
       if(background.fit === 'contain' ? ir > sr : ir < sr){ dw=W; dh=W/ir; dx=0; dy=(H-dh)/2; }
       else { dh=H; dw=H*ir; dy=0; dx=(W-dw)/2; }
-      ctx.drawImage(img,dx,dy,dw,dh);
+      ctx.drawImage(img,dx+parallaxCurrent.x,dy+parallaxCurrent.y,dw,dh);
     }
     ctx.restore();
+  }
+}
+// Pixel-subtract composite for PNG export (Canvas 2D has no subtract operation).
+function compositeSubtract(ctx,sourceCanvas,x,y,alpha){
+  const dw=ctx.canvas.width,dh=ctx.canvas.height;
+  const left=Math.round(x), top=Math.round(y);
+  const clipX=Math.max(0,left),clipY=Math.max(0,top);
+  const right=Math.min(dw,left+sourceCanvas.width),bottom=Math.min(dh,top+sourceCanvas.height);
+  if(right<=clipX||bottom<=clipY)return;
+  const w=right-clipX,h=bottom-clipY;
+  const back=ctx.getImageData(clipX,clipY,w,h);
+  const fx=sourceCanvas.getContext('2d',{willReadFrequently:true}).getImageData(clipX-left,clipY-top,w,h);
+  for(let i=0;i<back.data.length;i+=4){
+    const a=(fx.data[i+3]/255)*alpha;
+    for(let c=0;c<3;c++)back.data[i+c]=clampByte(back.data[i+c]-fx.data[i+c]*a);
+    back.data[i+3]=Math.max(back.data[i+3],Math.round(255*a));
+  }
+  ctx.putImageData(back,clipX,clipY);
+}
+// Render FX to an isolated full-stage surface to preserve transforms and blend.
+async function renderFxSprite(ctx,s,phase){
+  const off=document.createElement('canvas');off.width=W;off.height=H;
+  const t=off.getContext('2d',{willReadFrequently:true});
+  const pulseScale=s.pulse?1+(s.pulseAmount/100)*(phase+1)/2:1;
+  const pulseOpacity=s.pulse?1-.22*(phase+1)/2:1;
+  t.save();t.filter=`brightness(${s.brightness??100}%) contrast(${s.contrast??100}%) saturate(${s.saturation??100}%)`;t.translate(s.x+s.w/2,s.y+s.h/2);t.rotate(s.rot*Math.PI/180);
+  t.scale((s.flipX?-1:1)*pulseScale,(s.flipY?-1:1)*pulseScale);
+  if(s.kind==='dynamicBar'){
+    const e=preload(resolvedBarEmpty(s)),f=preload(s.fillSrc),frame=preload(s.frameSrc);
+    for(const im of [e,f,frame])if(!im.complete||!im.naturalWidth)await im.decode();
+    t.drawImage(e,-s.w/2,-s.h/2,s.w,s.h);
+    t.save();const pct=clampBarValue(s.value)/100;
+    t.beginPath();t.rect(s.direction==='rtl'?s.w*(1-pct)-s.w/2:-s.w/2,-s.h/2,s.w*pct,s.h);t.clip();
+    t.drawImage(f,-s.w/2,-s.h/2,s.w,s.h);t.restore();
+    t.drawImage(frame,-s.w/2,-s.h/2,s.w,s.h);
+  }else{
+    const im=preload(s.src);if(!im.complete||!im.naturalWidth)await im.decode();
+    if(s.darkKey){
+      const w=Math.max(1,Math.round(s.w)),h=Math.max(1,Math.round(s.h));
+      const keyed=document.createElement('canvas');keyed.width=w;keyed.height=h;
+      drawKeyed(keyed.getContext('2d',{willReadFrequently:true}),im,w,h,s.darkThreshold,s.darkFeather);
+      t.drawImage(keyed,-s.w/2,-s.h/2,s.w,s.h);
+    }else t.drawImage(im,-s.w/2,-s.h/2,s.w,s.h);
+  }
+  t.restore();
+  if(s.tintEnabled && s.smartKind!=='text' && s.smartKind!=='timer'){
+    const tinted=document.createElement('canvas');tinted.width=W;tinted.height=H;
+    const tintCtx=tinted.getContext('2d');tintCtx.drawImage(off,0,0);
+    tintCtx.globalCompositeOperation='source-in';tintCtx.fillStyle=s.tintColor||'#40f176';tintCtx.fillRect(0,0,W,H);
+    t.save();t.globalAlpha=Math.min(1,Math.max(0,(s.tintAmount??60)/100));t.drawImage(tinted,0,0);t.restore();
+  }
+  const intensity=Math.min(1,Math.max(0,(s.fxStrength??100)/100))*(s.opacity/100)*pulseOpacity;
+  if(s.blendMode==='subtract') compositeSubtract(ctx,off,0,0,intensity);
+  else{
+    ctx.save();ctx.globalAlpha=intensity;ctx.globalCompositeOperation=FX_CANVAS_BLEND[s.blendMode]||'source-over';
+    ctx.drawImage(off,0,0);ctx.restore();
   }
 }
 $('exportPng').onclick = async ()=>{
@@ -624,28 +1517,176 @@ $('exportPng').onclick = async ()=>{
     const canvas = document.createElement('canvas'); canvas.width=W; canvas.height=H; const ctx = canvas.getContext('2d');
     await drawBackgroundToCanvas(ctx);
     const ordered = [...sprites].filter(s=>s.visible).sort((a,b)=>a.z-b.z);
+    const tick=performance.now()/1000;
     for(const s of ordered){
-      const img = preload(s.src); if(!img.complete || !img.naturalWidth) await img.decode();
-      ctx.save(); ctx.globalAlpha = s.opacity/100; ctx.translate(s.x+s.w/2, s.y+s.h/2); ctx.rotate(s.rot*Math.PI/180); ctx.scale(s.flipX?-1:1, s.flipY?-1:1); ctx.drawImage(img, -s.w/2, -s.h/2, s.w, s.h); ctx.restore();
+      const phase=s.pulse?Math.sin(tick*Math.PI*2*s.pulseHz-Math.PI/2):-1;
+      await renderFxSprite(ctx,s,phase);
     }
     canvas.toBlob(blob=>{ if(blob) downloadBlob(blob, 'umk3-hud-1920x1080.png', 'image/png'); }, 'image/png');
     status('PNG exportado em 1920×1080.');
   }catch(err){ alert('Falha ao exportar PNG: '+err.message); }
 };
 document.addEventListener('keydown', e => {
-  const tag = document.activeElement?.tagName;
-  if(e.ctrlKey && e.key.toLowerCase() === 'z'){ e.preventDefault(); e.shiftKey ? redo():undo(); return; }
-  if(e.ctrlKey && e.key.toLowerCase() === 'y'){ e.preventDefault(); redo(); return; }
-  if(e.ctrlKey && e.key.toLowerCase() === 'd'){ e.preventDefault(); $('duplicate').click(); return; }
-  if(['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
-  if(e.key==='Escape'){ select(null); return; }
-  if((e.key==='Delete' || e.key==='Backspace') && selected){ e.preventDefault(); $('delete').click(); return; }
-  const s = selectedSprite(); if(!s || s.locked) return;
-  const step = e.shiftKey ? 10 : 1; let dx=0, dy=0;
-  if(e.key==='ArrowLeft') dx=-step; else if(e.key==='ArrowRight') dx=step; else if(e.key==='ArrowUp') dy=-step; else if(e.key==='ArrowDown') dy=step; else return;
-  e.preventDefault(); snapshot(); s.x += dx; s.y += dy; save(); applySprite(s); refreshInspectorFields(); renderLayers();
+  const tag=document.activeElement?.tagName;
+  if(['INPUT','TEXTAREA','SELECT'].includes(tag))return;
+  const ctrl=e.ctrlKey||e.metaKey,key=e.key.toLowerCase();
+  if(ctrl&&key==='c'){e.preventDefault();copySelection();return;}
+  // Ctrl+V is handled by the paste event to prioritize external image content.
+  if(ctrl&&key==='v')return;
+  if(ctrl&&e.shiftKey&&key==='g'){e.preventDefault();ungroupSelection();return;}
+  if(ctrl&&key==='g'){e.preventDefault();groupSelection();return;}
+  if(ctrl&&key==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}
+  if(ctrl&&key==='y'){e.preventDefault();redo();return;}
+  if(ctrl&&key==='d'){e.preventDefault();duplicateSelection();return;}
+  if(e.key==='Escape'){select(null);return;}
+  if((e.key==='Delete'||e.key==='Backspace')&&selection.size){e.preventDefault();deleteSelection();return;}
+  const active=selectedSprites().filter(s=>!s.locked);if(!active.length)return;
+  const step=e.shiftKey?10:1;let dx=0,dy=0;
+  if(e.key==='ArrowLeft')dx=-step;
+  else if(e.key==='ArrowRight')dx=step;
+  else if(e.key==='ArrowUp')dy=-step;
+  else if(e.key==='ArrowDown')dy=step;
+  else return;
+  e.preventDefault();snapshot();
+  for(const item of active){item.x+=dx;item.y+=dy;applySprite(item);}
+  save();refreshInspectorFields();renderLayers();
 });
 function renderAll(){ stage.style.setProperty('--grid-size', $('gridSize').value+'px'); stage.classList.toggle('grid', $('grid').checked); renderBackground(); render(); fitScale(); }
+// V0.3.1 — authoring primitives. Existing sprites retain their original schema.
+const MK_ROSTERS={
+  mk1:['Liu Kang','Johnny Cage','Sonya Blade','Kano','Raiden','Scorpion','Sub-Zero','Reptile','Goro','Shang Tsung'],
+  mk2:['Liu Kang','Kung Lao','Johnny Cage','Reptile','Sub-Zero','Shang Tsung','Kitana','Jax Briggs','Mileena','Baraka','Scorpion','Raiden','Smoke (Human)','Noob Saibot','Jade','Kintaro','Shao Kahn'],
+  mk3:['Liu Kang','Kung Lao','Jax Briggs','Sonya Blade','Kano','Shang Tsung','Sub-Zero (Kuai Liang)','Stryker','Nightwolf','Sindel','Sheeva','Kabal','Cyrax','Sektor','Smoke (Cyborg)','Motaro','Shao Kahn'],
+  umk3:['Liu Kang','Kung Lao','Jax Briggs','Sonya Blade','Kano','Shang Tsung','Sub-Zero (Kuai Liang)','Stryker','Nightwolf','Sindel','Sheeva','Kabal','Cyrax','Sektor','Smoke (Cyborg)','Kitana','Jade','Scorpion','Reptile','Mileena','Ermac','Sub-Zero (Bi-Han)','Noob Saibot','Rain','Smoke (Human)','Motaro','Shao Kahn'],
+  mkt:['Liu Kang','Kung Lao','Jax Briggs','Sonya Blade','Kano','Shang Tsung','Sub-Zero (Kuai Liang)','Stryker','Nightwolf','Sindel','Sheeva','Kabal','Cyrax','Sektor','Smoke (Cyborg)','Kitana','Jade','Scorpion','Reptile','Mileena','Ermac','Sub-Zero (Bi-Han)','Noob Saibot','Rain','Smoke (Human)','Johnny Cage','Baraka','Raiden','Goro','Kintaro','Motaro','Shao Kahn','Chameleon','Khameleon'],
+  advance:['Rain','Reptile','Stryker','Jax Briggs','Nightwolf','Jade','Noob Saibot','Sonya Blade','Kano','Mileena','Ermac','Sub-Zero (Kuai Liang)','Sub-Zero (Bi-Han)','Kung Lao','Sektor','Kitana','Scorpion','Cyrax','Kabal','Sindel','Smoke (Cyborg)','Liu Kang','Shang Tsung','Smoke (Human)','Motaro','Shao Kahn']
+};
+function refreshMKNames(){
+  const key=$('mkGame').value;
+  const names=key==='all'?[...new Set(Object.values(MK_ROSTERS).flat())].sort():MK_ROSTERS[key];
+  const previous=$('mkCharacter').value;$('mkCharacter').replaceChildren();
+  for(const name of names){const o=document.createElement('option');o.value=name;o.textContent=name;$('mkCharacter').append(o);}
+  if(names.includes(previous))$('mkCharacter').value=previous;
+  $('hudName').value=$('mkCharacter').value;
+}
+$('mkGame').onchange=refreshMKNames;
+$('mkCharacter').onchange=()=>{$('hudName').value=$('mkCharacter').value;};
+refreshMKNames();
+function escapeSvgText(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));}
+function smartSvgImage(value,color,font=48){
+  const safe=escapeSvgText(value),size=Math.max(12,Math.min(120,font));
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="145" viewBox="0 0 800 145"><defs><filter id="g"><feGaussianBlur stdDeviation="2"/></filter></defs><text x="400" y="83" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="${size}" font-weight="bold" textLength="${Math.min(750,Math.max(80,safe.length*size*.67))}" lengthAdjust="spacingAndGlyphs" fill="${color}" stroke="#180d06" stroke-width="5" paint-order="stroke">${safe}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+function addSmartSprite(info){
+  snapshot();const s=normalize({id:newId(),kind:'sprite',...info});sprites.push(s);preload(s.src);save();render();select(s.id);return s;
+}
+function addFighterText(side){
+  const name=$('hudName').value.trim()||$('mkCharacter').value;
+  const font=Math.max(12,Math.min(120,Number($('hudFontSize').value)||48));
+  const color=$('hudTextColor').value;
+  const x=side==='p1'?55:1437;
+  addSmartSprite({src:smartSvgImage(name,color,font),label:`Nome ${side.toUpperCase()} · ${name}`,x,y:35,w:430,h:78,z:90,smartKind:'text',textValue:name,textColor:color,fontSize:font});
+}
+$('addP1Name').onclick=()=>addFighterText('p1');
+$('addP2Name').onclick=()=>addFighterText('p2');
+$('applyHudText').onclick=()=>{
+  const s=selectedSprite();if(!s||s.smartKind!=='text'){status('Selecione um nome de lutador criado pelo Studio.');return;}
+  snapshot();s.textValue=$('hudName').value.trim()||s.textValue;s.textColor=$('hudTextColor').value;s.fontSize=Number($('hudFontSize').value)||48;
+  s.src=smartSvgImage(s.textValue,s.textColor,s.fontSize);preload(s.src);save();render();select(s.id);
+};
+const HUD_MATERIALS={
+  obsidiana:'assets/master-v1/clean/miolos/obsidiana_placa.png',
+  lava:'assets/master-v1/clean/miolos/lava_longa.png',
+  'lava-inclinada':'assets/master-v1/clean/miolos/lava_placa.png',
+  verde:'assets/miolos-4-cores/miolo_lava_verde.png',
+  azul:'assets/miolos-4-cores/miolo_lava_azul.png',
+  lilas:'assets/miolos-4-cores/miolo_lava_lilas.png',
+  pink:'assets/miolos-4-cores/miolo_lava_pink.png'
+};
+async function materialSource(frame,key){
+  const src=HUD_MATERIALS[key];const img=preload(src);
+  if(!img.complete||!img.naturalWidth)await img.decode();
+  const w=Math.max(2,Math.round(frame.w)),h=Math.max(2,Math.round(frame.h));
+  const can=document.createElement('canvas');can.width=w;can.height=h;
+  const c=can.getContext('2d');c.save();c.beginPath();
+  const central=/central|v\b/i.test(frame.label)||/central_v/.test(frame.src);
+  if(central){
+    c.moveTo(w*.14,h*.16);c.lineTo(w*.34,h*.18);c.lineTo(w*.5,h*.37);c.lineTo(w*.66,h*.18);c.lineTo(w*.86,h*.16);
+    c.lineTo(w*.65,h*.83);c.lineTo(w*.50,h*.94);c.lineTo(w*.35,h*.83);
+  }else{
+    c.moveTo(w*.09,h*.18);c.lineTo(w*.91,h*.18);c.lineTo(w*.96,h*.5);c.lineTo(w*.91,h*.82);c.lineTo(w*.09,h*.82);c.lineTo(w*.04,h*.5);
+  }
+  c.closePath();c.clip();
+  // Tile original master texture at native pixel dimensions; no horizontal stretch.
+  const pattern=c.createPattern(img,'repeat');c.fillStyle=pattern;c.fillRect(0,0,w,h);c.restore();
+  return can.toDataURL('image/png');
+}
+$('applyHudMaterial').onclick=async()=>{
+  const target=selectedSprite();if(!target){status('Selecione uma moldura antes de inserir o miolo.');return;}
+  if(target.smartKind==='text'||target.smartKind==='timer'){status('Selecione uma moldura, não um texto ou timer.');return;}
+  const kind=$('hudMaterial').value;
+  try{
+    const src=await materialSource(target,kind);
+    addSmartSprite({src,label:`Miolo ${kind} · ${target.label}`,x:target.x,y:target.y,w:target.w,h:target.h,z:target.z-.1,smartKind:'material'});
+    status('Miolo adicionado abaixo da moldura. Ajuste o encaixe se necessário.');
+  }catch(err){status('Falha ao carregar material: '+err.message);}
+};
+function timerVisual(s){
+  const t=Math.max(0,Math.ceil(s.timerRemaining));
+  const value=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+  return smartSvgImage(value,s.textColor||'#ffcd57',70);
+}
+function currentTimer(){return selectedSprite()?.smartKind==='timer'?selectedSprite():sprites.find(s=>s.smartKind==='timer');}
+$('addHudTimer').onclick=()=>{
+  const duration=Number($('hudTimerDuration').value);
+  const existing=sprites.find(s=>s.smartKind==='timer');if(existing){select(existing.id);return;}
+  const obj={id:newId(),src:'',label:'Timer · Central V',x:872,y:60,w:176,h:95,z:110,smartKind:'timer',timerDuration:duration,timerRemaining:duration,timerRunning:false,textColor:$('hudTimerColor').value};
+  obj.src=timerVisual(obj);addSmartSprite(obj);
+};
+function refreshTimer(s){s.src=timerVisual(s);preload(s.src);const im=stage.querySelector(`.sprite[data-id="${s.id}"] img`);if(im)im.src=s.src;}
+$('hudTimerPlay').onclick=()=>{const s=currentTimer();if(!s)return;s.timerRunning=!s.timerRunning;save();};
+$('hudTimerReset').onclick=()=>{const s=currentTimer();if(!s)return;s.timerDuration=Number($('hudTimerDuration').value);s.timerRemaining=s.timerDuration;s.timerRunning=false;refreshTimer(s);save();};
+let timerLast=performance.now();
+setInterval(()=>{
+  const now=performance.now(),dt=Math.max(0,Math.min(2,(now-timerLast)/1000));timerLast=now;
+  let changed=false;
+  for(const s of sprites){if(s.smartKind!=='timer'||!s.timerRunning)continue;
+    const before=Math.ceil(s.timerRemaining);s.timerRemaining=Math.max(0,s.timerRemaining-dt);
+    if(Math.ceil(s.timerRemaining)!==before){refreshTimer(s);changed=true;}
+    if(s.timerRemaining<=0){s.timerRunning=false;changed=true;}
+  }
+  if(changed)save();
+},120);
+function mirrorQuant(v){const n=Number($('hudMirrorGrid').value)||1;return Math.round(v/n)*n;}
+$('hudMirrorAlign').onclick=()=>{
+  const items=selectedSprites();if(!items.length)return;
+  snapshot();for(const s of items){s.x=mirrorQuant(s.x);s.y=mirrorQuant(s.y);applySprite(s);}save();render();status('Posições quantizadas à grade.');
+};
+$('hudMirrorDuplicate').onclick=()=>{
+  const items=selectedSprites().filter(s=>!s.locked);
+  if(!items.length)return;
+  snapshot();const axis=Number($('hudMirrorAxis').value)||960;
+  const copies=[];
+  for(const s of items){const pair=normalize({...clone(s),id:newId(),label:s.label+' · Espelho',x:mirrorQuant(2*axis-s.x-s.w),y:mirrorQuant(s.y),rot:-s.rot,flipX:!s.flipX,z:s.z+.1,groupId:null,mirrorPair:s.id,mirrorLinked:$('hudMirrorLink').checked});
+    if($('hudMirrorLink').checked){s.mirrorPair=pair.id;s.mirrorLinked=true;}
+    copies.push(pair);
+  }
+  sprites.push(...copies);save();render();setSelection(copies.map(s=>s.id),copies.at(-1).id);
+};
+for(const [id,key,type] of [['fxTintEnabled','tintEnabled','checkbox'],['fxTintColor','tintColor','value'],['fxTintAmount','tintAmount','number'],['fxBrightness','brightness','number'],['fxContrast','contrast','number'],['fxSaturation','saturation','number']]){
+  $(id).addEventListener(type==='checkbox'||type==='value'?'change':'input',e=>{
+    const items=selectedSprites();if(!items.length)return;
+    const val=type==='checkbox'?e.target.checked:type==='number'?+e.target.value:e.target.value;
+    for(const s of items){s[key]=val;applySprite(s);}
+    if(key==='tintAmount')$('fxTintAmountText').textContent=val+'%';
+    if(key==='brightness')$('fxBrightnessText').textContent=val+'%';
+    if(key==='contrast')$('fxContrastText').textContent=val+'%';
+    if(key==='saturation')$('fxSaturationText').textContent=val+'%';
+    save();
+  });
+}
+
 renderPalette(); renderAll(); updateRulers();
 </script>
 </body>

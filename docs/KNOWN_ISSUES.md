@@ -21,5 +21,13 @@ A interface ainda não foi validada por testes automatizados em navegador na pre
 ## V0.2 — Limitações do primeiro incremento
 
 - As guias magnéticas atuam sobre o retângulo geométrico do sprite, não o bounding box opaco.
-- O histórico Undo/Redo está disponível; agrupamento de múltiplos sprites e zoom por scroll continuam no roadmap.
+- O histórico Undo/Redo, agrupamento lógico, seleção em caixa e zoom por Ctrl+roda foram implementados; precisam de validação visual no Windows.
+- A seleção em caixa considera a interseção com o retângulo geométrico, não apenas pixels alpha.
+- O grupo é lógico: cada sprite mantém sua posição, escala e camada individuais, e o movimento de grupo é conjunto; redimensionamento e rotação de grupo não estão disponíveis.
 - Não foi possível completar teste automatizado de navegador neste ambiente (Chromium bloqueou acesso por política do ambiente). Testes Node de hit-test passam.
+
+## v0.2.3 — Pendências de validação
+
+- A imagem colada é embutida como data URI no projeto JSON. Isso pode ultrapassar a cota de `localStorage` em arquivos grandes; exporte o projeto JSON para não perder mudanças e futuramente migre a biblioteca para IndexedDB.
+- A seleção precisa por alpha de PNGs e a colagem de imagens precisam ser testadas manualmente no navegador do Windows antes de realizar merge na `main`.
+- Imagens animadas GIF são tratadas como um sprite estático durante a exportação pelo canvas.

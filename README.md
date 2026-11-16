@@ -1,3 +1,27 @@
+
+## V0.3.0 — Blend Modes & GIF FX
+
+### Controles: Inspector → Efeitos visuais · PNG / GIF
+
+- **Normal, Multiplicar, Tela (Screen), Somar, Clarear, Escurecer e Diferença:** composição no palco usando CSS `mix-blend-mode` e exportação PNG via Canvas 2D.
+- **Subtrair:** subtração real RGB por pixel **na exportação PNG**; a prévia utiliza o modo `difference` como aproximação devido à ausência de `subtract` nativo no CSS.
+- **Força do efeito:** controla a opacidade da camada de composição, independente da opacidade principal do sprite.
+- **Remover preto:** filtro de luminância com tolerância e suavização por Alpha (não remove fundo fisicamente do GIF de origem). Ative para GIFs com fundo preto; a prévia tenta processar os quadros animados em tempo real com Canvas 2D até ~25 fps, limitando resolução de processamento para desempenho.
+- **Persistência:** `blendMode`, `fxStrength`, `darkKey`, `darkThreshold`, `darkFeather` adicionados ao JSON; arquivos antigos continuam com `normal` e o filtro desligado.
+- **Exportação:** captura PNG de um quadro do GIF (não exporta GIF animado). Subtrair usa pixels do fundo na imagem atual. As limitações de navegador/performance e de transparência são descritas acima.
+
+### Testes
+
+```powershell
+py .\tests\smoke-test.py
+node .\tests\blend-fx-v030.test.cjs
+node .\tests\editor-v029.test.cjs
+node .\tests\hit-test.test.cjs
+node .\tests\dynamic-bars.test.cjs
+```
+
+**Validação visual obrigatória:** teste fumaça.gif sobre o cenário no Edge com `Tela`, `Somar`, `Remover preto`, tolerância e suavização; confira a exportação. O teste automatizado com Chromium não pôde abrir URLs locais no ambiente de preparação.
+
 # HUD Studio for SNES
 
 Editor visual experimental de HUDs e elementos de interface para jogos, com inspiração no fluxo de trabalho de editores de mídia como FL Studio.
@@ -12,6 +36,19 @@ Editor visual experimental de HUDs e elementos de interface para jogos, com insp
 - Regressão automatizada do alpha com Node.js (`node tests/hit-test.test.cjs`).
 
 **Importante:** implementação em desenvolvimento; o teste estático/regressão não substitui validação manual no navegador Windows.
+
+
+## V0.2.8 — DynamicBar Reconstruction (desenvolvimento)
+
+Recriação em três camadas para as **quatro barras**: `empty` (fundo vazio), `fill` (miolo com máscara interna específica) e `frame` (moldura fixa). Os miolos coloridos utilizam **texturas extraídas dos PNGs da Master** (`assets/miolos-4-cores/`); suas formas foram recortadas com máscaras geradas a partir da arte existente. A textura é repetida horizontalmente, não esticada até a largura total.
+
+- Assets: `assets/dynamic-bars/reconstructed/` (4 frames, 4 empty, 4 máscaras e 20 preenchimentos).
+- Catálogo: `assets/dynamic-bars/reconstructed/manifest.json`.
+- Compatibilidade: projetos V0.2.4–V0.2.7 são remapeados em memória ao importar; guarde backup do JSON original.
+- Exportação PNG: usa a mesma ordem de desenho e o mesmo cálculo de recorte que a prévia.
+- Teste: `py tests/dynamicbar-reconstruction-v028.test.py` (ou `python` no Linux).
+
+**Limitações:** as máscaras derivam de classificação de cor e precisam de inspeção final de bordas no Edge. A textura real é aplicada dentro da máscara, mas a adaptação à altura e repetição horizontal podem produzir emendas. Não foi possível validar a interface em Chromium neste ambiente.
 
 ## Funcionalidades atuais
 
@@ -81,3 +118,117 @@ powershell -ExecutionPolicy Bypass -File .\scripts\publicar-github.ps1 -Push
 ```
 
 Os PNGs incluídos são recursos de referência da interface do projeto e podem conter elementos associados a Mortal Kombat. Verifique os direitos de uso/distribuição antes de licenciar ou redistribuir comercialmente esses assets. **Nenhuma licença de código aberto foi aplicada automaticamente.**
+
+## Incremento v0.2.1 — Seleção e navegação
+
+- **Shift + clique:** adicionar/remover sprites da seleção (inclui membros de grupos).
+- **Arrastar no vazio:** seleção por retângulo.
+- **Ctrl + G:** agrupar itens selecionados; **Ctrl + Shift + G:** desagrupar.
+- **Arrastar sprite selecionado:** mover seleção ou grupo junto.
+- **Botão do meio + arrastar:** deslocar a visualização (pan).
+- **Ctrl + roda do mouse:** zoom, mantendo aproximadamente o ponto do cursor.
+- **Setas:** mover sprites selecionados; **Shift + setas:** incrementos de 10 px.
+- **Del:** excluir a seleção.
+
+Todos os projetos antigos mantêm compatibilidade com `groupId` opcional (nulo quando ausente). Os PNGs permanecem intactos. Os recursos de seleção em caixa e agrupamento ainda devem ser conferidos visualmente em Chromium/Edge no Windows.
+
+```powershell
+py .\tests\smoke-test.py
+node .\tests\hit-test.test.cjs
+node .\tests\editor-v021.test.cjs
+```
+
+## Incremento v0.2.2 — Visual Polish (pré-commit)
+
+- Barra superior em quatro grupos: **Visualização**, **Seleção**, **Histórico** e **Saída & zoom**.
+- Inspector com cartões separados: **Transformação**, **Espelho & visibilidade**, **Alinhamento**, **Organização & camadas** e **Remoção**.
+- Botões de alinhamento em grade 3 × 2, espaçamento e altura uniformes, exclusão em seção isolada.
+- Layout responsivo da toolbar para não comprimir os controles em resoluções menores.
+- IDs de controles e handlers do editor mantidos (sem alterações planejadas na lógica de edição).
+
+Validação adicional: `node tests/ui-v022.test.cjs`. Recomenda-se conferir no Edge em 1920 × 1080 e também com janelas menores antes de fazer commit.
+
+### Ferramentas v0.2.3 — Edição de grupos
+
+- `Shift + clique`: seleção múltipla; `Ctrl + G`: agrupar; `Ctrl + Shift + G`: desagrupar.
+- `Ctrl + D` ou **Duplicar seleção**: duplica todos os itens selecionados. Grupos novos recebem IDs independentes.
+- **Espelhar H / V**: reflete o conjunto ao redor do centro da seleção, preservando as posições relativas espelhadas.
+- `Delete`: exclui todos os itens selecionados; **Copiar** / `Ctrl + C`: copia sprites; `Ctrl + V`: cola cópias deslocadas.
+- `Ctrl + V` com imagem na área de transferência: insere imagem como sprite editável. **Importar imagem**: escolhe arquivo PNG, JPEG ou WEBP (GIF aceito como sprite estático no canvas).
+- Para projetos com imagens coladas, exporte o projeto JSON antes de fechar a aba: o limite de armazenamento local do navegador pode ser excedido.
+
+
+## DynamicBar v0.2.4 (prévia)
+
+Painel de barras dinâmicas com camadas separadas de moldura e preenchimento. No Browser, arraste uma barra de Vida/Corrida, ou clique em **Adicionar 4 barras dinâmicas** para o par P1/P2. Selecione a barra e ajuste seu valor (0–100%), categoria e direção no Inspector. **Simular combate** pré-visualiza mudanças, e **Parar** restaura o valor anterior. Export PNG inclui o quadro renderizado; JSON inclui as propriedades. Consulte `docs/DYNAMIC_BARS.md`.
+
+### Instalação no Windows
+
+Trabalhe na branch `feat/editor-v0.2.0`. Faça backup de eventuais alterações não commitadas antes de extrair o pacote ZIP **na raiz do projeto** (`D:\Desenvolvimento\Sistemas\HUD Studio for SNES`). Verifique os testes antes de commit/push.
+
+Para iniciar somente com as quatro barras, use **Importar JSON → examples/dynamic-bars-4.json**. Para acrescentar as quatro barras ao projeto existente, clique em **Adicionar 4 barras dinâmicas**. Se seu HUD já tiver barras estáticas, apague-as caso prefira não sobrepor os elementos.
+
+## V0.2.5 — Master Asset System (desenvolvimento)
+
+A master **Metal e Lava** (`assets/master-v1/MASTER_ORIGINAL_1536x1024.png`) foi adicionada como fonte de referência, com 37 recortes RGBA e catálogo pesquisável por categorias. Use o seletor **Biblioteca** para filtrar Molduras, Miolos, Estados, Extras e Referência. Os recortes são fiéis às regiões da master, mas ainda aguardam limpeza dos halos; veja `docs/MASTER_ASSET_SYSTEM_V025.md`.
+
+
+# HUD Studio for SNES — V0.2.6 | Miolos 4 Cores
+
+Atualização incremental sobre a V0.2.5 — Master Asset System.
+
+## Conteúdo inspecionado
+
+Arquivo recebido: `miolos_HUD_4_cores(1).zip`.
+
+- Verde, Azul, Lilás e Pink: **4 paletas de cores**.
+- Para cada cor: `miolo_lava_*` (281 × 81 px), `miolo_moldura_*` (283 × 94 px), `HUD_miolos_*` (1536 × 1024 px).
+- Prévia adicional `preview_miolos_4_cores.png` (700 × 560 px).
+- **12 PNGs fonte + 1 prévia**. O catálogo preserva SHA256 e métricas Alpha para cada sprite.
+- Arquivos originais copiados sem qualquer edição.
+
+## Integração
+
+No Browser do Studio, escolha **Miolos · 4 cores (8 sprites)** para acessar os miolos de lava e as variantes com moldura, ou **Miolos · Sheets (4 refs)** para as imagens completas. Arraste ao palco, transforme, espelhe, duplique e exporte normalmente. Mantivemos as 4 barras DynamicBar e os 37 assets da Master V1.
+
+### Aviso de produção
+
+Os recortes não são máscaras definitivas: `miolo_lava_*` contém resíduos isolados nas extremidades e `miolo_moldura_*` já contém borda dourada e resíduos de outras peças. **Não** interpretar `miolo_moldura_*` como moldura vazia; **não** aplicar automaticamente esses miolos em barras de vida/corrida de aspecto muito diferente, para evitar deformar a textura. A integração é como assets editáveis do Studio, com preparação de máscara/encaixe na etapa seguinte.
+
+Para preparar um DynamicBar oficial desses miolos, ainda é necessário estabelecer geometria de recorte, origem e bordas sem fragmentos, assim como o modo de repetição/revelação do preenchimento.
+
+## Testes
+
+```powershell
+py .\tests\smoke-test.py
+py .\tests\master-assets.test.py
+py .\tests\miolos-4-cores.test.py
+node .\tests\hit-test.test.cjs
+node .\tests\dynamic-bars.test.cjs
+```
+
+Não foram realizados testes interativos no Edge do usuário. Ainda não foi feito commit nem push no GitHub.
+
+### V0.2.7 — Editor de Preenchimentos
+Selecione uma DynamicBar de vida/corrida e troque a paleta do preenchimento entre vermelho, verde, azul, lilás e pink no **Inspector**. A moldura, dimensões e Alpha permanecem fixos. Valores entre 0–100% continuam disponíveis, e PNG/JSON incluem a cor atual.
+
+Detalhes técnicos e limitações: [docs/FILL_EDITOR_V027.md](docs/FILL_EDITOR_V027.md).
+
+## Editor V0.2.9 — Transformações e FX
+
+- Quatro alças de redimensionamento, com **Shift + arrastar** para redimensionar a partir do centro.
+- Inspector corrigido para não extrapolar o painel lateral.
+- Pulsação ajustável por sprite (0,2–4 Hz, 0–20% de intensidade).
+- Parallax opcional de background com ajuste de intensidade.
+- Imagens GIF animadas aceitas como sprites e como fundo.
+- Configurações persistidas no JSON; PNG exporta somente um quadro estático.
+
+Documentação: [docs/EDITOR_V029.md](docs/EDITOR_V029.md).
+
+## V0.3.1 — Smart HUD Authoring (experimental)
+
+Painel **Smart HUD** (sempre visível no Inspector): adicionar nomes P1/P2, selecionar personagem por jogo, inserir materiais sob molduras, cronômetro central 1/2/3 min, Mirror Quantize e colorização de fumaça (tint/brilho/contraste/saturação). Veja `docs/SMART_HUD_V031.md`.
+
+Os encaixes de material usam máscaras poligonais aproximadas e precisam de validação visual para cada moldura. O timer é uma prévia de editor, não um contador conectado ao motor do jogo. GIFs seguem animados no navegador, mas exportar PNG captura um quadro. O modo Subtrair permanece uma aproximação visual na prévia.
+
+Validar: `node tests/smart-hud-v031.test.cjs` e `py tests/smoke-test.py`.

@@ -1,0 +1,949 @@
+{
+  "version": "1.0",
+  "title": "Master Metal e Lava",
+  "source": "Sprite Sheet de HUD em Metal e Lava(1).png",
+  "source_size": [
+    1536,
+    1024
+  ],
+  "sha256": "d2ed5ef34072f87e392157e62b32614206c3b189587020e207996b8f0314585c",
+  "extraction": "pixel-preserving rectangular crop; includes source-authored glow and potential artifacts; not final alpha-isolation",
+  "assets": [
+    {
+      "id": "central_v",
+      "category": "molduras",
+      "label": "Moldura central V",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/central_v.png",
+      "source_rect": [
+        7,
+        58,
+        395,
+        265
+      ],
+      "size": [
+        388,
+        207
+      ],
+      "visible_pixels": 49412,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/central_v.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 17008
+    },
+    {
+      "id": "nome_inclinado",
+      "category": "molduras",
+      "label": "Moldura inclinada superior",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/nome_inclinado.png",
+      "source_rect": [
+        384,
+        72,
+        787,
+        205
+      ],
+      "size": [
+        403,
+        133
+      ],
+      "visible_pixels": 41889,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/nome_inclinado.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 15691
+    },
+    {
+      "id": "vida_longa",
+      "category": "molduras",
+      "label": "Moldura vida longa",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/vida_longa.png",
+      "source_rect": [
+        793,
+        90,
+        1233,
+        183
+      ],
+      "size": [
+        440,
+        93
+      ],
+      "visible_pixels": 32347,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/vida_longa.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 9745
+    },
+    {
+      "id": "corrida_longa",
+      "category": "molduras",
+      "label": "Moldura corrida longa",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/corrida_longa.png",
+      "source_rect": [
+        1240,
+        97,
+        1531,
+        183
+      ],
+      "size": [
+        291,
+        86
+      ],
+      "visible_pixels": 16142,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/corrida_longa.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3688
+    },
+    {
+      "id": "placa_curta_esquerda",
+      "category": "molduras",
+      "label": "Moldura pequena esquerda",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/placa_curta_esquerda.png",
+      "source_rect": [
+        365,
+        199,
+        640,
+        294
+      ],
+      "size": [
+        275,
+        95
+      ],
+      "visible_pixels": 23487,
+      "alpha_extrema": [
+        0,
+        252
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/placa_curta_esquerda.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 9508
+    },
+    {
+      "id": "placa_curta_centro",
+      "category": "molduras",
+      "label": "Moldura pequena central",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/placa_curta_centro.png",
+      "source_rect": [
+        640,
+        199,
+        1015,
+        294
+      ],
+      "size": [
+        375,
+        95
+      ],
+      "visible_pixels": 28833,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/placa_curta_centro.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 11924
+    },
+    {
+      "id": "placa_curta_direita",
+      "category": "molduras",
+      "label": "Moldura pequena direita",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/placa_curta_direita.png",
+      "source_rect": [
+        1022,
+        203,
+        1372,
+        290
+      ],
+      "size": [
+        350,
+        87
+      ],
+      "visible_pixels": 20058,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/placa_curta_direita.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 5428
+    },
+    {
+      "id": "medalhao_aro",
+      "category": "molduras",
+      "label": "Moldura circular medalhão",
+      "role": "frame",
+      "path": "assets/master-v1/molduras/medalhao_aro.png",
+      "source_rect": [
+        1374,
+        169,
+        1531,
+        315
+      ],
+      "size": [
+        157,
+        146
+      ],
+      "visible_pixels": 13054,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/molduras/medalhao_aro.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3102
+    },
+    {
+      "id": "obsidiana_v",
+      "category": "miolos",
+      "label": "Miolo obsidiana central",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/obsidiana_v.png",
+      "source_rect": [
+        7,
+        351,
+        273,
+        469
+      ],
+      "size": [
+        266,
+        118
+      ],
+      "visible_pixels": 24797,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/obsidiana_v.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3681
+    },
+    {
+      "id": "obsidiana_placa",
+      "category": "miolos",
+      "label": "Miolo obsidiana inclinada",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/obsidiana_placa.png",
+      "source_rect": [
+        235,
+        362,
+        521,
+        457
+      ],
+      "size": [
+        286,
+        95
+      ],
+      "visible_pixels": 21642,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/obsidiana_placa.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 2540
+    },
+    {
+      "id": "lava_placa",
+      "category": "miolos",
+      "label": "Miolo lava vermelha inclinada",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/lava_placa.png",
+      "source_rect": [
+        495,
+        361,
+        768,
+        450
+      ],
+      "size": [
+        273,
+        89
+      ],
+      "visible_pixels": 19763,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/lava_placa.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 5122
+    },
+    {
+      "id": "lava_longa",
+      "category": "miolos",
+      "label": "Textura lava vermelha",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/lava_longa.png",
+      "source_rect": [
+        739,
+        370,
+        1022,
+        448
+      ],
+      "size": [
+        283,
+        78
+      ],
+      "visible_pixels": 20006,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/lava_longa.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3880
+    },
+    {
+      "id": "energia_verde",
+      "category": "miolos",
+      "label": "Textura corrida verde",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/energia_verde.png",
+      "source_rect": [
+        1020,
+        379,
+        1274,
+        441
+      ],
+      "size": [
+        254,
+        62
+      ],
+      "visible_pixels": 14115,
+      "alpha_extrema": [
+        0,
+        252
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/energia_verde.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 2869
+    },
+    {
+      "id": "vazio_preto",
+      "category": "miolos",
+      "label": "Textura vazio preto",
+      "role": "fill",
+      "path": "assets/master-v1/miolos/vazio_preto.png",
+      "source_rect": [
+        1270,
+        377,
+        1536,
+        447
+      ],
+      "size": [
+        266,
+        70
+      ],
+      "visible_pixels": 13617,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/miolos/vazio_preto.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 1321
+    },
+    {
+      "id": "vida_100",
+      "category": "estados",
+      "label": "Vida 100%",
+      "role": "health",
+      "path": "assets/master-v1/estados/vida_100.png",
+      "source_rect": [
+        5,
+        519,
+        318,
+        586
+      ],
+      "size": [
+        313,
+        67
+      ],
+      "visible_pixels": 20118,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/vida_100.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3369
+    },
+    {
+      "id": "vida_75",
+      "category": "estados",
+      "label": "Vida 75%",
+      "role": "health",
+      "path": "assets/master-v1/estados/vida_75.png",
+      "source_rect": [
+        316,
+        517,
+        635,
+        588
+      ],
+      "size": [
+        319,
+        71
+      ],
+      "visible_pixels": 20695,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/vida_75.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 4423
+    },
+    {
+      "id": "vida_50",
+      "category": "estados",
+      "label": "Vida 50%",
+      "role": "health",
+      "path": "assets/master-v1/estados/vida_50.png",
+      "source_rect": [
+        625,
+        516,
+        941,
+        585
+      ],
+      "size": [
+        316,
+        69
+      ],
+      "visible_pixels": 18777,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/vida_50.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 2857
+    },
+    {
+      "id": "vida_25",
+      "category": "estados",
+      "label": "Vida 25%",
+      "role": "health",
+      "path": "assets/master-v1/estados/vida_25.png",
+      "source_rect": [
+        935,
+        513,
+        1240,
+        587
+      ],
+      "size": [
+        305,
+        74
+      ],
+      "visible_pixels": 17844,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/vida_25.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 2706
+    },
+    {
+      "id": "vida_0",
+      "category": "estados",
+      "label": "Vida 0%",
+      "role": "health",
+      "path": "assets/master-v1/estados/vida_0.png",
+      "source_rect": [
+        1232,
+        515,
+        1531,
+        587
+      ],
+      "size": [
+        299,
+        72
+      ],
+      "visible_pixels": 16540,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/vida_0.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 1662
+    },
+    {
+      "id": "corrida_100",
+      "category": "estados",
+      "label": "Corrida 100%",
+      "role": "stamina",
+      "path": "assets/master-v1/estados/corrida_100.png",
+      "source_rect": [
+        5,
+        581,
+        318,
+        659
+      ],
+      "size": [
+        313,
+        78
+      ],
+      "visible_pixels": 23656,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/corrida_100.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 8313
+    },
+    {
+      "id": "corrida_75",
+      "category": "estados",
+      "label": "Corrida 75%",
+      "role": "stamina",
+      "path": "assets/master-v1/estados/corrida_75.png",
+      "source_rect": [
+        316,
+        586,
+        636,
+        664
+      ],
+      "size": [
+        320,
+        78
+      ],
+      "visible_pixels": 23287,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/corrida_75.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 8252
+    },
+    {
+      "id": "corrida_50",
+      "category": "estados",
+      "label": "Corrida 50%",
+      "role": "stamina",
+      "path": "assets/master-v1/estados/corrida_50.png",
+      "source_rect": [
+        629,
+        585,
+        940,
+        664
+      ],
+      "size": [
+        311,
+        79
+      ],
+      "visible_pixels": 21721,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/corrida_50.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 7038
+    },
+    {
+      "id": "corrida_25",
+      "category": "estados",
+      "label": "Corrida 25%",
+      "role": "stamina",
+      "path": "assets/master-v1/estados/corrida_25.png",
+      "source_rect": [
+        936,
+        585,
+        1244,
+        661
+      ],
+      "size": [
+        308,
+        76
+      ],
+      "visible_pixels": 19459,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/corrida_25.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 5488
+    },
+    {
+      "id": "corrida_0",
+      "category": "estados",
+      "label": "Corrida 0%",
+      "role": "stamina",
+      "path": "assets/master-v1/estados/corrida_0.png",
+      "source_rect": [
+        1235,
+        587,
+        1530,
+        663
+      ],
+      "size": [
+        295,
+        76
+      ],
+      "visible_pixels": 17099,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/clean/estados/corrida_0.png",
+      "cleanup_method": "largest-connected-alpha-component + 6px margin; provisional",
+      "pixels_suppressed": 3292
+    },
+    {
+      "id": "glow_esquerda",
+      "category": "extras",
+      "label": "Brilho horizontal A",
+      "role": "fx",
+      "path": "assets/master-v1/extras/glow_esquerda.png",
+      "source_rect": [
+        0,
+        699,
+        329,
+        789
+      ],
+      "size": [
+        329,
+        90
+      ],
+      "visible_pixels": 25903,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/glow_esquerda.png"
+    },
+    {
+      "id": "glow_centro",
+      "category": "extras",
+      "label": "Brilho horizontal B",
+      "role": "fx",
+      "path": "assets/master-v1/extras/glow_centro.png",
+      "source_rect": [
+        328,
+        700,
+        567,
+        787
+      ],
+      "size": [
+        239,
+        87
+      ],
+      "visible_pixels": 17663,
+      "alpha_extrema": [
+        0,
+        252
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/glow_centro.png"
+    },
+    {
+      "id": "glow_direita",
+      "category": "extras",
+      "label": "Brilho horizontal C",
+      "role": "fx",
+      "path": "assets/master-v1/extras/glow_direita.png",
+      "source_rect": [
+        544,
+        699,
+        734,
+        787
+      ],
+      "size": [
+        190,
+        88
+      ],
+      "visible_pixels": 13605,
+      "alpha_extrema": [
+        0,
+        252
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/glow_direita.png"
+    },
+    {
+      "id": "flare_duplo",
+      "category": "extras",
+      "label": "Flare duplo",
+      "role": "fx",
+      "path": "assets/master-v1/extras/flare_duplo.png",
+      "source_rect": [
+        730,
+        697,
+        896,
+        795
+      ],
+      "size": [
+        166,
+        98
+      ],
+      "visible_pixels": 14105,
+      "alpha_extrema": [
+        0,
+        251
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/flare_duplo.png"
+    },
+    {
+      "id": "dragon_ouro",
+      "category": "extras",
+      "label": "Medalhão dragão dourado",
+      "role": "medal",
+      "path": "assets/master-v1/extras/dragon_ouro.png",
+      "source_rect": [
+        897,
+        704,
+        979,
+        795
+      ],
+      "size": [
+        82,
+        91
+      ],
+      "visible_pixels": 6353,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/dragon_ouro.png"
+    },
+    {
+      "id": "dragon_vermelho",
+      "category": "extras",
+      "label": "Medalhão dragão vermelho",
+      "role": "medal",
+      "path": "assets/master-v1/extras/dragon_vermelho.png",
+      "source_rect": [
+        975,
+        706,
+        1055,
+        796
+      ],
+      "size": [
+        80,
+        90
+      ],
+      "visible_pixels": 6117,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/dragon_vermelho.png"
+    },
+    {
+      "id": "dragon_prata",
+      "category": "extras",
+      "label": "Medalhão dragão prata",
+      "role": "medal",
+      "path": "assets/master-v1/extras/dragon_prata.png",
+      "source_rect": [
+        1056,
+        704,
+        1138,
+        796
+      ],
+      "size": [
+        82,
+        92
+      ],
+      "visible_pixels": 5723,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/dragon_prata.png"
+    },
+    {
+      "id": "dragon_bronze",
+      "category": "extras",
+      "label": "Medalhão dragão bronze",
+      "role": "medal",
+      "path": "assets/master-v1/extras/dragon_bronze.png",
+      "source_rect": [
+        1136,
+        706,
+        1232,
+        796
+      ],
+      "size": [
+        96,
+        90
+      ],
+      "visible_pixels": 6728,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/dragon_bronze.png"
+    },
+    {
+      "id": "hex_ouro",
+      "category": "extras",
+      "label": "Hexagonal dourado",
+      "role": "frame",
+      "path": "assets/master-v1/extras/hex_ouro.png",
+      "source_rect": [
+        1230,
+        706,
+        1312,
+        797
+      ],
+      "size": [
+        82,
+        91
+      ],
+      "visible_pixels": 6190,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/hex_ouro.png"
+    },
+    {
+      "id": "hex_prata",
+      "category": "extras",
+      "label": "Hexagonal prata",
+      "role": "frame",
+      "path": "assets/master-v1/extras/hex_prata.png",
+      "source_rect": [
+        1307,
+        706,
+        1378,
+        797
+      ],
+      "size": [
+        71,
+        91
+      ],
+      "visible_pixels": 5265,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/hex_prata.png"
+    },
+    {
+      "id": "hex_vermelho",
+      "category": "extras",
+      "label": "Hexagonal vermelho",
+      "role": "frame",
+      "path": "assets/master-v1/extras/hex_vermelho.png",
+      "source_rect": [
+        1370,
+        705,
+        1440,
+        797
+      ],
+      "size": [
+        70,
+        92
+      ],
+      "visible_pixels": 5006,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/hex_vermelho.png"
+    },
+    {
+      "id": "retangulo_pequeno",
+      "category": "extras",
+      "label": "Slot retangular",
+      "role": "frame",
+      "path": "assets/master-v1/extras/retangulo_pequeno.png",
+      "source_rect": [
+        1432,
+        705,
+        1534,
+        796
+      ],
+      "size": [
+        102,
+        91
+      ],
+      "visible_pixels": 5033,
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/extras/retangulo_pequeno.png"
+    },
+    {
+      "id": "composicao_hud",
+      "category": "referencia",
+      "label": "Composição ilustrativa do HUD",
+      "role": "reference",
+      "path": "assets/master-v1/referencia/composicao_hud.png",
+      "source_rect": [
+        0,
+        837,
+        1536,
+        1024
+      ],
+      "size": [
+        1536,
+        187
+      ],
+      "visible_pixels": 189501,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "status": "reference_crop_not_cleaned",
+      "editor_path": "assets/master-v1/referencia/composicao_hud.png"
+    }
+  ]
+}
