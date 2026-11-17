@@ -21,7 +21,9 @@ for ref in sorted(refs):
     width, height = struct.unpack('>II', header[16:24])
     assert width > 0 and height > 0, f'Dimensões inválidas: {ref}'
 
-assert 'const W=1920, H=1080' in html, 'Canvas Full HD não encontrado.'
+assert 'let W=1920, H=1080' in html, 'Preset inicial Full HD não encontrado.'
+for preset in ('1920x1080', '512x448', '256x224', '1080x1920', '720x1280', '1280x720'):
+    assert f'<option value="{preset}">' in html, f'Preset ausente: {preset}'
 script = re.search(r'<script>([\s\S]*?)</script>', html)
 assert script, 'JavaScript embutido não encontrado.'
 node = shutil.which('node')
@@ -33,4 +35,4 @@ if node:
     print('JavaScript: sintaxe OK')
 else:
     print('Node não instalado: verificação JS ignorada')
-print(f'OK: {len(refs)} PNGs referenciados; canvas 1920x1080; estrutura consistente.')
+print(f'OK: {len(refs)} PNGs referenciados; canvas dinâmico com 6 presets (PC/SNES/Mobile); estrutura consistente.')

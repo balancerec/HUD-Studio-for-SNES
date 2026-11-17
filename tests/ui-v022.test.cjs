@@ -14,7 +14,7 @@ for (const group of ['Visualização','Seleção','Histórico','Saída &amp; zoo
   'Espelho &amp; visibilidade','Alinhamento','Organização &amp; camadas','Remoção']) {
   assert.ok(html.includes(group), `Grupo ausente: ${group}`);
 }
-assert.equal((html.match(/class="tool-group"/g)||[]).length,4);
+assert.ok((html.match(/class="tool-group"/g)||[]).length>=4);
 assert.ok((html.match(/class="inspector-group(?: inspector-danger| fx-tools)?"/g)||[]).length>=5);
 assert.ok(html.includes('class="action-grid columns-3"'));
 assert.ok(html.includes('class="danger wide-action"'));

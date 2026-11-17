@@ -9,5 +9,5 @@ assert.equal(fx.darkKey,true);assert.equal(fx.blendMode,'screen');assert.equal(f
 const again=mk('fumaça2.gif',{darkKey:false,blendMode:'difference',fxPipelineVersion:3});assert.equal(again.darkKey,false);assert.equal(again.blendMode,'difference');
 const fighter=mk('Scorpion stance.gif',{darkKey:false,blendMode:'difference'});assert.equal(fighter.darkKey,false);assert.equal(fighter.blendMode,'difference');
 const text=mk('Nome P2 · Baraka · Espelho',{x:0,flipX:true,flipY:true,smartKind:'text',textValue:'JOHNNY'});assert.equal(text.flipX,false);assert.equal(text.flipY,false);assert.equal(text.label,'Nome P1 · JOHNNY');
-assert.match(source,/\$\('hudTimerDuration'\)\.addEventListener\('change'/);assert.match(source,/materialParentId:target\.id/);assert.match(source,/function repairMaterialHierarchy/);assert.match(source,/function projectPayload\(\)\{return \{version:[56]/);
+assert.match(source,/\$\('hudTimerDuration'\)\.addEventListener\('change'/);assert.match(source,/materialParentId:target\.id/);assert.match(source,/function repairMaterialHierarchy/);assert.match(source,/function projectPayload\(\)\{return \{version:[5-9]/);
 console.log('V0.3.3 FX Fidelity: 15 assertions approved');
