@@ -308,3 +308,11 @@ Ajustes de cada formato são preservados individualmente no JSON v8 (`layoutProf
 ## V0.3.5.4 — Viewport e layouts manuais
 
 Barras de rolagem visíveis, Ctrl+roda com âncora no cursor e seis presets manuais recuperáveis. Consulte `docs/VIEWPORT_ZOOM_LAYOUTS_V0354.md`.
+
+
+### V0.3.5.5 — Auditoria de layouts
+Botão **Auditar 6 telas** detecta perfis ausentes ou inválidos e elementos fora do palco, sem alterar a composição. Relatório JSON opcional. Consulte `docs/QUALITY_AUDIT_V0355.md`.
+
+## V0.3.6 — PC Engine Integration Foundation (experimental)
+
+Painel **Abrir PC Engine Lab** integrado à toolbar e isolado do HUD, com `GET status`, execução de cenários nativos via backend local, snapshots e repetição/comparação. Inicie o FastAPI original em 127.0.0.1:8000 e o servidor HUD same-origin via `py scripts/serve-pc-engine.py --port 8015 --upstream-port 8000`. Não exporta nem altera sprites ou projetos. Documentação em `docs/PC_ENGINE_FOUNDATION_V036.md`.

@@ -66,3 +66,12 @@ jobs:
 
       - name: Viewport and manual layout profiles v0.3.5.4
         run: node tests/viewport-layout-v0354.test.cjs
+
+      - name: Layout quality and invalid profile guards v0.3.5.5
+        run: node tests/layout-quality-v0355.test.cjs
+
+      - name: PC Engine Lab foundation v0.3.6 (isolated adapter and local HTTP proxy)
+        run: |
+          node tests/pc-engine-foundation-v036.test.cjs
+          python tests/pc-engine-proxy-v036.test.py
+          python tests/pc-engine-http-v036.test.py

@@ -1,0 +1,37 @@
+/* Isolated panel styling: no selectors that affect HUD Studio canvas/sprites. */
+#pcEngineDialog{color:#e8e5df;background:#191c22;border:1px solid #a9783a;border-radius:14px;padding:0;width:min(980px,94vw);max-height:92vh;box-shadow:0 16px 70px #000a;}
+#pcEngineDialog::backdrop{background:#000b}
+#pcEngineDialog .engine-head{display:flex;align-items:center;justify-content:space-between;background:#22262e;border-bottom:1px solid #674b2b;padding:15px 18px;gap:12px;flex-wrap:wrap}
+#pcEngineDialog h2{font-size:17px;margin:0;color:#e6bc78}
+#pcEngineDialog h3{font-size:13px;color:#d2ac71;margin:0 0 10px}
+#pcEngineDialog .engine-content{padding:16px;overflow:auto;max-height:calc(92vh - 70px);display:grid;gap:14px}
+#pcEngineDialog .engine-card{padding:12px;background:#12161c;border:1px solid #363e48;border-radius:9px;min-width:0}
+#pcEngineDialog .engine-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#pcEngineDialog button{cursor:pointer;padding:7px 10px}
+#pcEngineDialog select,#pcEngineDialog input{background:#252a33;color:#f0eee9;border:1px solid #53606a;border-radius:5px;padding:7px}
+#pcEngineDialog label{font-size:12px;color:#dbd4c5}
+#pcEngineDialog .engine-note{color:#b9c0c8;font-size:12px;line-height:1.5;margin:4px 0}
+#pcEngineDialog .engine-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#pcEngineDialog pre{white-space:pre-wrap;word-break:break-word;max-height:235px;overflow:auto;margin:8px 0 0;font:11px/1.45 Consolas,monospace;color:#c2d8df}
+#pcEngineDialog .engine-error{color:#ff978b}
+#pcEngineDialog .engine-success{color:#80e5ae}
+#pcEngineDialog .engine-summary{font:12px/1.6 Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+#pcEngineDialog input[type=range]{flex:1;min-width:130px}
+@media(max-width:680px){#pcEngineDialog .engine-columns{grid-template-columns:1fr}}
+/* v0.3.7 visual debugger additions (isolated to dialog) */
+#pcEngineDialog{width:min(1120px,96vw)}
+#pcEngineDialog .engine-viewport-wrap{width:100%;background:#10141b;border:1px solid #3b4655;border-radius:7px;overflow:hidden}
+#pcEngineDialog #pcEngineViewport{display:block;width:100%;height:auto;max-height:340px;aspect-ratio:820/290}
+#pcEngineDialog .engine-timeline{margin-top:10px}
+#pcEngineDialog .engine-timeline button{min-width:34px}
+#pcEngineDialog #pcEngineEntity{max-width:100%;margin:6px 0;min-width:160px}
+#pcEngineDialog details{margin-top:10px;color:#b9c0c8;font-size:12px}
+#pcEngineDialog details>summary{cursor:pointer}
+#pcEngineDialog #pcEngineEntityDetails{max-height:190px}
+@media(max-width:680px){#pcEngineDialog .engine-timeline input[type=range]{flex-basis:100%;order:2}}
+
+/* v0.3.8 diagnostic panel styles scoped to dialog */
+#pcEngineDialog .engine-event-list{display:flex;flex-direction:column;gap:4px;margin-top:10px;max-height:190px;overflow:auto}
+#pcEngineDialog button.engine-event{text-align:left;font:11px/1.3 Consolas,monospace;white-space:normal;overflow-wrap:anywhere;background:#242d38;border:1px solid #465363;color:#c9e4e9;border-radius:5px}
+#pcEngineDialog button.engine-event:hover,#pcEngineDialog button.engine-event:focus-visible{border-color:#e6bc78;background:#303c49}
+#pcEngineDialog #pcEngineEntityDiff{max-height:170px}

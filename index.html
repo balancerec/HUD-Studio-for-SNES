@@ -349,7 +349,15 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               <span class="tag" id="screenModeInfo" title="Resolução interna real do projeto">16:9</span>
               <label class="check" title="Reorganiza HUD, personagens e efeitos para o formato escolhido"><input id="adaptiveLayoutToggle" type="checkbox" checked> Adaptar HUD</label>
               <button type="button" id="adaptiveLayoutApply" title="Reorganizar todos os elementos na resolução atual">Reorganizar itens</button>
+              <button type="button" id="layoutAuditBtn" title="Examinar os seis perfis, detectar erros e elementos fora da tela sem modificar sprites">Auditar 6 telas</button>
               <button type="button" id="loadManualLayouts" title="Reutilizar os seis posicionamentos que você ajustou manualmente (somente para o conjunto de sprites correspondente)">Carregar 6 layouts manuais</button>
+            </div>
+          </div>
+          <div class="tool-group" id="pcEngineGroup">
+            <span class="tool-group-title">PC Engine Lab · V0.3.6</span>
+            <div class="tool-group-actions">
+              <button id="pcEngineOpen" type="button" title="Abrir laboratório isolado (não modifica o canvas ou o projeto)">Abrir PC Engine Lab</button>
+              <span class="tag" id="pcEngineConnectionBadge">Desconectado</span>
             </div>
           </div>
           <div class="tool-group">
@@ -635,6 +643,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   </div>
 </div>
 <script src="scripts/adaptive-layout.js"></script>
+<script src="scripts/layout-quality.js"></script>
 <script>
 'use strict';
 let W=1920, H=1080; const KEY='umk3-hud-fl-editor-v2';
@@ -851,7 +860,7 @@ function convertStageMode(width,height){
   for(const g of userGuides)g.pos=Math.round(g.pos*factor+(g.axis==='x'?offsetX:offsetY));
   if(adaptiveLayoutEnabled()){
     const saved=layoutProfiles[`${width}x${height}`];
-    if(saved && !HUDAdaptiveLayout.isCollapsed(spritesFromLayoutProfile(saved),height))HUDAdaptiveLayout.applySnapshot(sprites,saved);
+    if(saved && HUDLayoutQuality.validateProfile(saved,`${width}x${height}`,sprites.map(s=>s.id)).ok && !HUDAdaptiveLayout.isCollapsed(spritesFromLayoutProfile(saved),height))HUDAdaptiveLayout.applySnapshot(sprites,saved);
     else HUDAdaptiveLayout.applyLayout(sprites,HUDAdaptiveLayout.layout(sprites,layoutSource,width,height));
   }else{
     for(const s of sprites){s.x=s.x*factor+offsetX;s.y=s.y*factor+offsetY;s.w=Math.max(.1,s.w*factor);s.h=Math.max(.1,s.h*factor);if(s.fontSize!==undefined)s.fontSize=Math.max(1,s.fontSize*factor);}
@@ -890,13 +899,41 @@ async function importManualReferenceLayouts(){
     snapshot();
     saveCurrentLayoutProfile();
     for(const [key,profile] of Object.entries(refs.profiles)){
-      if(SCREEN_MODES[key]&&profile&&profile.items)layoutProfiles[key]=profile;
+      if(SCREEN_MODES[key]&&HUDLayoutQuality.validateProfile(profile,key,sprites.map(s=>s.id)).ok)layoutProfiles[key]=profile;
     }
     layoutSource=refs.source||layoutSource;
     save();
     status(`Seis layouts manuais carregados (${matches} sprites identificados). Escolha uma resolução; alterações atuais preservadas.`);
   }catch(err){status(`Não foi possível carregar os layouts manuais: ${err.message}`);}
 }
+function auditCurrentLayout(){
+  // Always include the live current canvas; this operation is read-only.
+  const all={...layoutProfiles,[`${W}x${H}`]:HUDAdaptiveLayout.snapshot(sprites,W,H)};
+  const report=HUDLayoutQuality.auditProfiles(all,sprites);
+  const lines=['HUD STUDIO — AUDITORIA DE LAYOUTS V0.3.5.5','',
+    `Perfis válidos: ${report.summary.valid}/6 · Ausentes: ${report.summary.missing} · Inválidos: ${report.summary.invalid}`,
+    `Itens com menos de 90% visíveis: ${report.summary.clipped}`,''];
+  for(const [key,v] of Object.entries(report.modes)){
+    lines.push(`${key}: ${v.status.toUpperCase()}${v.clipped?.length?' · '+v.clipped.length+' itens fora da tela':''}`);
+    for(const m of v.errors||[])lines.push('  ERRO: '+m);
+    for(const m of (v.warnings||[]).slice(0,5))lines.push('  AVISO: '+m);
+    for(const item of (v.clipped||[]).slice(0,8))lines.push(`  RECORTE: ${item.label} (${item.visiblePct}% visível)`);
+  }
+  const output=lines.join('\n');
+  let dlg=$('layoutAuditDialog');
+  if(!dlg){
+    dlg=document.createElement('dialog');dlg.id='layoutAuditDialog';
+    dlg.style.cssText='width:min(700px,92vw);max-height:85vh;overflow:auto;background:#191d25;color:#fff;border:1px solid #a87845;border-radius:12px;padding:18px;';
+    dlg.innerHTML='<h2 style="margin:0 0 10px">Auditoria de formatos PC / SNES / Mobile</h2><pre id="layoutAuditOutput" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:55vh;overflow:auto;font:12px/1.6 monospace"></pre><div style="display:flex;justify-content:flex-end;gap:10px"><button id="layoutAuditExport" type="button">Exportar relatório JSON</button><button id="layoutAuditClose" type="button">Fechar</button></div>';
+    document.body.append(dlg);
+    $('layoutAuditClose').onclick=()=>dlg.close();
+  }
+  $('layoutAuditOutput').textContent=output;
+  $('layoutAuditExport').onclick=()=>downloadBlob(JSON.stringify(report,null,2),'HUD-Studio-layout-audit-v0355.json','application/json');
+  if(!dlg.open)dlg.showModal();
+  status('Auditoria concluída; nenhum sprite foi alterado.');
+}
+$('layoutAuditBtn').addEventListener('click',auditCurrentLayout);
 $('loadManualLayouts').addEventListener('click',importManualReferenceLayouts);
 $('adaptiveLayoutApply').addEventListener('click',reorganizeCurrentLayout);
 $('adaptiveLayoutToggle').addEventListener('change',()=>{save();status($('adaptiveLayoutToggle').checked?'Layout adaptativo ligado.':'Layout proporcional ligado.');});
@@ -2442,5 +2479,10 @@ for(const id of ['hudMirrorAxis','hudMirrorAxisY','hudMirrorTolerance','hudMirro
 for(const id of ['hudMirrorGrid'])$(id).addEventListener('change',save);
 renderPalette(); renderAll(); updateRulers();
 </script>
+<link rel="stylesheet" href="scripts/pc-engine-panel.css">
+<script src="scripts/pc-engine-adapter.js"></script>
+<script src="scripts/pc-engine-visual-v037.js"></script>
+<script src="scripts/pc-engine-diagnostics-v038.js"></script>
+<script src="scripts/pc-engine-panel.js"></script>
 </body>
 </html>
