@@ -269,3 +269,42 @@ Réguas X/Y deslocadas para fora do canvas, guias auxiliares criadas por arrasta
 - O recorte é **não destrutivo**, serializado como `trimRect` no projeto JSON (esquema v6). Prévia, hit-test e exportação de PNG usam a região de origem correspondente.
 - Nota: para GIF preto-opaco, ative *Dark Key* no sprite antes do Auto Trim. GIFs de personagens com fundo escuro que tenham pixels visíveis muito escuros podem exigir ajuste do limiar para evitar cortar detalhes.
 - Validação interativa no navegador precisa ser realizada no Edge do usuário; o Chromium do ambiente de build bloqueou acesso a `localhost` (ERR_BLOCKED_BY_ADMINISTRATOR).
+
+
+## V0.3.5 — Auto Trim Pro
+
+Comparador antes/depois, margens editáveis nas quatro bordas e economia de área exibida no Inspector. O GIF preserva a animação e o corte permanece não destrutivo. Veja `docs/AUTO_TRIM_PRO_V035.md`.
+
+
+## Hotfix v0.3.5.1 — GIF de fumaça após Auto Trim
+Amostragem independente dos quadros de GIF com Dark Key; documentação em `docs/SMOKE_GIF_PLAYBACK_V0351.md`.
+
+## V0.3.5.2 — Presets de tela: PC, SNES e Mobile
+
+O seletor **Canvas → Formato de vídeo → Tela** oferece:
+
+| Preset | Resolução interna | Orientação |
+|---|---:|---|
+| PC widescreen | 1920 × 1080 | horizontal |
+| SNES Hi-Res | 512 × 448 | horizontal (pixel aspect ratio a conferir no dispositivo) |
+| SNES clássico | 256 × 224 | horizontal (resolução NTSC habitual) |
+| Mobile retrato | 1080 × 1920 | vertical |
+| Mobile retrato leve | 720 × 1280 | vertical |
+| Mobile paisagem | 1280 × 720 | horizontal |
+
+A troca de preset usa transformação uniforme com **contain**, centraliza o conteúdo remanescente e NÃO estica personagens. Posições, dimensões e tamanhos tipográficos são adaptados, mantendo o recorte de PNG/GIF no sistema de coordenadas do arquivo original. As réguas, guias, eixos do espelho, canvas de diagnóstico, exportação e salvamento JSON seguem o preset selecionado. O zoom automático considera largura e altura disponíveis para mostrar o canvas vertical.
+
+**Importante:** trocar de 16:9 para vertical com *contain* deixa espaços vazios acima e abaixo; isso é intencional para evitar deformação/corte. Recomponha os elementos para criar uma interface mobile específica. A exportação PNG salva nas dimensões físicas selecionadas; **não** converte o HUD em tiles, sprites, paletas, OAM ou ROM de SNES. As resoluções SNES não implicam automaticamente renderização de aspecto 4:3/CRT, nem certificação de limites de hardware.
+
+Teste: `node tests/screen-presets-v0352.test.cjs`. Faça backup do projeto em JSON antes de experimentar várias proporções de tela.
+
+## V0.3.5.3 — Adaptive Layouts (PC / SNES / Mobile)
+
+A conversão agora reposiciona cada componente por função, em vez de reduzir o HUD inteiro por um único fator. Ative **Adaptar HUD** no seletor de tela e use **Reorganizar itens** em projetos antigos já encolhidos. Modos suportados: PC 1920x1080; SNES 512x448 e 256x224; mobile 1080x1920, 720x1280 e 1280x720.
+
+Ajustes de cada formato são preservados individualmente no JSON v8 (`layoutProfiles`) e o layout de referência é mantido (`layoutSource`). `scripts/adaptive-layout.js` é testado com `node tests/adaptive-layout-v0353.test.cjs`. GIFs, Auto Trim, dark key e materiais continuam não destrutivos. Consulte `docs/ADAPTIVE_LAYOUTS_V0353.md`.
+
+
+## V0.3.5.4 — Viewport e layouts manuais
+
+Barras de rolagem visíveis, Ctrl+roda com âncora no cursor e seis presets manuais recuperáveis. Consulte `docs/VIEWPORT_ZOOM_LAYOUTS_V0354.md`.

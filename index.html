@@ -52,14 +52,20 @@ input[type="color"]{padding:2px;height:34px}
 .workspace-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 12px;background:linear-gradient(180deg,#1f2127,#15171b);border-bottom:1px solid #2e3239}
 .workspace-toolbar .title{font-weight:700;color:#fff0c2;margin-right:auto}
 .workspace-toolbar .tag{padding:2px 8px;border-radius:999px;background:#343841;border:1px solid #4a4f59;color:#d7dae1;font-size:11px}
-.viewport{flex:1;overflow:auto;padding:20px;background:radial-gradient(circle at 50% 20%, #1e2025 0, #0e1014 60%)}
-.scale-wrap{position:relative;margin:auto;--ruler-size:26px}
+.viewport{flex:1;min-width:0;min-height:0;overflow:scroll;scrollbar-gutter:stable;padding:20px 26px 26px 20px;overscroll-behavior:contain;scroll-behavior:auto;background:radial-gradient(circle at 50% 20%, #1e2025 0, #0e1014 60%);scrollbar-color:#a37a43 #15191f;scrollbar-width:thin}
+.viewport::-webkit-scrollbar{width:13px;height:13px}
+.viewport::-webkit-scrollbar-track{background:#141922;border:1px solid #333c47}
+.viewport::-webkit-scrollbar-thumb{background:#81613a;border:2px solid #141922;border-radius:8px}
+.viewport::-webkit-scrollbar-thumb:hover{background:#e4a64f}
+.viewport::-webkit-scrollbar-corner{background:#141922}
+.scale-wrap{position:relative;margin:auto;--ruler-size:26px;flex:none}
 .stage{position:absolute;left:26px;top:26px;width:1920px;height:1080px;background:#090a0d;border:1px solid #30343c;box-shadow:0 18px 70px rgba(0,0,0,.6);overflow:hidden;transform-origin:top left}
 .stage::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.06));pointer-events:none;z-index:2}
 .stage.grid::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);background-size:var(--grid-size,16px) var(--grid-size,16px);pointer-events:none;z-index:4}
 .bg-layer{position:absolute;inset:0;z-index:0;background-position:center;background-repeat:no-repeat;background-size:cover}
 .reference{position:absolute;left:50%;top:100px;transform:translateX(-50%);width:1780px;opacity:.18;display:none;pointer-events:none;z-index:1}
 .stage.show-reference .reference{display:block}
+.stage .reference{max-width:92%;max-height:92%;width:auto;height:auto;top:4%}
 .stage.drop-target{outline:3px dashed #ffb54a;outline-offset:-6px}
 .sprite{position:absolute;transform-origin:center center;touch-action:none;user-select:none;cursor:grab;z-index:10;pointer-events:none}
 .sprite img{width:100%;height:100%;object-fit:fill;pointer-events:none;display:block}
@@ -236,6 +242,21 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .trim-tools .hint{color:#bdb4a5;font-size:11px;line-height:1.45}
 #trimInfo{font-size:11px;color:#b3d1bd;padding-top:5px;word-break:break-word}
 
+
+/* V0.3.5 Auto Trim Pro — compact before/after contact sheet and four-edge adjustment. */
+.trim-comparison{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.trim-comparison figure{margin:0;min-width:0}
+.trim-comparison figcaption{font:700 10px/1.3 Arial,sans-serif;letter-spacing:.35px;color:#f0cc8a;text-align:center;margin-bottom:5px}
+.trim-preview{height:135px;position:relative;border:1px solid #4c5360;border-radius:5px;overflow:hidden;background-color:#252830;background-image:linear-gradient(45deg,#353943 25%,transparent 25%),linear-gradient(-45deg,#353943 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#353943 75%),linear-gradient(-45deg,transparent 75%,#353943 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
+.trim-preview img{position:absolute;max-width:none;max-height:none;pointer-events:none;user-select:none}
+.trim-preview .trim-bounding{position:absolute;border:1px dashed #ffcc70;pointer-events:none;box-sizing:border-box;z-index:1;box-shadow:0 0 0 1000px #0004}
+.trim-manual{padding:8px 0;border-top:1px solid #47412f;margin-top:7px}
+.trim-manual h4{font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin:0 0 7px;color:#ead9bc}
+.trim-manual .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.trim-manual .grid2 input{width:100%;box-sizing:border-box}
+.trim-manual .hint{margin:6px 0}
+.trim-stat{border-radius:4px;background:#172b25;border:1px solid #3c7158;padding:7px;color:#a9eed1;font:600 11px/1.5 Arial,sans-serif}
+
 </style>
 </head>
 <body>
@@ -252,7 +273,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <span class="slot">Snap</span>
     <span class="slot">Drag & Drop</span>
     <span class="spacer"></span>
-    <span class="display">1920 × 1080</span>
+    <span class="display" id="stageDimensionLabel">1920 × 1080</span>
   </div>
   <div class="app">
     <aside class="panel">
@@ -310,10 +331,27 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     <main class="workspace">
       <div class="workspace-toolbar" role="toolbar" aria-label="Ferramentas do editor">
         <div class="toolbar-heading">
-          <strong>Canvas <span class="toolbar-slash">/</span> Playlist · V0.3.4</strong>
+          <strong>Canvas <span class="toolbar-slash">/</span> Playlist · V0.3.5.2</strong>
           <span class="toolbar-subtitle">Edição e posicionamento</span>
         </div>
         <div class="toolbar-groups">
+          <div class="tool-group" id="screenModeGroup">
+            <span class="tool-group-title">Formato de vídeo</span>
+            <div class="tool-group-actions">
+              <label class="tool-select">Tela <select id="screenMode" aria-label="Resolução do canvas">
+                <option value="1920x1080">PC · 1920 × 1080</option>
+                <option value="512x448">SNES Hi-Res · 512 × 448</option>
+                <option value="256x224">SNES clássico · 256 × 224</option>
+                <option value="1080x1920">Mobile retrato · 1080 × 1920</option>
+                <option value="720x1280">Mobile retrato leve · 720 × 1280</option>
+                <option value="1280x720">Mobile paisagem · 1280 × 720</option>
+              </select></label>
+              <span class="tag" id="screenModeInfo" title="Resolução interna real do projeto">16:9</span>
+              <label class="check" title="Reorganiza HUD, personagens e efeitos para o formato escolhido"><input id="adaptiveLayoutToggle" type="checkbox" checked> Adaptar HUD</label>
+              <button type="button" id="adaptiveLayoutApply" title="Reorganizar todos os elementos na resolução atual">Reorganizar itens</button>
+              <button type="button" id="loadManualLayouts" title="Reutilizar os seis posicionamentos que você ajustou manualmente (somente para o conjunto de sprites correspondente)">Carregar 6 layouts manuais</button>
+            </div>
+          </div>
           <div class="tool-group">
             <span class="tool-group-title">Visualização</span>
             <div class="tool-group-actions tool-options">
@@ -406,6 +444,22 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
   <label class="field">Limiar de opacidade <output id="trimAlphaText">8</output><input id="trimAlpha" type="range" min="1" max="128" value="8"></label>
   <label class="field">Margem de segurança (px da imagem) <input id="trimPadding" type="number" min="0" max="100" value="2"></label>
   <label class="check"><input type="checkbox" id="trimUseDarkKey" checked> Usar fundo preto/Chroma Key quando habilitado no sprite</label>
+  <div class="trim-comparison" aria-label="Prévia antes e depois do corte">
+    <figure><figcaption>ORIGINAL</figcaption><div class="trim-preview" id="trimBefore"></div></figure>
+    <figure><figcaption>ÁREA ÚTIL</figcaption><div class="trim-preview" id="trimAfter"></div></figure>
+  </div>
+  <div class="trim-stat" id="trimSavings" aria-live="polite">Área removida: 0% · 0 px²</div>
+  <div class="trim-manual">
+    <h4>Recorte manual — pixels da imagem original</h4>
+    <div class="grid2">
+      <label class="field">Esquerda (px)<input type="number" min="0" step="1" id="trimManualL" value="0"></label>
+      <label class="field">Direita (px)<input type="number" min="0" step="1" id="trimManualR" value="0"></label>
+      <label class="field">Superior (px)<input type="number" min="0" step="1" id="trimManualT" value="0"></label>
+      <label class="field">Inferior (px)<input type="number" min="0" step="1" id="trimManualB" value="0"></label>
+    </div>
+    <p class="hint">A prévia usa a área de origem e preserva a animação. O corte só é aplicado quando confirmado.</p>
+    <div class="row"><button type="button" id="trimManualApply">Aplicar bordas</button><button type="button" id="trimPreviewReset">Prévia = corte atual</button></div>
+  </div>
   <div class="row"><button type="button" class="primary" id="trimApply">✂ Cortar vazios</button><button type="button" id="trimReset">Restaurar margens</button></div>
   <div id="trimInfo" aria-live="polite">Selecione um PNG ou GIF.</div>
 </div>
@@ -580,9 +634,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
     </aside>
   </div>
 </div>
+<script src="scripts/adaptive-layout.js"></script>
 <script>
 'use strict';
-const W=1920, H=1080, KEY='umk3-hud-fl-editor-v2';
+let W=1920, H=1080; const KEY='umk3-hud-fl-editor-v2';
 const $ = id => document.getElementById(id);
 const stage = $('stage');
 const view = $('viewport');
@@ -715,7 +770,7 @@ function normalize(s){
   const fixedTextFlip=s.smartKind==='text'?false:!!s.flipX;
   const fixedTextFlipY=s.smartKind==='text'?false:!!s.flipY;
   const fixedLabel=(s.smartKind==='text' && s.textValue && /^Nome P[12]/i.test(s.label||''))
-    ?('Nome '+((Number(s.x)+Number(s.w)/2)<960?'P1':'P2')+' · '+s.textValue.toLocaleUpperCase('pt-BR')):s.label;
+    ?('Nome '+((Number(s.x)+Number(s.w)/2)<(typeof W==='number'?W:1920)/2?'P1':'P2')+' · '+s.textValue.toLocaleUpperCase('pt-BR')):s.label;
   return {
     pivotX:Math.max(0,Math.min(100,Number.isFinite(+s.pivotX)?+s.pivotX:50)),pivotY:Math.max(0,Math.min(100,Number.isFinite(+s.pivotY)?+s.pivotY:50)),
     mirrorMode:["horizontal","vertical","both"].includes(s.mirrorMode)?s.mirrorMode:"horizontal",
@@ -759,7 +814,97 @@ let background = { color:'#0b0c10', image:null, fit:'cover', opacity:100, parall
 let sprites = defaultSprites();
 let userGuides=[];
 const editorConfig={mirrorAxisX:960,mirrorAxisY:540,mirrorGrid:16,mirrorMode:'horizontal',mirrorTolerance:6};
-function projectPayload(){return {version:6,stage:{width:W,height:H},background,sprites,guides:userGuides,editor:{...editorConfig,mirrorAxisX:Number($('hudMirrorAxis').value),mirrorAxisY:Number($('hudMirrorAxisY').value),mirrorGrid:Number($('hudMirrorGrid').value),mirrorMode:$('hudMirrorMode').value,mirrorTolerance:Number($('hudMirrorTolerance').value)}};}
+const SCREEN_MODES = Object.freeze({'1920x1080':[1920,1080],'512x448':[512,448],'256x224':[256,224],'1080x1920':[1080,1920],'720x1280':[720,1280],'1280x720':[1280,720]});
+const SCREEN_MODE_LABELS = Object.freeze({'1920x1080':'PC · 16:9','512x448':'SNES Hi-Res','256x224':'SNES clássico','1080x1920':'Mobile · retrato Full HD','720x1280':'Mobile · retrato leve','1280x720':'Mobile · paisagem HD'});
+function applyStageDimensions(width,height){
+  width=Math.round(Number(width));height=Math.round(Number(height));
+  if(!SCREEN_MODES[`${width}x${height}`]){width=1920;height=1080;}
+  W=width;H=height;
+  stage.style.width=W+'px';stage.style.height=H+'px';
+  const overlay=$('diagnosticOverlay');overlay.width=W;overlay.height=H;
+  overlay.style.width=W+'px';overlay.style.height=H+'px';
+  $('screenMode').value=`${W}x${H}`;
+  $('stageDimensionLabel').textContent=`${W} × ${H}`;
+  $('screenModeInfo').textContent=SCREEN_MODE_LABELS[`${W}x${H}`];
+  $('hudMirrorAxis').max=W;$('hudMirrorAxisY').max=H;
+  $('stat') && ($('stat').textContent=`${sprites.length} instâncias · ${paletteItems.length} tipos · Canvas ${W} × ${H}`);
+}
+function loadStageFromData(raw){
+  if(raw?.stage && SCREEN_MODES[`${raw.stage.width}x${raw.stage.height}`]){
+    applyStageDimensions(raw.stage.width,raw.stage.height);
+  }
+}
+let layoutProfiles={};
+let layoutSource=null;
+function adaptiveLayoutEnabled(){return $('adaptiveLayoutToggle').checked;}
+function spritesFromLayoutProfile(profile){return sprites.map(s=>({...s,...(profile.items?.[s.id]||{})}));}
+function saveCurrentLayoutProfile(){if(!HUDAdaptiveLayout.isCollapsed(sprites,H))layoutProfiles[`${W}x${H}`]=HUDAdaptiveLayout.snapshot(sprites,W,H);}
+function convertStageMode(width,height){
+  if(W===width && H===height)return;
+  snapshot();
+  const oldW=W,oldH=H;
+  saveCurrentLayoutProfile();
+  if(!layoutSource)layoutSource=HUDAdaptiveLayout.snapshot(sprites,W,H);
+  const factor=Math.min(width/oldW,height/oldH);
+  const offsetX=(width-oldW*factor)/2,offsetY=(height-oldH*factor)/2;
+  // Guides are editorial, not sprites. Transform them with the old viewport.
+  for(const g of userGuides)g.pos=Math.round(g.pos*factor+(g.axis==='x'?offsetX:offsetY));
+  if(adaptiveLayoutEnabled()){
+    const saved=layoutProfiles[`${width}x${height}`];
+    if(saved && !HUDAdaptiveLayout.isCollapsed(spritesFromLayoutProfile(saved),height))HUDAdaptiveLayout.applySnapshot(sprites,saved);
+    else HUDAdaptiveLayout.applyLayout(sprites,HUDAdaptiveLayout.layout(sprites,layoutSource,width,height));
+  }else{
+    for(const s of sprites){s.x=s.x*factor+offsetX;s.y=s.y*factor+offsetY;s.w=Math.max(.1,s.w*factor);s.h=Math.max(.1,s.h*factor);if(s.fontSize!==undefined)s.fontSize=Math.max(1,s.fontSize*factor);}
+  }
+  applyStageDimensions(width,height);
+  // The playable layout is always symmetric around the actual viewport center.
+  $('hudMirrorAxis').value=Math.round(W/2);
+  $('hudMirrorAxisY').value=Math.round(H/2);
+  background.fit='cover';
+  $('zoom').value='auto';
+  repairExportSprites();save();renderAll();renderUserGuides();renderSymmetryDiagnostics();
+  status(`Tela ${W}×${H}: ${adaptiveLayoutEnabled()?'HUD, lutadores e FX adaptados ao formato':'escala proporcional'}. Salve o projeto JSON.`);
+}
+function reorganizeCurrentLayout(){
+  snapshot();
+  if(!layoutSource)layoutSource=HUDAdaptiveLayout.snapshot(sprites,W,H);
+  HUDAdaptiveLayout.applyLayout(sprites,HUDAdaptiveLayout.layout(sprites,layoutSource,W,H));
+  saveCurrentLayoutProfile();repairExportSprites();save();renderAll();renderUserGuides();renderSymmetryDiagnostics();
+  status(`Reorganização inteligente aplicada à tela ${W}×${H}. Ctrl+Z para desfazer.`);
+}
+// Apply the six hand-positioned reference profiles without replacing assets,
+// FX, layers or the current editing state. Reference IDs are stable only for
+// this specific 20-sprite example, so require a strong ID match.
+async function importManualReferenceLayouts(){
+  try{
+    const response=await fetch('examples/manual-layout-profiles-v0353.json',{cache:'no-store'});
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    const refs=await response.json();
+    const target=new Set(sprites.map(s=>s.id));
+    const known=Object.keys(refs.profiles?.['1920x1080']?.items||{});
+    const matches=known.filter(id=>target.has(id)).length;
+    if(matches<Math.min(10,known.length)){
+      status(`Referência incompatível: ${matches}/${known.length} IDs coincidem. Use o JSON consolidado de exemplo.`);
+      return;
+    }
+    snapshot();
+    saveCurrentLayoutProfile();
+    for(const [key,profile] of Object.entries(refs.profiles)){
+      if(SCREEN_MODES[key]&&profile&&profile.items)layoutProfiles[key]=profile;
+    }
+    layoutSource=refs.source||layoutSource;
+    save();
+    status(`Seis layouts manuais carregados (${matches} sprites identificados). Escolha uma resolução; alterações atuais preservadas.`);
+  }catch(err){status(`Não foi possível carregar os layouts manuais: ${err.message}`);}
+}
+$('loadManualLayouts').addEventListener('click',importManualReferenceLayouts);
+$('adaptiveLayoutApply').addEventListener('click',reorganizeCurrentLayout);
+$('adaptiveLayoutToggle').addEventListener('change',()=>{save();status($('adaptiveLayoutToggle').checked?'Layout adaptativo ligado.':'Layout proporcional ligado.');});
+$('screenMode').addEventListener('change', e=>{
+  const dims=SCREEN_MODES[e.target.value];if(!dims)return;
+  convertStageMode(...dims);
+});
+function projectPayload(){return {version:8,layoutProfiles:HUDAdaptiveLayout.isCollapsed(sprites,H)?layoutProfiles:{...layoutProfiles,[`${W}x${H}`]:HUDAdaptiveLayout.snapshot(sprites,W,H)},layoutSource,adaptiveLayout:adaptiveLayoutEnabled(),stage:{width:W,height:H},background,sprites,guides:userGuides,editor:{...editorConfig,mirrorAxisX:Number($('hudMirrorAxis').value),mirrorAxisY:Number($('hudMirrorAxisY').value),mirrorGrid:Number($('hudMirrorGrid').value),mirrorMode:$('hudMirrorMode').value,mirrorTolerance:Number($('hudMirrorTolerance').value)}};}
 function applyEditorConfig(e){if(!e)return;for(const [id,key] of [['hudMirrorAxis','mirrorAxisX'],['hudMirrorAxisY','mirrorAxisY'],['hudMirrorGrid','mirrorGrid'],['hudMirrorMode','mirrorMode'],['hudMirrorTolerance','mirrorTolerance']])if(e[key]!==undefined)$(id).value=e[key];}
 function repairMaterialHierarchy(){
   const frames=sprites.filter(s=>s.smartKind!=='material');
@@ -794,6 +939,9 @@ function load(){
   try{
     const raw = JSON.parse(localStorage.getItem(KEY));
     if(raw){
+      loadStageFromData(raw);
+      layoutProfiles=raw.layoutProfiles||{};layoutSource=raw.layoutSource||null;
+      if(typeof raw.adaptiveLayout==='boolean')$('adaptiveLayoutToggle').checked=raw.adaptiveLayout;
       if(raw.background) background = Object.assign(background, raw.background);
       if(Array.isArray(raw.sprites)) sprites = raw.sprites.map(normalize);
       userGuides=sanitizeGuides(raw.guides);applyEditorConfig(raw.editor);repairMaterialHierarchy();repairExportSprites();
@@ -801,9 +949,11 @@ function load(){
   }catch(e){}
 }
 load();
+applyStageDimensions(W,H);
 function snapshot(){ history.push(JSON.stringify(projectPayload())); if(history.length>80) history.shift(); future=[]; }
 function restoreState(serialized){
-  const state=JSON.parse(serialized); background=state.background||background;userGuides=sanitizeGuides(state.guides);
+  const state=JSON.parse(serialized); loadStageFromData(state); layoutProfiles=state.layoutProfiles||{};layoutSource=state.layoutSource||null;
+  if(typeof state.adaptiveLayout==='boolean')$('adaptiveLayoutToggle').checked=state.adaptiveLayout; background=state.background||background;userGuides=sanitizeGuides(state.guides);
   sprites=(state.sprites||[]).map(normalize);repairMaterialHierarchy();repairExportSprites();applyEditorConfig(state.editor);selected=null;selection.clear(); save(); renderAll();
 }
 function undo(){
@@ -881,25 +1031,31 @@ function findTopmostSpriteAt(clientX, clientY, excludeId=null){
 }
 function fitScale(){
   const z = $('zoom').value;
-  const available = Math.max(300, view.clientWidth - 68);
-  scale = z === 'auto' ? Math.max(.15, Math.min(1, available / W)) : z === 'custom' ? scale : Number(z);
+  const availableW = Math.max(160, view.clientWidth - 68);
+  const availableH = Math.max(160, view.clientHeight - 68);
+  scale = z === 'auto' ? Math.max(.05, Math.min(1, availableW / W, availableH / H)) : z === 'custom' ? scale : Number(z);
   $('scaleWrap').style.width = (W * scale + 26) + 'px';
   $('scaleWrap').style.height = (H * scale + 26) + 'px';
   stage.style.transform = `scale(${scale})`;updateRulers();
 }
 function zoomAt(clientX,clientY,next){
-  const old=scale, rect=stage.getBoundingClientRect();
-  const x=(clientX-rect.left)/old, y=(clientY-rect.top)/old;
-  scale=Math.min(3,Math.max(.15,next));
+  // The transform origin and the outer rulers are independent of scrolling.
+  // Measure the actual stage rectangle before AND after scaling: this accounts
+  // for centered scale-wrap margins, viewport padding and visible scrollbars.
+  const old=scale, before=stage.getBoundingClientRect();
+  const x=(clientX-before.left)/old, y=(clientY-before.top)/old;
+  const candidate=Math.min(4,Math.max(.08,next));
+  if(Math.abs(candidate-old)<1e-8)return;
+  scale=candidate;
   $('zoom').value='custom';
-  $('scaleWrap').style.width=(W*scale+26)+'px';$('scaleWrap').style.height=(H*scale+26)+'px';
+  const wrap=$('scaleWrap');
+  wrap.style.width=(W*scale+26)+'px';
+  wrap.style.height=(H*scale+26)+'px';
   stage.style.transform=`scale(${scale})`;
-  const vr=view.getBoundingClientRect();
-  // Preserve the canvas point under the cursor using scroll offsets.
-  const localViewportX=clientX-vr.left,localViewportY=clientY-vr.top;
-  const wrap=$('scaleWrap');const wx=wrap.offsetLeft,wy=wrap.offsetTop;
-  view.scrollLeft=wx+x*scale-localViewportX;
-  view.scrollTop=wy+y*scale-localViewportY;
+  const after=stage.getBoundingClientRect();
+  // Scroll by the on-screen movement of the same original-canvas coordinate.
+  view.scrollLeft+=after.left+x*scale-clientX;
+  view.scrollTop+=after.top+y*scale-clientY;
   updateRulers();
 }
 const FX_CANVAS_BLEND={normal:'source-over',multiply:'multiply',screen:'screen',add:'lighter',subtract:'source-over',lighten:'lighten',darken:'darken',difference:'difference'};
@@ -924,7 +1080,53 @@ function drawKeyed(ctx,img,w,h,threshold,feather){
   t.putImageData(keyDarkPixels(px,threshold,feather),0,0);
   ctx.drawImage(tmp,0,0);
 }
-// For GIFs the browser advances HTMLImageElement frames; rAF samples the current frame.
+// V0.3.5.1: Decode dark-key GIFs independently of the hidden <img>.
+// Browsers may suspend GIF playback when their original img is invisible or clipped.
+// Each GIF source is decoded only once and shared between mirrored smoke sprites.
+const keyedGifSources=new Map();
+function keyedGifSource(s){
+  if(!/^data:image\/gif/i.test(s.src||'')&&!/\.gif(?:[?#]|$)/i.test(s.src||''))return null;
+  let source=keyedGifSources.get(s.src);
+  if(source)return source;
+  source={frames:null,durations:null,total:0,start:performance.now(),error:null};
+  keyedGifSources.set(s.src,source);
+  if(typeof ImageDecoder==='undefined'){
+    source.error='ImageDecoder indisponível: usando reprodução nativa como fallback.';
+    return source;
+  }
+  source.loading=(async()=>{
+    const response=await fetch(s.src);
+    if(!response.ok)throw new Error('GIF indisponível: '+response.status);
+    const decoder=new ImageDecoder({data:await response.arrayBuffer(),type:'image/gif'});
+    const frames=[],durations=[];
+    try{
+      await decoder.tracks.ready;
+      const count=decoder.tracks.selectedTrack?.frameCount||1;
+      for(let i=0;i<count;i++){
+        const {image}=await decoder.decode({frameIndex:i,completeFramesOnly:true});
+        try{
+          frames.push(await createImageBitmap(image));
+          // VideoFrame.duration is expressed in microseconds.
+          durations.push(Math.max(20,Math.round((image.duration||100000)/1000)));
+        }finally{image.close();}
+      }
+    }finally{decoder.close();}
+    source.frames=frames;
+    source.durations=durations;
+    source.total=durations.reduce((a,b)=>a+b,0);
+    source.start=performance.now();
+  })().catch(e=>{source.error=String(e);console.warn('GIF dark-key: fallback nativo',e);});
+  return source;
+}
+function keyedGifFrame(source,now){
+  if(!source?.frames?.length)return null;
+  let elapsed=(now-source.start)%source.total;
+  for(let i=0;i<source.frames.length;i++){
+    elapsed-=source.durations[i];
+    if(elapsed<0)return source.frames[i];
+  }
+  return source.frames[source.frames.length-1];
+}
 const keyedInstances=new Map();
 let keyedLoopHandle=0, keyedLast=0;
 function refreshKeyedInstances(){
@@ -934,7 +1136,7 @@ function refreshKeyedInstances(){
     const el=stage.querySelector(`.sprite[data-id="${s.id}"]`);
     const canvas=el?.querySelector('.chroma-canvas');
     const img=el?.querySelector('.sprite-visual img');
-    if(canvas&&img)keyedInstances.set(s.id,{s,canvas,img});
+    if(canvas&&img)keyedInstances.set(s.id,{s,canvas,img,gif:keyedGifSource(s)});
   }
   if(keyedInstances.size&&!keyedLoopHandle)keyedLoopHandle=requestAnimationFrame(keyedTick);
 }
@@ -942,7 +1144,7 @@ function keyedTick(ts){
   keyedLoopHandle=0;
   if(ts-keyedLast<40){if(keyedInstances.size)keyedLoopHandle=requestAnimationFrame(keyedTick);return;}
   keyedLast=ts;
-  for(const {s,canvas,img} of keyedInstances.values()){
+  for(const {s,canvas,img,gif} of keyedInstances.values()){
     if(!img.complete || !img.naturalWidth || !img.naturalHeight)continue;
     // Native frame resolution capped to keep animated FX responsive.
     const factor=Math.min(1,640/img.naturalWidth,480/img.naturalHeight);
@@ -952,7 +1154,7 @@ function keyedTick(ts){
     const ctx=canvas.getContext('2d',{willReadFrequently:true});
     ctx.clearRect(0,0,w,h);
     try{
-      drawKeyed(ctx,img,w,h,s.darkThreshold,s.darkFeather);
+      drawKeyed(ctx,keyedGifFrame(gif,ts)||img,w,h,s.darkThreshold,s.darkFeather);
       if(s.tintEnabled){
         const over=document.createElement('canvas');over.width=w;over.height=h;
         const o=over.getContext('2d');o.drawImage(canvas,0,0);
@@ -991,7 +1193,11 @@ function setSpriteStyle(el, s){
     const keyCanvas=visual.querySelector('.chroma-canvas');
     if(keyCanvas)keyCanvas.hidden=!s.darkKey;
     const original=visual.querySelector('img:not(.dynamic-bar-empty):not(.dynamic-bar-fill):not(.dynamic-bar-frame)');
-    if(original)original.style.visibility=s.darkKey?'hidden':'visible';
+    if(original){
+      // Keep the native GIF image eligible for playback on older browsers.
+      original.style.visibility='visible';
+      original.style.opacity=s.darkKey?'0':'1';
+    }
   }
   if(s.kind==='dynamicBar'){
     const fill=el.querySelector('.dynamic-bar-fill');
@@ -1003,7 +1209,7 @@ function applySprite(s){
     const pair=sprites.find(x=>x.id===s.mirrorPair);
     if(pair){
       window.__mirrorSyncing=true;
-      const axisX=Number($('hudMirrorAxis')?.value)||960,axisY=Number($('hudMirrorAxisY')?.value)||540;
+      const axisX=Number($('hudMirrorAxis')?.value)||W/2,axisY=Number($('hudMirrorAxisY')?.value)||H/2;
       const mode=s.mirrorMode||'horizontal',hor=mode!=='vertical',ver=mode!=='horizontal';
       pair.x=hor?Math.round(2*axisX-s.x-s.w):s.x;pair.y=ver?Math.round(2*axisY-s.y-s.h):s.y;pair.w=s.w;pair.h=s.h;
       pair.rot=(hor!==ver)?-s.rot:s.rot;pair.flipX=pair.smartKind==='text'?false:(hor?!s.flipX:s.flipX);pair.flipY=pair.smartKind==='text'?false:(ver?!s.flipY:s.flipY);
@@ -1428,8 +1634,8 @@ view.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault();});
 function updateRulers(){
   const rx=$('rulerX'),ry=$('rulerY');rx.replaceChildren();ry.replaceChildren();
   rx.style.width=(W*scale)+'px';ry.style.height=(H*scale)+'px';
-  for(let x=0;x<=W;x+=100){const b=document.createElement('b');b.textContent=x;b.style.left=(x*scale)+'px';rx.append(b);}
-  for(let y=0;y<=H;y+=100){const b=document.createElement('b');b.textContent=y;b.style.top=(y*scale)+'px';ry.append(b);}
+  for(let x=0;x<=W;x+=(W<=512?32:100)){const b=document.createElement('b');b.textContent=x;b.style.left=(x*scale)+'px';rx.append(b);}
+  for(let y=0;y<=H;y+=(H<=448?32:100)){const b=document.createElement('b');b.textContent=y;b.style.top=(y*scale)+'px';ry.append(b);}
   const active=$('rulers').checked;
   for(const id of ['rulerX','rulerY','rulerCorner'])$(id).classList.toggle('hidden',!active);
 }
@@ -1644,13 +1850,16 @@ for(const [id,key] of [['reflexEnabled','reflexEnabled'],['reflexColor','reflexC
   $(id).addEventListener('change',()=>save());
 }
 $('exportJson').onclick = ()=> downloadBlob(JSON.stringify(projectPayload(), null, 2), 'umk3-hud-project.json', 'application/json');
-$('saveProjectState').onclick=()=>{save();downloadBlob(JSON.stringify(projectPayload(),null,2),'HUD-Studio-v0.3.2-project-state.json','application/json');$('saveStateStatus').textContent='Estado exportado em JSON. Salve esse arquivo para recuperar todos os sprites.';};
+$('saveProjectState').onclick=()=>{save();downloadBlob(JSON.stringify(projectPayload(),null,2),`HUD-Studio-${W}x${H}-project-state.json`,'application/json');$('saveStateStatus').textContent='Estado exportado em JSON. Salve esse arquivo para recuperar todos os sprites.';};
 $('importJson').onclick = ()=> $('jsonFile').click();
 $('jsonFile').onchange = async e => {
   const f = e.target.files[0]; if(!f) return;
   try{
     const data = JSON.parse(await f.text());
     snapshot();
+    loadStageFromData(data);
+    layoutProfiles=data.layoutProfiles||{};layoutSource=data.layoutSource||null;
+    if(typeof data.adaptiveLayout==='boolean')$('adaptiveLayoutToggle').checked=data.adaptiveLayout;
     background = Object.assign({color:'#0b0c10',image:null,fit:'cover',opacity:100}, data.background || {});
     const list = Array.isArray(data) ? data : data.sprites;
     if(!Array.isArray(list)) throw new Error('Formato inválido');
@@ -1713,7 +1922,7 @@ async function renderFxSprite(ctx,s,phase){
   }else{
     const im=preload(s.src);if(!im.complete||!im.naturalWidth)await im.decode();
     if(s.darkKey){
-      const w=Math.max(1,Math.min(1920,Math.round(s.w))),h=Math.max(1,Math.min(1080,Math.round(s.h)));
+      const w=Math.max(1,Math.min(2048,Math.round(s.w))),h=Math.max(1,Math.min(2048,Math.round(s.h)));
       const keyed=document.createElement('canvas');keyed.width=w;keyed.height=h;
       const tr=validateTrimRect(s.trimRect);
       if(tr){
@@ -1866,12 +2075,111 @@ function mapCropToCurrent(s,newRect){
   s.w=+dw.toFixed(3);s.h=+dh.toFixed(3);
   s.trimRect=newRect;
 }
+// V0.3.5 — Pure geometry: all trim margins measured in ORIGINAL image pixels.
+const TRIM_EDGE_IDS=['trimManualL','trimManualR','trimManualT','trimManualB'];
+function trimRectFromMargins(sourceW,sourceH,margin){
+  const w=Math.floor(Number(sourceW)),h=Math.floor(Number(sourceH));
+  if(!Number.isFinite(w)||!Number.isFinite(h)||w<1||h<1)return null;
+  const vals=margin.map(Number);
+  if(vals.length!==4||vals.some(v=>!Number.isSafeInteger(v)||v<0))return null;
+  const [l,r,t,b]=vals;
+  if(l+r>=w||t+b>=h)return null;
+  return {left:l,top:t,width:w-l-r,height:h-t-b,sourceW:w,sourceH:h};
+}
+function trimMarginsFromRect(t){return [t.left,t.sourceW-t.left-t.width,t.top,t.sourceH-t.top-t.height].map(Math.round);}
+function trimAreaStats(t){
+  const original=t.sourceW*t.sourceH,visible=t.width*t.height;
+  return {original,visible,removed:Math.max(0,original-visible),percent:original?100*(1-visible/original):0};
+}
+function trimNaturalDimensions(s){
+  const t=validateTrimRect(s?.trimRect);
+  if(t)return {w:t.sourceW,h:t.sourceH};
+  const img=s&&preload(s.src);
+  return img?.naturalWidth?{w:img.naturalWidth,h:img.naturalHeight}:null;
+}
+function trimCurrentRect(s){
+  const t=validateTrimRect(s?.trimRect);if(t)return t;
+  const d=trimNaturalDimensions(s);
+  return d?trimRectFromMargins(d.w,d.h,[0,0,0,0]):null;
+}
+function trimReadPreviewRect(s){
+  const d=trimNaturalDimensions(s);
+  if(!d)return null;
+  return trimRectFromMargins(d.w,d.h,TRIM_EDGE_IDS.map(id=>$(id).value));
+}
+function trimSetMargins(s){
+  const rect=trimCurrentRect(s);
+  const vals=rect?trimMarginsFromRect(rect):[0,0,0,0];
+  TRIM_EDGE_IDS.forEach((id,i)=>$(id).value=vals[i]);
+}
+function drawTrimComparison(s,proposal){
+  const before=$('trimBefore'),after=$('trimAfter');
+  before.replaceChildren();after.replaceChildren();
+  if(!s||!proposal)return;
+  const {sourceW:w,sourceH:h,left,top,width,height}=proposal;
+  const fit=(cw,ch)=>Math.min(120/Math.max(1,cw),125/Math.max(1,ch));
+  const initial=fit(w,h),final=fit(width,height);
+  const originalImg=document.createElement('img');originalImg.src=s.src;
+  originalImg.alt='Original sem corte';originalImg.style.width=w*initial+'px';originalImg.style.height=h*initial+'px';
+  originalImg.style.left=(before.clientWidth-w*initial)/2+'px';originalImg.style.top=(135-h*initial)/2+'px';
+  before.appendChild(originalImg);
+  const bounding=document.createElement('div');bounding.className='trim-bounding';
+  bounding.style.left=((before.clientWidth-w*initial)/2+left*initial)+'px';
+  bounding.style.top=((135-h*initial)/2+top*initial)+'px';
+  bounding.style.width=(width*initial)+'px';bounding.style.height=(height*initial)+'px';
+  before.appendChild(bounding);
+  const afterImg=document.createElement('img');afterImg.src=s.src;afterImg.alt='Recorte proposto';
+  afterImg.style.width=w*final+'px';afterImg.style.height=h*final+'px';
+  afterImg.style.left=((after.clientWidth-width*final)/2-left*final)+'px';
+  afterImg.style.top=((135-height*final)/2-top*final)+'px';
+  // Clip to proposed source rectangle while centering the surviving pixels.
+  const clipLeft=(after.clientWidth-width*final)/2,clipTop=(135-height*final)/2;
+  const mask=document.createElement('div');mask.style.position='absolute';mask.style.overflow='hidden';
+  Object.assign(mask.style,{left:clipLeft+'px',top:clipTop+'px',width:width*final+'px',height:height*final+'px'});
+  afterImg.style.left=(-left*final)+'px';afterImg.style.top=(-top*final)+'px';
+  mask.appendChild(afterImg);after.appendChild(mask);
+}
+let trimPreviewTicket=0;
+function updateTrimPreview(){
+  const s=selectedSprite();
+  const rect=s&&trimReadPreviewRect(s);
+  const pane=$('trimSavings');
+  if(!rect){pane.textContent=s?'Bordas inválidas ou imagem ainda não carregada.':'Selecione um PNG/GIF.';
+    drawTrimComparison(null,null);return;}
+  const stats=trimAreaStats(rect);
+  pane.textContent=`Área removida: ${stats.percent.toFixed(1)}% · ${stats.removed.toLocaleString('pt-BR')} px² | Área útil ${rect.width} × ${rect.height}`;
+  drawTrimComparison(s,rect);
+}
+TRIM_EDGE_IDS.forEach(id=>$(id).addEventListener('input',updateTrimPreview));
+$('trimPreviewReset').onclick=()=>{const s=selectedSprite();if(!s)return;trimSetMargins(s);updateTrimPreview();};
+$('trimManualApply').onclick=()=>{
+  const targets=selectedSprites().filter(s=>s.kind!=='dynamicBar'&&!['text','timer','material'].includes(s.smartKind));
+  if(targets.length!==1){$('trimInfo').textContent='Para ajustar as quatro bordas, selecione exatamente um sprite.';return;}
+  const s=targets[0],rect=trimReadPreviewRect(s);
+  if(!rect){$('trimInfo').textContent='Recorte inválido: verifique os limites (esquerda + direita < largura, superior + inferior < altura).';return;}
+  const current=trimCurrentRect(s);
+  if(!current||rect.sourceW!==current.sourceW||rect.sourceH!==current.sourceH){$('trimInfo').textContent='Imagem ainda não carregada ou dimensões inconsistentes.';return;}
+  snapshot();mapCropToCurrent(s,rect);
+  if(rect.width===rect.sourceW&&rect.height===rect.sourceH)s.trimRect=null;
+  const ids=new Set(selection),primary=selected;save();render();setSelection(ids,primary);
+  status(`Auto Trim Pro: bordas aplicadas a ${s.label}.`);
+};
 $('trimAlpha').addEventListener('input',e=>$('trimAlphaText').textContent=e.target.value);
 function refreshTrimPanel(){
   const sel=selectedSprite();const isRegular=sel&&sel.kind!=='dynamicBar'&&!['text','timer','material'].includes(sel.smartKind);
   $('trimApply').disabled=!isRegular;$('trimReset').disabled=!sel?.trimRect;
+  $('trimManualApply').disabled=!isRegular || selectedSprites().length!==1;
+  $('trimPreviewReset').disabled=!isRegular;
   const tr=sel?.trimRect;
   $('trimInfo').textContent=!sel?'Selecione um PNG ou GIF.':tr?`Corte ativo: origem (${tr.left}, ${tr.top}), área ${tr.width} × ${tr.height} de ${tr.sourceW} × ${tr.sourceH}.`:'Sem corte aplicado ao sprite selecionado.';
+  // Defer async image decode, but never overwrite controls after selecting another sprite.
+  const ticket=++trimPreviewTicket,ref=sel?.id;
+  trimSetMargins(sel);
+  updateTrimPreview();
+  if(sel&&isRegular){const img=preload(sel.src);if(!img.naturalWidth){img.decode().then(()=>{
+    if(ticket!==trimPreviewTicket||selected!==ref)return;
+    trimSetMargins(sel);updateTrimPreview();
+  }).catch(()=>{});}}
 }
 $('trimApply').onclick=async()=>{
   const targets=selectedSprites().filter(s=>s.kind!=='dynamicBar'&&!['text','timer','material'].includes(s.smartKind));
@@ -1914,8 +2222,8 @@ $('exportPng').onclick = async ()=>{
       const phase=s.pulse?Math.sin(tick*Math.PI*2*s.pulseHz-Math.PI/2):-1;
       await renderFxSprite(ctx,s,phase);
     }
-    canvas.toBlob(blob=>{ if(blob) downloadBlob(blob, 'umk3-hud-1920x1080.png', 'image/png'); }, 'image/png');
-    status('PNG exportado em 1920×1080.');
+    canvas.toBlob(blob=>{ if(blob) downloadBlob(blob, `umk3-hud-${W}x${H}.png`, 'image/png'); }, 'image/png');
+    status(`PNG exportado em ${W}×${H}.`);
   }catch(err){ alert('Falha ao exportar PNG: '+err.message); }
 };
 document.addEventListener('keydown', e => {
@@ -2088,8 +2396,8 @@ $('hudMirrorAlign').onclick=()=>{
 $('hudMirrorDuplicate').onclick=()=>{
   const items=selectedSprites().filter(s=>!s.locked);
   if(!items.length)return;
-  snapshot();const axis=Number($('hudMirrorAxis').value)||960;
-  const copies=[],axisY=Number($('hudMirrorAxisY').value)||540;
+  snapshot();const axis=Number($('hudMirrorAxis').value)||W/2;
+  const copies=[],axisY=Number($('hudMirrorAxisY').value)||H/2;
   const mode=$('hudMirrorMode').value,hor=mode!=='vertical',ver=mode!=='horizontal';
   for(const s of items){const pair=normalize({...clone(s),id:newId(),label:s.label+' · Espelho',x:mirrorQuant(hor?2*axis-s.x-s.w:s.x),y:mirrorQuant(ver?2*axisY-s.y-s.h:s.y),rot:(hor!==ver)?-s.rot:s.rot,flipX:s.smartKind==='text'?false:(hor?!s.flipX:s.flipX),flipY:s.smartKind==='text'?false:(ver?!s.flipY:s.flipY),pivotX:hor?100-s.pivotX:s.pivotX,pivotY:ver?100-s.pivotY:s.pivotY,mirrorMode:mode,z:s.z+.1,groupId:null,mirrorPair:s.id,mirrorLinked:$('hudMirrorLink').checked});
     if($('hudMirrorLink').checked){s.mirrorPair=pair.id;s.mirrorLinked=true;s.mirrorMode=mode;}
