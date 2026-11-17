@@ -316,3 +316,10 @@ Botão **Auditar 6 telas** detecta perfis ausentes ou inválidos e elementos for
 ## V0.3.6 — PC Engine Integration Foundation (experimental)
 
 Painel **Abrir PC Engine Lab** integrado à toolbar e isolado do HUD, com `GET status`, execução de cenários nativos via backend local, snapshots e repetição/comparação. Inicie o FastAPI original em 127.0.0.1:8000 e o servidor HUD same-origin via `py scripts/serve-pc-engine.py --port 8015 --upstream-port 8000`. Não exporta nem altera sprites ou projetos. Documentação em `docs/PC_ENGINE_FOUNDATION_V036.md`.
+
+## PC Engine Lab — integração e plano jogável (2026-11-17)
+
+- [Estado da integração, histórico de armazenamento, baseline e distinção Git/local](docs/PC_ENGINE_STATUS_E_INTEGRACAO_20261117.md)
+- [Roadmap de animação, combate e Playtest Arena (V0.4.2–V0.7.0)](docs/ANIMATION_COMBAT_PLAYTEST_ROADMAP.md)
+
+**Nota:** hotfixes V0.4.0/V0.4.1 e serviços de armazenamento foram validados no ambiente local informado pelo operador, mas não devem ser presumidos como código já publicado nesta branch. A engine C++ é um protótipo independente, sem equivalência de gameplay com a ROM UMK3 comprovada.
