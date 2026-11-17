@@ -353,6 +353,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
               <button type="button" id="loadManualLayouts" title="Reutilizar os seis posicionamentos que você ajustou manualmente (somente para o conjunto de sprites correspondente)">Carregar 6 layouts manuais</button>
             </div>
           </div>
+          <div class="tool-group" id="pcEngineGroup">
+            <span class="tool-group-title">PC Engine Lab · V0.3.6</span>
+            <div class="tool-group-actions">
+              <button id="pcEngineOpen" type="button" title="Abrir laboratório isolado (não modifica o canvas ou o projeto)">Abrir PC Engine Lab</button>
+              <span class="tag" id="pcEngineConnectionBadge">Desconectado</span>
+            </div>
+          </div>
           <div class="tool-group">
             <span class="tool-group-title">Visualização</span>
             <div class="tool-group-actions tool-options">
@@ -2472,5 +2479,10 @@ for(const id of ['hudMirrorAxis','hudMirrorAxisY','hudMirrorTolerance','hudMirro
 for(const id of ['hudMirrorGrid'])$(id).addEventListener('change',save);
 renderPalette(); renderAll(); updateRulers();
 </script>
+<link rel="stylesheet" href="scripts/pc-engine-panel.css">
+<script src="scripts/pc-engine-adapter.js"></script>
+<script src="scripts/pc-engine-visual-v037.js"></script>
+<script src="scripts/pc-engine-diagnostics-v038.js"></script>
+<script src="scripts/pc-engine-panel.js"></script>
 </body>
 </html>
