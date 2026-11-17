@@ -66,3 +66,6 @@ jobs:
 
       - name: Viewport and manual layout profiles v0.3.5.4
         run: node tests/viewport-layout-v0354.test.cjs
+
+      - name: Layout quality and invalid profile guards v0.3.5.5
+        run: node tests/layout-quality-v0355.test.cjs

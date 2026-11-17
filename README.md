@@ -308,3 +308,7 @@ Ajustes de cada formato são preservados individualmente no JSON v8 (`layoutProf
 ## V0.3.5.4 — Viewport e layouts manuais
 
 Barras de rolagem visíveis, Ctrl+roda com âncora no cursor e seis presets manuais recuperáveis. Consulte `docs/VIEWPORT_ZOOM_LAYOUTS_V0354.md`.
+
+
+### V0.3.5.5 — Auditoria de layouts
+Botão **Auditar 6 telas** detecta perfis ausentes ou inválidos e elementos fora do palco, sem alterar a composição. Relatório JSON opcional. Consulte `docs/QUALITY_AUDIT_V0355.md`.
